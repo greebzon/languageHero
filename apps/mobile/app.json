@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "ЛингвоГерой",
+    "slug": "lingvohero",
+    "scheme": "lingvohero",
+    "version": "0.2.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/images/tim.png",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lingvohero.app"
+    },
+    "android": {
+      "package": "com.lingvohero.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/tim.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundRecording": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-font",
+      "expo-asset",
+      "expo-status-bar",
+      "expo-localization"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

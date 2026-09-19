@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 2,
+  "id": "en-family-03",
+  "version": 1,
+  "language": "en",
+  "title": "Тётя, дядя и друзья",
+  "presentation": {
+    "intro": "Тим говорит: «В большой семье много добрых людей — давай назовём их по-английски!»",
+    "completionTitle": "Большая дружная семья!",
+    "completionMessage": "Теперь ты знаешь слова для тёти, дяди, друга и двоюродного брата или сестры. Ура!"
+  },
+  "words": [
+    {
+      "id": "aunt",
+      "text": "Aunt",
+      "spelling": "aunt",
+      "translation": "тётя",
+      "imageId": "aunt-image",
+      "audioId": "aunt-audio"
+    },
+    {
+      "id": "uncle",
+      "text": "Uncle",
+      "spelling": "uncle",
+      "translation": "дядя",
+      "imageId": "uncle-image",
+      "audioId": "uncle-audio"
+    },
+    {
+      "id": "friend",
+      "text": "Friend",
+      "spelling": "friend",
+      "translation": "друг",
+      "imageId": "friend-image",
+      "audioId": "friend-audio"
+    },
+    {
+      "id": "cousin",
+      "text": "Cousin",
+      "spelling": "cousin",
+      "translation": "двоюродный брат или сестра",
+      "imageId": "cousin-image",
+      "audioId": "cousin-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "aunt-image",
+      "path": "/v1/media/5b419586f8e3d8fb348973b0c51313e63210d1531d91f505d48ebddd99daf027.png",
+      "kind": "image"
+    },
+    {
+      "id": "aunt-audio",
+      "path": "/v1/media/1e52bb8e3625c7eff43be3bd82f01fd269468d938f5ab9d2779ee4bd9eac0f6e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "uncle-image",
+      "path": "/v1/media/db010c274504adbfd2841fb11d5614768224d48eb762dace392559aa679e13f2.png",
+      "kind": "image"
+    },
+    {
+      "id": "uncle-audio",
+      "path": "/v1/media/2e8945023cd6dd53a2976f22a60a114a93b20f8984d1972f235912133b3cee0c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "friend-image",
+      "path": "/v1/media/4e6a6777af06cc951bad262b5bcd67c6b382ae54b31782850e35cf01fa470344.png",
+      "kind": "image"
+    },
+    {
+      "id": "friend-audio",
+      "path": "/v1/media/e5af829ee4fdc500ffaaecc5c7231bb4f41d579aa63ca00230a661b455723ed5.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "cousin-image",
+      "path": "/v1/media/acf2a11ec35e61a56557521d5ca69fd5031ca58b8db6c6a8f1f5c289e9e8eccb.png",
+      "kind": "image"
+    },
+    {
+      "id": "cousin-audio",
+      "path": "/v1/media/8bc9848ed16a47635ce85bb6a6a32bcc70720f86e5ec3ef176e3a0e514996294.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок шепчет: слушай внимательно и найди нужного человека.",
+      "type": "listen-and-select",
+      "wordId": "aunt",
+      "choices": [
+        "aunt",
+        "friend",
+        "uncle"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок советует: называй каждого человека по-английски.",
+      "type": "match-pairs",
+      "wordIds": [
+        "uncle",
+        "friend",
+        "cousin"
+      ],
+      "imageOrder": [
+        "friend",
+        "cousin",
+        "uncle"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это мамина или папина сестра.",
+      "type": "build-word",
+      "wordId": "aunt",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "x"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t6",
+          "letter": "p"
+        },
+        {
+          "id": "t1",
+          "letter": "a"
+        },
+        {
+          "id": "t3",
+          "letter": "n"
+        },
+        {
+          "id": "t2",
+          "letter": "u"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: этот человек — брат мамы или папы.",
+      "type": "listen-and-select",
+      "wordId": "uncle",
+      "choices": [
+        "aunt",
+        "cousin",
+        "friend",
+        "uncle"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: среди картинок есть друг и родственники.",
+      "type": "match-pairs",
+      "wordIds": [
+        "aunt",
+        "uncle",
+        "friend",
+        "cousin"
+      ],
+      "imageOrder": [
+        "uncle",
+        "cousin",
+        "friend",
+        "aunt"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: с этим человеком весело играть и гулять.",
+      "type": "build-word",
+      "wordId": "friend",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t7",
+          "letter": "q"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t6",
+          "letter": "d"
+        },
+        {
+          "id": "t3",
+          "letter": "i"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t8",
+          "letter": "z"
+        }
+      ]
+    }
+  ]
+}

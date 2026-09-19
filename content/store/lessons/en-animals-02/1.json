@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 2,
+  "id": "en-animals-02",
+  "version": 1,
+  "language": "en",
+  "title": "Кто спрятался?",
+  "words": [
+    {
+      "id": "fox",
+      "text": "A fox",
+      "spelling": "fox",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "A bear",
+      "spelling": "bear",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "A rabbit",
+      "spelling": "rabbit",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "An owl",
+      "spelling": "owl",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "listen-0",
+      "prompt": "Послушай и найди зверька",
+      "hint": "Эта птица с большими глазами хорошо видит в темноте.",
+      "type": "listen-and-select",
+      "wordId": "owl",
+      "choices": [
+        "fox",
+        "bear",
+        "rabbit",
+        "owl"
+      ]
+    },
+    {
+      "id": "listen-1",
+      "prompt": "Послушай и найди зверька",
+      "hint": "У этого зверька длинные ушки. Он умеет прыгать!",
+      "type": "listen-and-select",
+      "wordId": "rabbit",
+      "choices": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ]
+    },
+    {
+      "id": "listen-2",
+      "prompt": "Послушай и найди зверька",
+      "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+      "type": "listen-and-select",
+      "wordId": "fox",
+      "choices": [
+        "rabbit",
+        "owl",
+        "fox",
+        "bear"
+      ]
+    },
+    {
+      "id": "listen-3",
+      "prompt": "Послушай и найди зверька",
+      "hint": "Большой лесной зверь с круглыми ушами.",
+      "type": "listen-and-select",
+      "wordId": "bear",
+      "choices": [
+        "owl",
+        "fox",
+        "bear",
+        "rabbit"
+      ]
+    }
+  ]
+}

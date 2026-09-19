@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 2,
+  "id": "en-family-01",
+  "version": 1,
+  "language": "en",
+  "title": "Мама, папа и малыш",
+  "presentation": {
+    "intro": "Тим говорит: «Давай познакомимся с твоей семьёй и скажем новые слова вместе!»",
+    "completionTitle": "Отличное знакомство!",
+    "completionMessage": "Ты уже умеешь говорить по-английски: мама, папа, сестра и малыш. Здорово получилось!"
+  },
+  "words": [
+    {
+      "id": "mother",
+      "text": "Mother",
+      "spelling": "mother",
+      "translation": "мама",
+      "imageId": "mother-image",
+      "audioId": "mother-audio"
+    },
+    {
+      "id": "father",
+      "text": "Father",
+      "spelling": "father",
+      "translation": "папа",
+      "imageId": "father-image",
+      "audioId": "father-audio"
+    },
+    {
+      "id": "sister",
+      "text": "Sister",
+      "spelling": "sister",
+      "translation": "сестра",
+      "imageId": "sister-image",
+      "audioId": "sister-audio"
+    },
+    {
+      "id": "baby",
+      "text": "Baby",
+      "spelling": "baby",
+      "translation": "малыш",
+      "imageId": "baby-image",
+      "audioId": "baby-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "mother-image",
+      "path": "/v1/media/cc68a55b4e01e6b9e58aeb96a061902ad8384d91fe907e3dc97a379060c391a2.png",
+      "kind": "image"
+    },
+    {
+      "id": "mother-audio",
+      "path": "/v1/media/52f45a6c5f2550399c7d0a855423166ff48ddc190fed043557791da22f25a2c2.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "father-image",
+      "path": "/v1/media/93770ca0cd5d796033e04a5bf69f8ce7c8e3deb75e00bfd1836e0e34c7b30a4b.png",
+      "kind": "image"
+    },
+    {
+      "id": "father-audio",
+      "path": "/v1/media/3a4fe44d4f440460e62e8af01fbc12cf7c5baf51076ce8ec2ef123dfd6aa8931.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "sister-image",
+      "path": "/v1/media/5c888bc4c0677c9ca810c2f2fa57ace1a50dbbe426c0ec348b91a9fc662da087.png",
+      "kind": "image"
+    },
+    {
+      "id": "sister-audio",
+      "path": "/v1/media/c5ea0e8a45185d89493ceddf3b84c2bff16fe01e1c2b497b5da07472df0cf0b7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "baby-image",
+      "path": "/v1/media/826274330628c6c5d5b41a1c4889683b0ce9e08af4f22cd42feb2551eb721731.png",
+      "kind": "image"
+    },
+    {
+      "id": "baby-audio",
+      "path": "/v1/media/75610403ede897021d3c698fbff836e2efae9bd3dc96054880f6b4120b1327b2.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок подсказывает: слушай внимательно и нажми на нужного человека.",
+      "type": "listen-and-select",
+      "wordId": "mother",
+      "choices": [
+        "baby",
+        "father",
+        "mother"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини английские слова с картинками.",
+      "hint": "Тим-лисёнок советует: назови каждого человека по-русски, а потом ищи пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "father",
+        "sister"
+      ],
+      "imageOrder": [
+        "father",
+        "sister"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это самый маленький член семьи.",
+      "type": "build-word",
+      "wordId": "baby",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "y"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t3",
+          "letter": "b"
+        },
+        {
+          "id": "t6",
+          "letter": "q"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок говорит: это папа. Найди его на картинке.",
+      "type": "listen-and-select",
+      "wordId": "father",
+      "choices": [
+        "sister",
+        "mother",
+        "father",
+        "baby"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини английские слова с картинками.",
+      "hint": "Тим-лисёнок советует: не спеши, проверь каждую пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "mother",
+        "baby"
+      ],
+      "imageOrder": [
+        "baby",
+        "mother"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это девочка в семье, не мама.",
+      "type": "build-word",
+      "wordId": "sister",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t8",
+          "letter": "q"
+        },
+        {
+          "id": "t6",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "s"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t7",
+          "letter": "b"
+        }
+      ]
+    }
+  ]
+}

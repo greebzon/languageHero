@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 2,
+  "id": "en-space-03",
+  "version": 2,
+  "language": "en",
+  "title": "Небесные находки",
+  "presentation": {
+    "intro": "Тим говорит: «Смотри внимательно: в небе спрятались удивительные космические находки!»",
+    "completionTitle": "Мастер космических находок!",
+    "completionMessage": "Ура! Ты заметил галактику, метеор и орбиту. Твои английские слова сияют ярко!"
+  },
+  "texts": {
+    "en": {
+      "title": "Sky Finds",
+      "presentation": {
+        "intro": "Tim says: “Look closely: amazing space finds are hidden in the sky!”",
+        "completionTitle": "Space Finds Master!",
+        "completionMessage": "Hooray! You spotted a galaxy, a meteor, and an orbit. Your English words shine bright!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: This shines brightly in the sky during the day."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: One flies with a tail, and the other is made by people."
+        },
+        "ex-3": {
+          "prompt": "Build the name of a big star family.",
+          "hint": "Tim the fox: It has lots and lots of stars."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: This is a fiery streak that flies fast across the sky."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: One is a path around a planet, and the other is a bright star near us."
+        },
+        "ex-6": {
+          "prompt": "Build the name of a space helper from the letters.",
+          "hint": "Tim the fox: People send it high above Earth."
+        }
+      },
+      "words": {
+        "sun": {
+          "translation": "sun"
+        },
+        "comet": {
+          "translation": "comet"
+        },
+        "orbit": {
+          "translation": "orbit"
+        },
+        "galaxy": {
+          "translation": "galaxy"
+        },
+        "meteor": {
+          "translation": "meteor"
+        },
+        "satellite": {
+          "translation": "satellite"
+        }
+      }
+    },
+    "he": {
+      "title": "מציאות בשמים",
+      "presentation": {
+        "intro": "טים אומר: ״תסתכלו טוב: בשמים מסתתרות מציאות מדהימות מהחלל!״",
+        "completionTitle": "אלופי המציאות מהחלל!",
+        "completionMessage": "איזה יופי! מצאתם גלקסיה, מטאור ומסלול. המילים באנגלית זוהרות ממש!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: זה זוהר חזק בשמים ביום."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: אחד עף עם זנב, והשני עשוי בידי אנשים."
+        },
+        "ex-3": {
+          "prompt": "להרכיב את השם של משפחת כוכבים גדולה.",
+          "hint": "טים השועל: יש בה המון כוכבים."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: זה פס אש שעף מהר בשמים."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: אחד הוא דרך סביב כוכב לכת, והשני הוא כוכב בהיר קרוב אלינו."
+        },
+        "ex-6": {
+          "prompt": "לבנות מאותיות את השם של עוזר מהחלל.",
+          "hint": "טים השועל: אנשים משגרים אותו גבוה מעל כדור הארץ."
+        }
+      },
+      "words": {
+        "sun": {
+          "translation": "השמש"
+        },
+        "comet": {
+          "translation": "שביט"
+        },
+        "orbit": {
+          "translation": "מסלול"
+        },
+        "galaxy": {
+          "translation": "גלקסיה"
+        },
+        "meteor": {
+          "translation": "מטאור"
+        },
+        "satellite": {
+          "translation": "לוויין"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "sun",
+      "text": "The sun",
+      "spelling": "sun",
+      "translation": "солнце",
+      "imageId": "sun-image",
+      "audioId": "sun-audio"
+    },
+    {
+      "id": "satellite",
+      "text": "A satellite",
+      "spelling": "satellite",
+      "translation": "спутник",
+      "imageId": "satellite-image",
+      "audioId": "satellite-audio"
+    },
+    {
+      "id": "comet",
+      "text": "A comet",
+      "spelling": "comet",
+      "translation": "комета",
+      "imageId": "comet-image",
+      "audioId": "comet-audio"
+    },
+    {
+      "id": "galaxy",
+      "text": "A galaxy",
+      "spelling": "galaxy",
+      "translation": "галактика",
+      "imageId": "galaxy-image",
+      "audioId": "galaxy-audio"
+    },
+    {
+      "id": "meteor",
+      "text": "A meteor",
+      "spelling": "meteor",
+      "translation": "метеор",
+      "imageId": "meteor-image",
+      "audioId": "meteor-audio"
+    },
+    {
+      "id": "orbit",
+      "text": "An orbit",
+      "spelling": "orbit",
+      "translation": "орбита",
+      "imageId": "orbit-image",
+      "audioId": "orbit-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "sun-image",
+      "path": "/v1/media/fb51e7a3e06d6467ca5c97b86fc5102b6213ab12fb2b2389eeabbfe8a849415d.png",
+      "kind": "image"
+    },
+    {
+      "id": "sun-audio",
+      "path": "/v1/media/fa795512a30d753aef4a51654850c2e53d8b88b675640fb57106ee06aefaea3f.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "satellite-image",
+      "path": "/v1/media/7cbfb257174aeab297faebdfe2fba26e655bf56fe7d58ff6e47359691453de26.png",
+      "kind": "image"
+    },
+    {
+      "id": "satellite-audio",
+      "path": "/v1/media/e19775913ceb1d3a9ffdfedfb876c73119b4b6e94317c6287ecc688f732e455c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "comet-image",
+      "path": "/v1/media/51c88e198d51e2eb47be15d6f24aa2287fc3ccb4911d3141cfee690fcb53fabd.png",
+      "kind": "image"
+    },
+    {
+      "id": "comet-audio",
+      "path": "/v1/media/01e2e5ef1dfb9d3ecbe12e4ee726e8a5b72eadd77d0f6b7f08922ade35deed36.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "galaxy-image",
+      "path": "/v1/media/8376cdaf31a051683c09b057ae6e5720bc4b8f01ae1a471d49f2c73001e93228.png",
+      "kind": "image"
+    },
+    {
+      "id": "galaxy-audio",
+      "path": "/v1/media/4e295b5ba25198c714f589e130380c809cb64280111aaebe02cbfc3ab81656b6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "meteor-image",
+      "path": "/v1/media/eca6d4edebe07c1ddee26f34de9137ca0c1d07cedba4b9c37b56cb937a2ff2a7.png",
+      "kind": "image"
+    },
+    {
+      "id": "meteor-audio",
+      "path": "/v1/media/108773e45e097859f0544b136f4b064235703c5809eaa55665682e5a4ab4ea44.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "orbit-image",
+      "path": "/v1/media/7edc36cb25f1d46fd3da72806775326471611bf5bb0bc894445596efd1e18460.png",
+      "kind": "image"
+    },
+    {
+      "id": "orbit-audio",
+      "path": "/v1/media/55f5cb725a865737228f5fed18d7052c70adc7ac9b5e2f25d84263d58ba59903.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим-лисёнок: Это ярко светит днём на небе.",
+      "type": "listen-and-select",
+      "wordId": "sun",
+      "choices": [
+        "sun",
+        "satellite",
+        "comet"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: Один объект летит с хвостом, а другой сделан людьми.",
+      "type": "match-pairs",
+      "wordIds": [
+        "comet",
+        "satellite"
+      ],
+      "imageOrder": [
+        "satellite",
+        "comet"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Сложи название большой звёздной семьи.",
+      "hint": "Тим-лисёнок: В ней живёт очень много звёзд.",
+      "type": "build-word",
+      "wordId": "galaxy",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "x"
+        },
+        {
+          "id": "t1",
+          "letter": "g"
+        },
+        {
+          "id": "t6",
+          "letter": "y"
+        },
+        {
+          "id": "t3",
+          "letter": "l"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t7",
+          "letter": "p"
+        },
+        {
+          "id": "t8",
+          "letter": "r"
+        },
+        {
+          "id": "t4",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим-лисёнок: Это огненная полоска, которая быстро летит по небу.",
+      "type": "listen-and-select",
+      "wordId": "meteor",
+      "choices": [
+        "orbit",
+        "galaxy",
+        "sun",
+        "meteor"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: Одно — путь вокруг планеты, другое — яркая звезда рядом с нами.",
+      "type": "match-pairs",
+      "wordIds": [
+        "orbit",
+        "sun"
+      ],
+      "imageOrder": [
+        "sun",
+        "orbit"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Выложи из букв название космического помощника.",
+      "hint": "Тим-лисёнок: Люди запускают его высоко над Землёй.",
+      "type": "build-word",
+      "wordId": "satellite",
+      "tiles": [
+        {
+          "id": "t8",
+          "letter": "t"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "l"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t10",
+          "letter": "z"
+        },
+        {
+          "id": "t9",
+          "letter": "e"
+        },
+        {
+          "id": "t7",
+          "letter": "i"
+        },
+        {
+          "id": "t3",
+          "letter": "t"
+        }
+      ]
+    }
+  ]
+}

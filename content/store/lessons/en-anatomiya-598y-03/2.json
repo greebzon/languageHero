@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 2,
+  "id": "en-anatomiya-598y-03",
+  "version": 2,
+  "language": "en",
+  "title": "Руки-помощники",
+  "presentation": {
+    "intro": "Тим предлагает: потянись, согни руку и найди новые слова!",
+    "completionTitle": "Руки всё умеют!",
+    "completionMessage": "Ты молодец! Теперь ты знаешь, как по-английски рука, кисть, палец и локоть."
+  },
+  "texts": {
+    "en": {
+      "title": "Helpful Hands",
+      "presentation": {
+        "intro": "Tim says: Reach up, bend your arm, and find new words!",
+        "completionTitle": "Hands Can Do Everything!",
+        "completionMessage": "Great job! Now you know hand, arm, finger, and elbow in English."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim the fox: It is the hand. We wave with it."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: Find the hand, finger, and elbow."
+        },
+        "ex-3": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim the fox: It is the part of the arm between the hand and shoulder."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim the fox: It is a small part on the hand. There are five!"
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: An arm has a long part and a place where it bends."
+        },
+        "ex-6": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim the fox: It is the place on the arm that bends."
+        }
+      },
+      "words": {
+        "arm": {
+          "translation": "An arm = arm"
+        },
+        "hand": {
+          "translation": "A hand = hand"
+        },
+        "elbow": {
+          "translation": "An elbow = elbow"
+        },
+        "finger": {
+          "translation": "A finger = finger"
+        }
+      }
+    },
+    "he": {
+      "title": "ידיים עוזרות",
+      "presentation": {
+        "intro": "טים מציע: למתוח את היד, לכופף אותה ולמצוא מילים חדשות!",
+        "completionTitle": "הידיים יודעות הכול!",
+        "completionMessage": "כל הכבוד! עכשיו אפשר לדעת איך אומרים באנגלית יד, זרוע, אצבע ומרפק."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים השועל: זו כף היד. מנופפים איתה."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: למצוא את כף היד, האצבע והמרפק."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה החלק של הזרוע בין כף היד לכתף."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים השועל: זה חלק קטן בכף היד. יש חמש כאלה!"
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: לזרוע יש חלק ארוך ומקום שבו היא מתכופפת."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה המקום בזרוע שמתכופף."
+        }
+      },
+      "words": {
+        "arm": {
+          "translation": "An arm = זרוע"
+        },
+        "hand": {
+          "translation": "A hand = כף יד"
+        },
+        "elbow": {
+          "translation": "An elbow = מרפק"
+        },
+        "finger": {
+          "translation": "A finger = אצבע"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "hand",
+      "text": "A hand",
+      "spelling": "hand",
+      "translation": "кисть",
+      "imageId": "hand-image",
+      "audioId": "hand-audio"
+    },
+    {
+      "id": "arm",
+      "text": "An arm",
+      "spelling": "arm",
+      "translation": "рука",
+      "imageId": "arm-image",
+      "audioId": "arm-audio"
+    },
+    {
+      "id": "finger",
+      "text": "A finger",
+      "spelling": "finger",
+      "translation": "палец",
+      "imageId": "finger-image",
+      "audioId": "finger-audio"
+    },
+    {
+      "id": "elbow",
+      "text": "An elbow",
+      "spelling": "elbow",
+      "translation": "локоть",
+      "imageId": "elbow-image",
+      "audioId": "elbow-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "hand-image",
+      "path": "/v1/media/5aa1c18d41e2d12d26759d2b4e7caee8158cab2b0b04433f492c7f7c456c16a8.png",
+      "kind": "image"
+    },
+    {
+      "id": "hand-audio",
+      "path": "/v1/media/180b49b2f3e51c8e8ea30264dc8137ed8e635398c0e91996cb35d05a40f03c53.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "arm-image",
+      "path": "/v1/media/e20160d8d7302d8ef9349e284708ab2264fa3a6d251e5b55e65934fae7f94437.png",
+      "kind": "image"
+    },
+    {
+      "id": "arm-audio",
+      "path": "/v1/media/6f28745437ddfc0b7836f30eebc39f1e0c7872d6e66027a451d23d0d03106fd3.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "finger-image",
+      "path": "/v1/media/06324b791e4e34afbea79b1524871b32ea71aadfd59cec76844d7386385277b9.png",
+      "kind": "image"
+    },
+    {
+      "id": "finger-audio",
+      "path": "/v1/media/276206f124844a8636d1cf2ca3e20eaeb8414ac8d6786a5674ee51038889e221.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "elbow-image",
+      "path": "/v1/media/63736584ce6d39d732792b7954b092ec003eb54d921b9665ad62d85fe59dd94e.png",
+      "kind": "image"
+    },
+    {
+      "id": "elbow-audio",
+      "path": "/v1/media/b4957c5e91da0a09401ec5471e7730e26accc82f93c1db382670399219297e4f.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим-лисёнок: это кисть руки — ею мы машем.",
+      "type": "listen-and-select",
+      "wordId": "hand",
+      "choices": [
+        "finger",
+        "hand",
+        "arm"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: найди кисть, палец и локоть.",
+      "type": "match-pairs",
+      "wordIds": [
+        "hand",
+        "finger",
+        "elbow"
+      ],
+      "imageOrder": [
+        "finger",
+        "elbow",
+        "hand"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это часть руки между кистью и плечом.",
+      "type": "build-word",
+      "wordId": "arm",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "m"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t1",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "o"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим-лисёнок: это маленькая часть на кисти. Их пять!",
+      "type": "listen-and-select",
+      "wordId": "finger",
+      "choices": [
+        "elbow",
+        "arm",
+        "finger",
+        "hand"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: у руки есть длинная часть и место, где она сгибается.",
+      "type": "match-pairs",
+      "wordIds": [
+        "arm",
+        "elbow",
+        "hand",
+        "finger"
+      ],
+      "imageOrder": [
+        "elbow",
+        "hand",
+        "finger",
+        "arm"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это место на руке, которое сгибается.",
+      "type": "build-word",
+      "wordId": "elbow",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "e"
+        },
+        {
+          "id": "t7",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "b"
+        },
+        {
+          "id": "t5",
+          "letter": "w"
+        },
+        {
+          "id": "t6",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "o"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+export const colors = {
+  background: '#F8F9FF',
+  paper: '#FFFFFF',
+  ink: '#183B32',
+  text: '#243E37',
+  muted: '#71827C',
+  line: '#E6EDE7',
+  green: '#22C55E',
+  greenDark: '#139448',
+  greenInk: '#006E2F',
+  mint: '#E8F8E9',
+  cream: '#FFF8ED',
+  amber: '#FEA619',
+  amberDark: '#D7880A',
+  sky: '#36B6FB',
+  blueInk: '#006591',
+  blueLight: '#EAF6FF',
+  lavender: '#F0ECFC',
+  purple: '#8061C0',
+  coral: '#EA785C',
+};
+export const fonts = {
+  heading: 'Rubik_700Bold',
+  heavy: 'Rubik_800ExtraBold',
+  body: 'NunitoSans_600SemiBold',
+  bold: 'NunitoSans_800ExtraBold',
+};

@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 2,
+  "id": "en-food-01",
+  "version": 1,
+  "language": "en",
+  "title": "Фрукты и хлеб",
+  "presentation": {
+    "intro": "Тим говорит: «Давай найдём вкусные продукты и повторим их названия по-английски!»",
+    "completionTitle": "Вкусное начало!",
+    "completionMessage": "Отлично! Теперь ты знаешь, как по-английски яблоко, банан, хлеб и молоко."
+  },
+  "words": [
+    {
+      "id": "apple",
+      "text": "An apple",
+      "spelling": "apple",
+      "translation": "яблоко",
+      "imageId": "apple-image",
+      "audioId": "apple-audio"
+    },
+    {
+      "id": "banana",
+      "text": "A banana",
+      "spelling": "banana",
+      "translation": "банан",
+      "imageId": "banana-image",
+      "audioId": "banana-audio"
+    },
+    {
+      "id": "bread",
+      "text": "Bread",
+      "spelling": "bread",
+      "translation": "хлеб",
+      "imageId": "bread-image",
+      "audioId": "bread-audio"
+    },
+    {
+      "id": "milk",
+      "text": "Milk",
+      "spelling": "milk",
+      "translation": "молоко",
+      "imageId": "milk-image",
+      "audioId": "milk-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "apple-image",
+      "path": "/v1/media/fc426f8234095c3e1e818bad5da7f1bf4efbd96b97f665e22705c9c2e8336dcf.png",
+      "kind": "image"
+    },
+    {
+      "id": "apple-audio",
+      "path": "/v1/media/11ea27e39c55251c6d4bfda520fa48ce693d49128c153c64a54f37127c787381.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "banana-image",
+      "path": "/v1/media/4215835cbeab221faa9354af8946ac1723e2987c668d92fa887dc1d59d8ee56d.png",
+      "kind": "image"
+    },
+    {
+      "id": "banana-audio",
+      "path": "/v1/media/3af17188bb06d920d6b93fe6ab41dc90ab08d25c485119aaf67f3b886fd5492c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bread-image",
+      "path": "/v1/media/87301c41a74f35abe2320bb41abbb48ad240c2cb7923bcfd2b5d942a78d9146d.png",
+      "kind": "image"
+    },
+    {
+      "id": "bread-audio",
+      "path": "/v1/media/7f6e515e4eeae5f8246496113265da9d3b41be27ab6b52ff9f913dbb5cb1e3c9.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "milk-image",
+      "path": "/v1/media/b855b9dd319f2175153c92a9f17768d9ad593e25baaa8f1db45f1e98a6caede1.png",
+      "kind": "image"
+    },
+    {
+      "id": "milk-audio",
+      "path": "/v1/media/1b16e56cf962f39a4a77e420e80db8ad5a2da1e0585c116df50223f1b6051cf9.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и нажми на картинку.",
+      "hint": "Тим: Это круглый фрукт, он бывает красным или зелёным.",
+      "type": "listen-and-select",
+      "wordId": "apple",
+      "choices": [
+        "apple",
+        "bread",
+        "banana"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: Сначала найди фрукты, потом еду и напиток.",
+      "type": "match-pairs",
+      "wordIds": [
+        "apple",
+        "banana",
+        "bread",
+        "milk"
+      ],
+      "imageOrder": [
+        "milk",
+        "bread",
+        "apple",
+        "banana"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это едят, например, с супом или бутербродом.",
+      "type": "build-word",
+      "wordId": "bread",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "d"
+        },
+        {
+          "id": "t7",
+          "letter": "q"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        },
+        {
+          "id": "t3",
+          "letter": "e"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и нажми на картинку.",
+      "hint": "Тим: Этот напиток белый. Его часто пьют на завтрак.",
+      "type": "listen-and-select",
+      "wordId": "milk",
+      "choices": [
+        "milk",
+        "bread",
+        "banana"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: Найди жёлтый длинный фрукт и круглый фрукт.",
+      "type": "match-pairs",
+      "wordIds": [
+        "banana",
+        "apple",
+        "milk"
+      ],
+      "imageOrder": [
+        "banana",
+        "apple",
+        "milk"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это жёлтый длинный фрукт. Обезьянки его любят.",
+      "type": "build-word",
+      "wordId": "banana",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "a"
+        },
+        {
+          "id": "t7",
+          "letter": "x"
+        },
+        {
+          "id": "t8",
+          "letter": "z"
+        },
+        {
+          "id": "t3",
+          "letter": "n"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t6",
+          "letter": "a"
+        }
+      ]
+    }
+  ]
+}

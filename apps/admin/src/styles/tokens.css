@@ -1,0 +1,29 @@
+/* Palette mirrors apps/mobile/src/theme/index.ts so cards look like the child's app. */
+:root {
+  --bg: #f8f9ff;
+  --paper: #ffffff;
+  --ink: #183b32;
+  --text: #243e37;
+  --muted: #71827c;
+  --line: #e6ede7;
+  --green: #22c55e;
+  --green-dark: #139448;
+  --green-ink: #006e2f;
+  --mint: #e8f8e9;
+  --cream: #fff8ed;
+  --amber: #fea619;
+  --amber-dark: #d7880a;
+  --sky: #36b6fb;
+  --sky-light: #edf8ff;
+  --blue-ink: #006591;
+  --blue-light: #eaf6ff;
+  --lavender: #f0ecfc;
+  --purple: #8061c0;
+  --coral: #ea785c;
+  --coral-light: #fdece7;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow: 0 1px 2px rgb(24 59 50 / 6%);
+  --font: 'Nunito Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Rubik', 'Segoe UI', system-ui, sans-serif;
+}

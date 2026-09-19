@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 2,
+  "id": "en-family-04",
+  "version": 2,
+  "language": "en",
+  "title": "Дом, родитель и улыбка",
+  "presentation": {
+    "intro": "Тим говорит: «Дом и семья дарят улыбки! Давай соберём последние слова.»",
+    "completionTitle": "Семейная коллекция готова!",
+    "completionMessage": "Ты умеешь назвать дом, родителя, ребёнка и улыбку по-английски. Отличная работа!"
+  },
+  "texts": {
+    "en": {
+      "title": "Home, Parent, and Smile",
+      "presentation": {
+        "intro": "Tim says: “Home and family bring smiles! Let’s collect the last words.”",
+        "completionTitle": "Family Collection Complete!",
+        "completionMessage": "You can name a home, a parent, a child, and a smile in English. Great job!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: It is a place where people live."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: Look for a grown-up and a little one."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: This happens when you feel happy."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: It is a mum, dad, or another grown-up in the family."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: Find a place to live and a happy face."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: It is a boy or a girl."
+        }
+      },
+      "words": {
+        "home": {
+          "translation": "home"
+        },
+        "child": {
+          "translation": "child"
+        },
+        "smile": {
+          "translation": "smile"
+        },
+        "parent": {
+          "translation": "parent"
+        }
+      }
+    },
+    "he": {
+      "title": "בית, הורה וחיוך",
+      "presentation": {
+        "intro": "טים אומר: ״בית ומשפחה מביאים חיוכים! בואו נאסוף את המילים האחרונות.״",
+        "completionTitle": "אוסף המשפחה מוכן!",
+        "completionMessage": "אפשר לקרוא לבית, להורה, לילד ולחיוך באנגלית. עבודה מצוינת!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור בתמונה הנכונה.",
+          "hint": "טים השועל: זה מקום שבו אנשים גרים."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים השועל: לחפש מבוגר וילד קטן."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה קורה כששמח."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור בתמונה הנכונה.",
+          "hint": "טים השועל: זאת אמא, אבא או מבוגר אחר במשפחה."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים השועל: למצוא מקום לגור בו ופנים שמחות."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה בן או בת."
+        }
+      },
+      "words": {
+        "home": {
+          "translation": "בית"
+        },
+        "child": {
+          "translation": "ילד"
+        },
+        "smile": {
+          "translation": "חיוך"
+        },
+        "parent": {
+          "translation": "הורה"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "home",
+      "text": "Home",
+      "spelling": "home",
+      "translation": "дом",
+      "imageId": "home-image",
+      "audioId": "home-audio"
+    },
+    {
+      "id": "parent",
+      "text": "Parent",
+      "spelling": "parent",
+      "translation": "родитель",
+      "imageId": "parent-image",
+      "audioId": "parent-audio"
+    },
+    {
+      "id": "child",
+      "text": "Child",
+      "spelling": "child",
+      "translation": "ребёнок",
+      "imageId": "child-image",
+      "audioId": "child-audio"
+    },
+    {
+      "id": "smile",
+      "text": "Smile",
+      "spelling": "smile",
+      "translation": "улыбка",
+      "imageId": "smile-image",
+      "audioId": "smile-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "home-image",
+      "path": "/v1/media/051a38bdc437a4b235ea8582f2f68989dde7c2314f3562f03f2aabe6cd4e1661.png",
+      "kind": "image"
+    },
+    {
+      "id": "home-audio",
+      "path": "/v1/media/4bd0edcb287f920fd766ebebcbb297ea2ca268b630f9e5c2e5cbd773476008a5.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "parent-image",
+      "path": "/v1/media/87c2746e93040d008261ac532d7a182cb7f39f00d6890ae6c20f225535a5cb0c.png",
+      "kind": "image"
+    },
+    {
+      "id": "parent-audio",
+      "path": "/v1/media/579b499bdc11d072e1a90e5dad607eae994f1c595ebe60c2442f3a18787dae96.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "child-image",
+      "path": "/v1/media/11a4f176a99be6df4a6ff700d2b88e12a2db6b1e612cfe3cd32251deff942a64.png",
+      "kind": "image"
+    },
+    {
+      "id": "child-audio",
+      "path": "/v1/media/8050ad44e78dca6ccc9b30a2dc94b5dff078eb058a7ab30f61f64d2c2f16522e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "smile-image",
+      "path": "/v1/media/5cc0387fa1e9134c0027332cbb07b0b51ee9e8413ed7b42bb0920c49991dbf0a.png",
+      "kind": "image"
+    },
+    {
+      "id": "smile-audio",
+      "path": "/v1/media/70a397c4410655ebb1e2160d48e94dc4db348892f610d65b7640f42fceddbc20.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: это место, где живут люди.",
+      "type": "listen-and-select",
+      "wordId": "home",
+      "choices": [
+        "home",
+        "smile",
+        "child"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: ищи взрослого и малыша.",
+      "type": "match-pairs",
+      "wordIds": [
+        "parent",
+        "child"
+      ],
+      "imageOrder": [
+        "parent",
+        "child"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: так бывает, когда тебе весело.",
+      "type": "build-word",
+      "wordId": "smile",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t4",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t2",
+          "letter": "m"
+        },
+        {
+          "id": "t7",
+          "letter": "t"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t3",
+          "letter": "i"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: это мама, папа или другой взрослый в семье.",
+      "type": "listen-and-select",
+      "wordId": "parent",
+      "choices": [
+        "smile",
+        "child",
+        "home",
+        "parent"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: найди место для жизни и радостное лицо.",
+      "type": "match-pairs",
+      "wordIds": [
+        "home",
+        "smile"
+      ],
+      "imageOrder": [
+        "home",
+        "smile"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это мальчик или девочка.",
+      "type": "build-word",
+      "wordId": "child",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t5",
+          "letter": "d"
+        },
+        {
+          "id": "t3",
+          "letter": "i"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t7",
+          "letter": "q"
+        },
+        {
+          "id": "t2",
+          "letter": "h"
+        },
+        {
+          "id": "t4",
+          "letter": "l"
+        }
+      ]
+    }
+  ]
+}

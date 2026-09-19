@@ -1,0 +1,36 @@
+{
+  "name": "lingvohero",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "content:publish": "tsx scripts/publish-content.ts",
+    "dev": "pnpm --filter @lingvohero/mobile start",
+    "dev:web": "pnpm --filter @lingvohero/mobile web",
+    "dev:api": "pnpm --filter @lingvohero/api dev",
+    "dev:admin": "pnpm --filter @lingvohero/admin dev",
+    "dev:worker": "pnpm --filter @lingvohero/api worker",
+    "db:up": "docker compose up -d db",
+    "db:migrate": "tsx apps/api/src/cli/migrate.ts",
+    "admin:bootstrap": "tsx apps/api/src/cli/bootstrap-admin.ts",
+    "admin:import": "tsx apps/api/src/cli/import-content.ts",
+    "admin:import-wardrobe": "tsx apps/api/src/cli/import-wardrobe.ts",
+    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.tools.json",
+    "test": "tsx --test packages/contracts/src/*.test.ts packages/learning-core/src/*.test.ts apps/api/src/**/*.test.ts",
+    "test:admin": "tsx --test apps/api/src/**/*.dbtest.ts",
+    "test:e2e": "playwright test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^24.0.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.21.0",
+    "typescript": "~6.0.3"
+  }
+}

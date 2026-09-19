@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 2,
+  "id": "en-farm-demo-01",
+  "version": 2,
+  "language": "en",
+  "title": "Урок 1: Ферма",
+  "presentation": {
+    "intro": "Тим приглашает в урок 1!",
+    "completionTitle": "Урок 1 пройден",
+    "completionMessage": "Ты справился, Тим гордится тобой!"
+  },
+  "texts": {
+    "en": {
+      "title": "Lesson 1: Farm",
+      "presentation": {
+        "intro": "Tim invites you to Lesson 1!",
+        "completionTitle": "Lesson 1 complete",
+        "completionMessage": "You did it! Tim is proud of you!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose 1",
+          "hint": "This word starts with “a”"
+        },
+        "ex-2": {
+          "prompt": "Find the pairs 2",
+          "hint": "Match the word to the picture"
+        },
+        "ex-3": {
+          "prompt": "Build the word 3",
+          "hint": "Start with the first letter"
+        },
+        "ex-4": {
+          "prompt": "Listen and choose 4",
+          "hint": "This word starts with “d”"
+        },
+        "ex-5": {
+          "prompt": "Find the pairs 5",
+          "hint": "Match the word to the picture"
+        },
+        "ex-6": {
+          "prompt": "Build the word 6",
+          "hint": "Start with the first letter"
+        }
+      },
+      "words": {
+        "cat": {
+          "translation": "cat"
+        },
+        "dog": {
+          "translation": "dog"
+        },
+        "ball": {
+          "translation": "ball"
+        },
+        "apple": {
+          "translation": "apple"
+        }
+      }
+    },
+    "he": {
+      "title": "שיעור 1: חווה",
+      "presentation": {
+        "intro": "טים מזמין לשיעור 1!",
+        "completionTitle": "שיעור 1 הושלם",
+        "completionMessage": "הצלחת, טים גאה בך!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור 1",
+          "hint": "המילה מתחילה באות «a»"
+        },
+        "ex-2": {
+          "prompt": "למצוא זוגות 2",
+          "hint": "לחבר את המילה לתמונה"
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה 3",
+          "hint": "להתחיל באות הראשונה"
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור 4",
+          "hint": "המילה מתחילה באות «d»"
+        },
+        "ex-5": {
+          "prompt": "למצוא זוגות 5",
+          "hint": "לחבר את המילה לתמונה"
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה 6",
+          "hint": "להתחיל באות הראשונה"
+        }
+      },
+      "words": {
+        "cat": {
+          "translation": "חתול"
+        },
+        "dog": {
+          "translation": "כלב"
+        },
+        "ball": {
+          "translation": "כדור"
+        },
+        "apple": {
+          "translation": "תפוח"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "apple",
+      "text": "Apple",
+      "spelling": "apple",
+      "translation": "Перевод apple",
+      "imageId": "apple-image",
+      "audioId": "apple-audio"
+    },
+    {
+      "id": "ball",
+      "text": "Ball",
+      "spelling": "ball",
+      "translation": "Перевод ball",
+      "imageId": "ball-image",
+      "audioId": "ball-audio"
+    },
+    {
+      "id": "cat",
+      "text": "Cat",
+      "spelling": "cat",
+      "translation": "Перевод cat",
+      "imageId": "cat-image",
+      "audioId": "cat-audio"
+    },
+    {
+      "id": "dog",
+      "text": "Dog",
+      "spelling": "dog",
+      "translation": "Перевод dog",
+      "imageId": "dog-image",
+      "audioId": "dog-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "apple-image",
+      "path": "/v1/media/11fce1cc5aba7a03ccc81ee55735d895bf470a494e1e9ecbdbdfc909e9e590e5.png",
+      "kind": "image"
+    },
+    {
+      "id": "apple-audio",
+      "path": "/v1/media/dbafaef3edf2f191beb16b9ee7657f8629b289d62af3f967f039b8469794c059.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "ball-image",
+      "path": "/v1/media/8da62ed877e07f578c3a6592c7c14ae96be6a2b3c5e65e7a2c168d8ed25240e1.png",
+      "kind": "image"
+    },
+    {
+      "id": "ball-audio",
+      "path": "/v1/media/be3e02b3864766b568687d5f87022f6d61ce93982131dd53d547aeb1c4bbbcc1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "cat-image",
+      "path": "/v1/media/90c6fbdc2c61a384f18f81a37c0d465601db9385fa9f2355dff6cb62cef64ab8.png",
+      "kind": "image"
+    },
+    {
+      "id": "cat-audio",
+      "path": "/v1/media/417d6cf550b6349d21274a4f77b82c54e1d9d2f79180e877934d0d8b56f022d0.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "dog-image",
+      "path": "/v1/media/017c82655929310182ef8df2629989a91d123beb469a2026a5f46207e24ac848.png",
+      "kind": "image"
+    },
+    {
+      "id": "dog-audio",
+      "path": "/v1/media/313deaba4504d9113c7d48a74e12b1c4966761b588dcadd4afbceb6b0fc9f0ee.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери 1",
+      "hint": "Это слово начинается на «a»",
+      "type": "listen-and-select",
+      "wordId": "apple",
+      "choices": [
+        "apple",
+        "ball"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Найди пары 2",
+      "hint": "Соедини слово с картинкой",
+      "type": "match-pairs",
+      "wordIds": [
+        "ball",
+        "apple",
+        "cat"
+      ],
+      "imageOrder": [
+        "ball",
+        "apple",
+        "cat"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово 3",
+      "hint": "Начни с первой буквы",
+      "type": "build-word",
+      "wordId": "cat",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "q"
+        },
+        {
+          "id": "t5",
+          "letter": "z"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери 4",
+      "hint": "Это слово начинается на «d»",
+      "type": "listen-and-select",
+      "wordId": "dog",
+      "choices": [
+        "apple",
+        "dog"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Найди пары 5",
+      "hint": "Соедини слово с картинкой",
+      "type": "match-pairs",
+      "wordIds": [
+        "apple",
+        "ball",
+        "cat"
+      ],
+      "imageOrder": [
+        "cat",
+        "apple",
+        "ball"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово 6",
+      "hint": "Начни с первой буквы",
+      "type": "build-word",
+      "wordId": "ball",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "l"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        },
+        {
+          "id": "t3",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "q"
+        }
+      ]
+    }
+  ]
+}

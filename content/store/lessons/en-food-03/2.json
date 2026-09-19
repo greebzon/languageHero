@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 2,
+  "id": "en-food-03",
+  "version": 2,
+  "language": "en",
+  "title": "Яркое меню",
+  "presentation": {
+    "intro": "Тим говорит: «Выбирай блюдо из весёлого меню и произноси английские слова вместе со мной!»",
+    "completionTitle": "Меню изучено!",
+    "completionMessage": "Сок, морковь, пицца и рис — теперь ты знаешь их по-английски. Замечательно!"
+  },
+  "texts": {
+    "en": {
+      "title": "Bright Menu",
+      "presentation": {
+        "intro": "Tim says: “Choose a dish from the fun menu and say the English words with me!”",
+        "completionTitle": "Menu learned!",
+        "completionMessage": "Juice, carrot, pizza, and rice — now you know them in English. Great job!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim says: listen carefully and tap the picture with this word."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: read the word and find the same food or drink in the picture."
+        },
+        "ex-3": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim says: it is a crunchy orange vegetable. Put the letters in order."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim says: this food is often eaten with a fork. Find it in the picture."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: find pairs for all the words. Don’t hurry!"
+        },
+        "ex-6": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim says: it is a drink made from fruit. Choose the right letters and make the word."
+        }
+      },
+      "words": {
+        "rice": {
+          "translation": "rice"
+        },
+        "juice": {
+          "translation": "juice"
+        },
+        "pizza": {
+          "translation": "pizza"
+        },
+        "carrot": {
+          "translation": "a carrot"
+        }
+      }
+    },
+    "he": {
+      "title": "תפריט צבעוני",
+      "presentation": {
+        "intro": "טים אומר: ״לבחור מנה מהתפריט המצחיק ולהגיד איתי את המילים באנגלית!״",
+        "completionTitle": "התפריט נלמד!",
+        "completionMessage": "מיץ, גזר, פיצה ואורז — עכשיו אפשר להגיד אותם באנגלית. נהדר!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים אומר: להקשיב טוב וללחוץ על התמונה עם המילה הזאת."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים אומר: לקרוא את המילה ולמצוא בתמונה אותו אוכל או משקה."
+        },
+        "ex-3": {
+          "prompt": "להרכיב את המילה מהאותיות.",
+          "hint": "טים אומר: זה ירק כתום ופריך. לסדר את האותיות לפי הסדר."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים אומר: את המאכל הזה אוכלים הרבה פעמים במזלג. למצוא אותו בתמונה."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים אומר: למצוא זוגות לכל המילים. לא למהר!"
+        },
+        "ex-6": {
+          "prompt": "להרכיב את המילה מהאותיות.",
+          "hint": "טים אומר: זה משקה מפירות. לבחור את האותיות הנכונות ולהרכיב את המילה."
+        }
+      },
+      "words": {
+        "rice": {
+          "translation": "אורז"
+        },
+        "juice": {
+          "translation": "מיץ"
+        },
+        "pizza": {
+          "translation": "פיצה"
+        },
+        "carrot": {
+          "translation": "גזר"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "juice",
+      "text": "Juice",
+      "spelling": "juice",
+      "translation": "сок",
+      "imageId": "juice-image",
+      "audioId": "juice-audio"
+    },
+    {
+      "id": "carrot",
+      "text": "A carrot",
+      "spelling": "carrot",
+      "translation": "морковь",
+      "imageId": "carrot-image",
+      "audioId": "carrot-audio"
+    },
+    {
+      "id": "pizza",
+      "text": "Pizza",
+      "spelling": "pizza",
+      "translation": "пицца",
+      "imageId": "pizza-image",
+      "audioId": "pizza-audio"
+    },
+    {
+      "id": "rice",
+      "text": "Rice",
+      "spelling": "rice",
+      "translation": "рис",
+      "imageId": "rice-image",
+      "audioId": "rice-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "juice-image",
+      "path": "/v1/media/746f45ba330ae35a8690fd56d9c0dc7d7d4b0085bb33bea9d0f8c6cf29d60e03.png",
+      "kind": "image"
+    },
+    {
+      "id": "juice-audio",
+      "path": "/v1/media/e4cb9edc1171ee749964d1c1d92daf083aa83c5a25c804893d811f948882f7f1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "carrot-image",
+      "path": "/v1/media/48794105e727e564752f4006d59ac59823bc62ec7e6b56aec1e7a2da549ef627.png",
+      "kind": "image"
+    },
+    {
+      "id": "carrot-audio",
+      "path": "/v1/media/d97077c06eefe17e4bda46358783f49eea98df2346d5b8be739fb7d901ca56a3.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "pizza-image",
+      "path": "/v1/media/f1fcf515c45171ee0df539ea50b038433bbe06dd66a1d4cf59674c01f7779c19.png",
+      "kind": "image"
+    },
+    {
+      "id": "pizza-audio",
+      "path": "/v1/media/69c55a6da0c72bd5b7667d107f4e10d11d9d4d7fecb223427ca79daca0b619cc.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rice-image",
+      "path": "/v1/media/4fecb2ebe081c2b9c0e71f651f491469e2301f93532e319c5871aba2b281d0a6.png",
+      "kind": "image"
+    },
+    {
+      "id": "rice-audio",
+      "path": "/v1/media/be5233bdeff35a0411104f2f34e554fc997dda7371d1c1c12b1025021efc9c37.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит: слушай внимательно и нажми на картинку с этим словом.",
+      "type": "listen-and-select",
+      "wordId": "juice",
+      "choices": [
+        "carrot",
+        "juice",
+        "pizza"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим говорит: прочитай слово и найди такую же еду или напиток на картинке.",
+      "type": "match-pairs",
+      "wordIds": [
+        "carrot",
+        "rice",
+        "pizza"
+      ],
+      "imageOrder": [
+        "rice",
+        "pizza",
+        "carrot"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это хрустящий оранжевый овощ. Поставь буквы по порядку.",
+      "type": "build-word",
+      "wordId": "carrot",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "t"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t4",
+          "letter": "r"
+        },
+        {
+          "id": "t7",
+          "letter": "i"
+        },
+        {
+          "id": "t8",
+          "letter": "z"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t5",
+          "letter": "o"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит: это блюдо часто едят вилкой. Найди его на картинке.",
+      "type": "listen-and-select",
+      "wordId": "rice",
+      "choices": [
+        "rice",
+        "pizza",
+        "carrot",
+        "juice"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим говорит: найди пары для всех слов. Не спеши!",
+      "type": "match-pairs",
+      "wordIds": [
+        "juice",
+        "pizza",
+        "rice",
+        "carrot"
+      ],
+      "imageOrder": [
+        "rice",
+        "carrot",
+        "juice",
+        "pizza"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это напиток из фруктов. Выбери нужные буквы и составь слово.",
+      "type": "build-word",
+      "wordId": "juice",
+      "tiles": [
+        {
+          "id": "t7",
+          "letter": "b"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "j"
+        },
+        {
+          "id": "t2",
+          "letter": "u"
+        },
+        {
+          "id": "t6",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "c"
+        },
+        {
+          "id": "t3",
+          "letter": "i"
+        }
+      ]
+    }
+  ]
+}

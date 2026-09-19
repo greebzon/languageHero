@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 2,
+  "revision": 11,
+  "languages": [
+    {
+      "code": "en",
+      "title": "Английский",
+      "direction": "ltr"
+    },
+    {
+      "code": "he",
+      "title": "עברית",
+      "direction": "rtl"
+    }
+  ],
+  "courses": [
+    {
+      "id": "en-forest",
+      "language": "en",
+      "title": "Загадочный лес",
+      "description": "Слушаем, играем и учим слова",
+      "cover": {
+        "id": "forest-cover",
+        "path": "/v1/media/8ec735ed253cb35bcff391345345c802a749edceb1b349308297a2838fc2870b.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-animals-01",
+          "version": 1,
+          "title": "Лесные друзья",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "en-animals-02",
+          "version": 1,
+          "title": "Кто спрятался?",
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "en-animals-03",
+          "version": 1,
+          "title": "Найди пары",
+          "exerciseCount": 3,
+          "requiredTypes": [
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-animals-04",
+          "version": 1,
+          "title": "Собери слова",
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "build-word"
+          ]
+        },
+        {
+          "id": "en-animals-05",
+          "version": 2,
+          "title": "Праздник в лесу",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-colors",
+      "language": "en",
+      "title": "Цвета радуги",
+      "description": "Красный, синий, жёлтый — раскрашиваем мир вместе с Тимом",
+      "cover": {
+        "id": "colors-cover",
+        "path": "/v1/media/3db46ff69cd39d9e9d7894161143bec1e10a9b78360cde7c0e0b2294ab6cf8e9.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-colors-01",
+          "version": 1,
+          "title": "Яркие краски",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-colors-02",
+          "version": 1,
+          "title": "Нежные и спокойные цвета",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-colors-03",
+          "version": 1,
+          "title": "Радужная мастерская",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-numbers",
+      "language": "en",
+      "title": "Считаем до десяти",
+      "description": "Один, два, три — считаем игрушки, яблоки и звёзды",
+      "cover": {
+        "id": "numbers-cover",
+        "path": "/v1/media/71315ac24663a2174485751bd70fa208bf1102b5aa6ec2a319a218b8108d8d87.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-numbers-01",
+          "version": 1,
+          "title": "Считаем до четырёх",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-numbers-02",
+          "version": 1,
+          "title": "Считаем до семи",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-numbers-03",
+          "version": 1,
+          "title": "Считаем до десяти",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-family",
+      "language": "en",
+      "title": "Моя семья",
+      "description": "Мама, папа, бабушка — знакомимся с семьёй Тима",
+      "cover": {
+        "id": "family-cover",
+        "path": "/v1/media/2e0b6fdc2a35b9c5b83ac3801bd7449c2dc4d45286c18c79677323ebc35bd0a4.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-family-01",
+          "version": 1,
+          "title": "Мама, папа и малыш",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-family-02",
+          "version": 1,
+          "title": "Брат и старшие родные",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-family-03",
+          "version": 1,
+          "title": "Тётя, дядя и друзья",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-family-04",
+          "version": 1,
+          "title": "Дом, родитель и улыбка",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-food",
+      "language": "en",
+      "title": "Вкусная еда",
+      "description": "Яблоко, хлеб, молоко — собираем вкусный обед",
+      "cover": {
+        "id": "food-cover",
+        "path": "/v1/media/01f1adae56c296196fe469c80a7f9ae03b69f25b7a212f81a79eba7cc7dc1887.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-food-01",
+          "version": 1,
+          "title": "Фрукты и хлеб",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-food-02",
+          "version": 1,
+          "title": "Угощение на обед",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-food-03",
+          "version": 1,
+          "title": "Яркое меню",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-food-04",
+          "version": 1,
+          "title": "Напитки и перекус",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-farm-demo",
+      "language": "en",
+      "title": "Ферма",
+      "cover": {
+        "id": "farm-demo-cover",
+        "path": "/v1/media/68932bc27331380b3c1e51d95c7b25b0a85f0267bd8f09813cb10023b237f41e.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-farm-demo-01",
+          "version": 1,
+          "title": "Урок 1: Ферма",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-farm-demo-02",
+          "version": 1,
+          "title": "Урок 2: Ферма",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-farm-demo-03",
+          "version": 1,
+          "title": "Что есть на ферме",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-farm-demo-04",
+          "version": 2,
+          "title": "Вкусный урожай",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-farm-demo-05",
+          "version": 1,
+          "title": "Цвета и фермерский день",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-underwater",
+      "language": "en",
+      "title": "Подводный мир: Морские обитатели",
+      "description": "Глубоководные тайны и новые слова",
+      "cover": {
+        "id": "underwater-cover",
+        "path": "/v1/media/25030d3fa02b3d86fe9c6a469638dba08b0e5fd91b2f14c3e2b69c4dee07a1a0.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-underwater-01",
+          "version": 1,
+          "title": "Друзья в волнах",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-underwater-02",
+          "version": 1,
+          "title": "Плывём и играем",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-underwater-03",
+          "version": 1,
+          "title": "Морские формы",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-underwater-04",
+          "version": 1,
+          "title": "Секреты морского дна",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-space",
+      "language": "en",
+      "title": "Космос: Планеты и звёзды",
+      "description": "Галактические приключения на английском",
+      "cover": {
+        "id": "space-cover",
+        "path": "/v1/media/befd9f7683d461ad69dd4fc0bcf067c22f60b8b1f0f06470a22d30d8d239885e.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-space-01",
+          "version": 1,
+          "title": "Солнечная прогулка",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-space-02",
+          "version": 1,
+          "title": "Экипаж в космосе",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-space-03",
+          "version": 1,
+          "title": "Небесные находки",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-space-04",
+          "version": 1,
+          "title": "Цвет и свет космоса",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-anatomiya-598y",
+      "language": "en",
+      "title": "Анатомия",
+      "description": "Анатомия человека",
+      "cover": {
+        "id": "anatomiya-598y-cover",
+        "path": "/v1/media/3fb2201735495a6d0c202ebbe78f75875da6e724a304504f021c505b31e72e30.png",
+        "kind": "image"
+      },
+      "lessons": [
+        {
+          "id": "en-anatomiya-598y-01",
+          "version": 1,
+          "title": "Личико Тима",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-anatomiya-598y-02",
+          "version": 1,
+          "title": "Улыбка и волосы",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-anatomiya-598y-03",
+          "version": 1,
+          "title": "Руки-помощники",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-anatomiya-598y-04",
+          "version": 1,
+          "title": "Шагаем вместе",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-anatomiya-598y-05",
+          "version": 1,
+          "title": "Что внутри?",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "listen-and-select",
+            "match-pairs"
+          ]
+        }
+      ]
+    }
+  ]
+}

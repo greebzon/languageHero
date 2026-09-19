@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 2,
+  "id": "en-farm-demo-03",
+  "version": 1,
+  "language": "en",
+  "title": "Что есть на ферме",
+  "presentation": {
+    "intro": "Тим говорит: «Пора осмотреть ферму: здесь есть полезные вещи и интересные места!»",
+    "completionTitle": "Ферма изучена!",
+    "completionMessage": "Ты отлично нашёл всё нужное на ферме и назвал это по-английски."
+  },
+  "words": [
+    {
+      "id": "barn",
+      "text": "A barn",
+      "spelling": "barn",
+      "translation": "сарай",
+      "imageId": "barn-image",
+      "audioId": "barn-audio"
+    },
+    {
+      "id": "tractor",
+      "text": "A tractor",
+      "spelling": "tractor",
+      "translation": "трактор",
+      "imageId": "tractor-image",
+      "audioId": "tractor-audio"
+    },
+    {
+      "id": "farmer",
+      "text": "A farmer",
+      "spelling": "farmer",
+      "translation": "фермер",
+      "imageId": "farmer-image",
+      "audioId": "farmer-audio"
+    },
+    {
+      "id": "field",
+      "text": "A field",
+      "spelling": "field",
+      "translation": "поле",
+      "imageId": "field-image",
+      "audioId": "field-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "barn-image",
+      "path": "/v1/media/0f78f83a00e1a4f0658c8894c48dfbf3a2b340e79af53a22fb3ef8f9dc8e70ab.png",
+      "kind": "image"
+    },
+    {
+      "id": "barn-audio",
+      "path": "/v1/media/d4e88f91fbefefda3c7719f5f6dd544b18aad6d01397a57371750dab239e0a06.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "tractor-image",
+      "path": "/v1/media/b75e65e710e33ae4bbc6a122f598193dbe61d182c8510d210eb0da084c49a70b.png",
+      "kind": "image"
+    },
+    {
+      "id": "tractor-audio",
+      "path": "/v1/media/e8c56c646d1fea360fd7b9d338322346309879718ddc3a41539261fc8576bd0c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "farmer-image",
+      "path": "/v1/media/52492128490a4d9e85f476121081d885de4b2682a5ed1746f677913d3389424c.png",
+      "kind": "image"
+    },
+    {
+      "id": "farmer-audio",
+      "path": "/v1/media/0ee304e7a60e2cdcf4e222a617ab9561d8ac8bef64bec445de778d509750b72d.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "field-image",
+      "path": "/v1/media/82ddb78da410cb5c193441a85f773c18c2c57f105a95078d9b7b8a528bf6baf0.png",
+      "kind": "image"
+    },
+    {
+      "id": "field-audio",
+      "path": "/v1/media/7c43d68dab06457c883ea2cfe10f7e762d7796dd1e051a1d55e33af413a928fd.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит: это большая машина, которая работает на ферме.",
+      "type": "listen-and-select",
+      "wordId": "tractor",
+      "choices": [
+        "field",
+        "tractor",
+        "barn"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: найди домик фермера, поле и большую машину.",
+      "type": "match-pairs",
+      "wordIds": [
+        "barn",
+        "tractor",
+        "field"
+      ],
+      "imageOrder": [
+        "barn",
+        "field",
+        "tractor"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это фермер — человек, который работает на ферме.",
+      "type": "build-word",
+      "wordId": "farmer",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "r"
+        },
+        {
+          "id": "t7",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "m"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t8",
+          "letter": "o"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит: там растут растения и гуляют животные.",
+      "type": "listen-and-select",
+      "wordId": "field",
+      "choices": [
+        "tractor",
+        "barn",
+        "farmer",
+        "field"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: внимательно посмотри, что есть на ферме.",
+      "type": "match-pairs",
+      "wordIds": [
+        "farmer",
+        "barn",
+        "tractor",
+        "field"
+      ],
+      "imageOrder": [
+        "barn",
+        "farmer",
+        "field",
+        "tractor"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это большой сарай, где живут животные или хранят вещи.",
+      "type": "build-word",
+      "wordId": "barn",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "t"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t4",
+          "letter": "n"
+        }
+      ]
+    }
+  ]
+}

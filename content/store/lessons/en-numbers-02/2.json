@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 2,
+  "id": "en-numbers-02",
+  "version": 2,
+  "language": "en",
+  "title": "Считаем до семи",
+  "presentation": {
+    "intro": "Тим говорит: «Теперь кубиков становится больше! Посчитаем пять, шесть и семь.»",
+    "completionTitle": "Середина счёта пройдена!",
+    "completionMessage": "У тебя получилось! Ты называешь по-английски пять, шесть и семь. Счёт становится всё длиннее."
+  },
+  "texts": {
+    "en": {
+      "title": "Counting to Seven",
+      "presentation": {
+        "intro": "Tim says: “Now there are more blocks! Let’s count five, six, and seven.”",
+        "completionTitle": "You’re halfway through counting!",
+        "completionMessage": "You did it! You can say five, six, and seven in English. The counting gets longer and longer."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox is listening with you. Tap the right number."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim is putting out blocks. Count them in each picture."
+        },
+        "ex-3": {
+          "prompt": "Put the letters in the right order.",
+          "hint": "Tim counted five blocks. Find the letters for this number."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim is counting blocks. Choose the picture with the right number."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim asks you to find a pair for each number."
+        },
+        "ex-6": {
+          "prompt": "Put the letters in order to make the number word.",
+          "hint": "Tim counted seven blocks. One letter does not belong."
+        }
+      },
+      "words": {
+        "six": {
+          "translation": "six"
+        },
+        "five": {
+          "translation": "five"
+        },
+        "seven": {
+          "translation": "seven"
+        }
+      }
+    },
+    "he": {
+      "title": "סופרים עד שבע",
+      "presentation": {
+        "intro": "טים אומר: ״עכשיו יש יותר קוביות! בואו נספור חמש, שש ושבע.״",
+        "completionTitle": "עברנו את אמצע הספירה!",
+        "completionMessage": "הצלחת! אפשר לומר באנגלית חמש, שש ושבע. הספירה הולכת ומתארכת."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל מקשיב יחד איתך. ללחוץ על המספר הנכון."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים מסדר קוביות. לספור אותן בכל תמונה."
+        },
+        "ex-3": {
+          "prompt": "לסדר את האותיות בסדר הנכון.",
+          "hint": "טים ספר חמש קוביות. למצוא את האותיות של המספר הזה."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים סופר קוביות. לבחור את התמונה עם המספר הנכון."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים מבקש למצוא זוג לכל מספר."
+        },
+        "ex-6": {
+          "prompt": "לסדר את האותיות כדי ליצור את שם המספר.",
+          "hint": "טים ספר שבע קוביות. יש כאן אות אחת מיותרת."
+        }
+      },
+      "words": {
+        "six": {
+          "translation": "שש"
+        },
+        "five": {
+          "translation": "חמש"
+        },
+        "seven": {
+          "translation": "שבע"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "five",
+      "text": "Five",
+      "spelling": "five",
+      "translation": "пять",
+      "imageId": "five-image",
+      "audioId": "five-audio"
+    },
+    {
+      "id": "six",
+      "text": "Six",
+      "spelling": "six",
+      "translation": "шесть",
+      "imageId": "six-image",
+      "audioId": "six-audio"
+    },
+    {
+      "id": "seven",
+      "text": "Seven",
+      "spelling": "seven",
+      "translation": "семь",
+      "imageId": "seven-image",
+      "audioId": "seven-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "five-image",
+      "path": "/v1/media/f31302a6b5d5435122a7dbb0f2275e8c5755ed70fb5c34599c7e0141b52e1b3d.png",
+      "kind": "image"
+    },
+    {
+      "id": "five-audio",
+      "path": "/v1/media/4ee7ac1571c15f60e46b5acb0c67e66518c8ab2357812e9d73b3c02069811aae.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "six-image",
+      "path": "/v1/media/ca3367a0baa92181dd3b14c15c849e67fecf3e5a9c3c6749798336a6e72dd392.png",
+      "kind": "image"
+    },
+    {
+      "id": "six-audio",
+      "path": "/v1/media/af5fc414eca2eef3407cb9022ea0e593d11a1844c0bad5f7781c86144be9fc59.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "seven-image",
+      "path": "/v1/media/797060cf06c714c159d7c44ebeed3d30977b30a6016c9c9fa50e68739809791a.png",
+      "kind": "image"
+    },
+    {
+      "id": "seven-audio",
+      "path": "/v1/media/d014b581faedad6731b9f811bff4bfcc6908e4d0d57439998496b3d2413a08dd.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок слушает вместе с тобой. Нажми на нужное число.",
+      "type": "listen-and-select",
+      "wordId": "five",
+      "choices": [
+        "six",
+        "five",
+        "seven"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим раскладывает кубики. Посчитай их на каждой картинке.",
+      "type": "match-pairs",
+      "wordIds": [
+        "five",
+        "six",
+        "seven"
+      ],
+      "imageOrder": [
+        "seven",
+        "six",
+        "five"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Расставь буквы в правильном порядке.",
+      "hint": "Тим насчитал пять кубиков. Найди буквы для этого числа.",
+      "type": "build-word",
+      "wordId": "five",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "v"
+        },
+        {
+          "id": "t5",
+          "letter": "s"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим считает кубики. Выбери картинку с нужным числом.",
+      "type": "listen-and-select",
+      "wordId": "six",
+      "choices": [
+        "six",
+        "seven"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим просит найти пару для каждого числа.",
+      "type": "match-pairs",
+      "wordIds": [
+        "six",
+        "seven"
+      ],
+      "imageOrder": [
+        "six",
+        "seven"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Поставь буквы так, чтобы получилось название числа.",
+      "hint": "Тим насчитал семь кубиков. Одна буква здесь лишняя.",
+      "type": "build-word",
+      "wordId": "seven",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "v"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        }
+      ]
+    }
+  ]
+}

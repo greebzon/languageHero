@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 2,
+  "id": "en-anatomiya-598y-02",
+  "version": 2,
+  "language": "en",
+  "title": "Улыбка и волосы",
+  "presentation": {
+    "intro": "Тим машет лапкой: улыбнись и давай выучим ещё четыре слова!",
+    "completionTitle": "Какая улыбка!",
+    "completionMessage": "Здорово! Теперь ты знаешь слова для рта, зуба, языка и волос."
+  },
+  "texts": {
+    "en": {
+      "title": "Smile and Hair",
+      "presentation": {
+        "intro": "Tim waves a paw: Smile, and let’s learn four more words!",
+        "completionTitle": "What a smile!",
+        "completionMessage": "Great! Now you know words for a mouth, a tooth, a tongue, and hair."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: We use this to smile and talk."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim: Find hair, a tongue, and a tooth."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim: It is white and lives in your mouth. You use it to bite food."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: This helper in your mouth helps you taste."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim: Find a mouth and hair."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim: It grows on your head. You can comb it."
+        }
+      },
+      "words": {
+        "hair": {
+          "translation": "hair"
+        },
+        "mouth": {
+          "translation": "mouth"
+        },
+        "tooth": {
+          "translation": "tooth"
+        },
+        "tongue": {
+          "translation": "tongue"
+        }
+      }
+    },
+    "he": {
+      "title": "חיוך ושיער",
+      "presentation": {
+        "intro": "טים מנופף בכף: בואו נחייך ונלמד עוד ארבע מילים!",
+        "completionTitle": "איזה חיוך!",
+        "completionMessage": "נהדר! עכשיו מכירים מילים לפה, לשן, ללשון ולשיער."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור בתמונה.",
+          "hint": "טים: בעזרתו מחייכים ומדברים."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים: למצוא שיער, לשון ושן."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זה לבן וחי בפה. בעזרתו נוגסים באוכל."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור בתמונה.",
+          "hint": "טים: העוזר הזה בפה עוזר להרגיש טעם."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים: למצוא פה ושיער."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זה גדל על הראש. אפשר לסרק אותו."
+        }
+      },
+      "words": {
+        "hair": {
+          "translation": "שיער"
+        },
+        "mouth": {
+          "translation": "פה"
+        },
+        "tooth": {
+          "translation": "שן"
+        },
+        "tongue": {
+          "translation": "לשון"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "mouth",
+      "text": "A mouth",
+      "spelling": "mouth",
+      "translation": "рот",
+      "imageId": "mouth-image",
+      "audioId": "mouth-audio"
+    },
+    {
+      "id": "tooth",
+      "text": "A tooth",
+      "spelling": "tooth",
+      "translation": "зуб",
+      "imageId": "tooth-image",
+      "audioId": "tooth-audio"
+    },
+    {
+      "id": "tongue",
+      "text": "A tongue",
+      "spelling": "tongue",
+      "translation": "язык",
+      "imageId": "tongue-image",
+      "audioId": "tongue-audio"
+    },
+    {
+      "id": "hair",
+      "text": "Hair",
+      "spelling": "hair",
+      "translation": "волосы",
+      "imageId": "hair-image",
+      "audioId": "hair-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "mouth-image",
+      "path": "/v1/media/fdb98a22f1827fcae7bb714dd58c900f00a30b847236c063364d7d4f99532090.png",
+      "kind": "image"
+    },
+    {
+      "id": "mouth-audio",
+      "path": "/v1/media/721074f81586f50c5a81dd44c868210a30d766de810869d3f092eefa76d0a37c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "tooth-image",
+      "path": "/v1/media/49398f016d537aa2e0f443f469691ebdd66813b1da9f18a5225d12b8354ee0e4.png",
+      "kind": "image"
+    },
+    {
+      "id": "tooth-audio",
+      "path": "/v1/media/f501307f5e5e74ca1254c84ff9a8d9c078be3ea4c91793754f633808b9cc03aa.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "tongue-image",
+      "path": "/v1/media/d6a1bd87360469ec666630c0168a563fa9ea788b3e18ec78fcd1edded35cf47f.png",
+      "kind": "image"
+    },
+    {
+      "id": "tongue-audio",
+      "path": "/v1/media/1558af1c71d14ac63072783a19a8526ab6da51894747daeba52f94ad92405d21.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "hair-image",
+      "path": "/v1/media/839178ab74f32300a81e3da5fec59ff9a0b337038ac175bdf01950e88b82a711.png",
+      "kind": "image"
+    },
+    {
+      "id": "hair-audio",
+      "path": "/v1/media/dd3bc2a51925d1846154f005ddd1b51a1f36a7eeeaa0ffce9807ef932ce758ee.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: Этим мы улыбаемся и говорим.",
+      "type": "listen-and-select",
+      "wordId": "mouth",
+      "choices": [
+        "tooth",
+        "hair",
+        "mouth"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: Найди, где волосы, язык и зуб.",
+      "type": "match-pairs",
+      "wordIds": [
+        "hair",
+        "tongue",
+        "tooth"
+      ],
+      "imageOrder": [
+        "tooth",
+        "tongue",
+        "hair"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это белое и живёт во рту. Им кусают еду.",
+      "type": "build-word",
+      "wordId": "tooth",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t7",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t6",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "h"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: Этот помощник во рту помогает чувствовать вкус.",
+      "type": "listen-and-select",
+      "wordId": "tongue",
+      "choices": [
+        "mouth",
+        "tongue",
+        "hair"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: Найди рот и волосы.",
+      "type": "match-pairs",
+      "wordIds": [
+        "mouth",
+        "hair"
+      ],
+      "imageOrder": [
+        "hair",
+        "mouth"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это растёт на голове. Его можно расчёсывать.",
+      "type": "build-word",
+      "wordId": "hair",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "r"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t3",
+          "letter": "i"
+        },
+        {
+          "id": "t6",
+          "letter": "u"
+        },
+        {
+          "id": "t1",
+          "letter": "h"
+        }
+      ]
+    }
+  ]
+}

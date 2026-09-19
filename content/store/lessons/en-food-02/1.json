@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 2,
+  "id": "en-food-02",
+  "version": 1,
+  "language": "en",
+  "title": "Угощение на обед",
+  "presentation": {
+    "intro": "Тим говорит: «На столе ждут угощения — давай узнаем, как они называются по-английски!»",
+    "completionTitle": "Обед готов!",
+    "completionMessage": "Яйцо, сыр, суп и торт — всё на столе! Отличная работа!"
+  },
+  "words": [
+    {
+      "id": "egg",
+      "text": "An egg",
+      "spelling": "egg",
+      "translation": "яйцо",
+      "imageId": "egg-image",
+      "audioId": "egg-audio"
+    },
+    {
+      "id": "cheese",
+      "text": "Cheese",
+      "spelling": "cheese",
+      "translation": "сыр",
+      "imageId": "cheese-image",
+      "audioId": "cheese-audio"
+    },
+    {
+      "id": "soup",
+      "text": "Soup",
+      "spelling": "soup",
+      "translation": "суп",
+      "imageId": "soup-image",
+      "audioId": "soup-audio"
+    },
+    {
+      "id": "cake",
+      "text": "A cake",
+      "spelling": "cake",
+      "translation": "торт",
+      "imageId": "cake-image",
+      "audioId": "cake-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "egg-image",
+      "path": "/v1/media/2d410f4fc2337bf720c88edc68db1b52f1fdde1f4aa73609967c5990b4855036.png",
+      "kind": "image"
+    },
+    {
+      "id": "egg-audio",
+      "path": "/v1/media/64ab9b8332fbd13c484e87fc24b5d3d883550e1b9d3767ba439ab8ffb5ddd8e7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "cheese-image",
+      "path": "/v1/media/77009955b040f86f3a8ab9fda84df91cddeec2c8ebdda6776e804015d0a26121.png",
+      "kind": "image"
+    },
+    {
+      "id": "cheese-audio",
+      "path": "/v1/media/0a3212d27d782eb478cdb5a9152e96d0ef4a828dd7af37ec4764e64a248d2ebb.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "soup-image",
+      "path": "/v1/media/332f2778e1e84a4f96c89cb6279fabbea89ec0b0b82577f9bf66bb4b2e0adc38.png",
+      "kind": "image"
+    },
+    {
+      "id": "soup-audio",
+      "path": "/v1/media/edf1be02523cd3af05c9254278e6695b1e68e702b3664c25e63498cb32e80ab3.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "cake-image",
+      "path": "/v1/media/40d2d3100e9d442c1e2bf8f7cc786c0019ec79a9ab112c7d398f05b8db4c0b8e.png",
+      "kind": "image"
+    },
+    {
+      "id": "cake-audio",
+      "path": "/v1/media/a2085cd19a5df2c43043f44d327c9da4099b9592ed55307d263144b732819266.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим-лисёнок: это бывает на завтрак и прячется в скорлупе.",
+      "type": "listen-and-select",
+      "wordId": "egg",
+      "choices": [
+        "egg",
+        "cake",
+        "cheese"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: найди суп в тарелке и кусочек молочного продукта.",
+      "type": "match-pairs",
+      "wordIds": [
+        "soup",
+        "cheese"
+      ],
+      "imageOrder": [
+        "soup",
+        "cheese"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это сладкое угощение со свечками на празднике.",
+      "type": "build-word",
+      "wordId": "cake",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "k"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим-лисёнок: это горячее жидкое блюдо в миске.",
+      "type": "listen-and-select",
+      "wordId": "soup",
+      "choices": [
+        "cheese",
+        "soup",
+        "egg",
+        "cake"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: одно блюдо в скорлупе, а другое бывает сладким на праздник.",
+      "type": "match-pairs",
+      "wordIds": [
+        "egg",
+        "cake"
+      ],
+      "imageOrder": [
+        "cake",
+        "egg"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это жёлтый или белый кусочек, который кладут на бутерброд.",
+      "type": "build-word",
+      "wordId": "cheese",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t7",
+          "letter": "t"
+        },
+        {
+          "id": "t3",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "s"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "h"
+        }
+      ]
+    }
+  ]
+}

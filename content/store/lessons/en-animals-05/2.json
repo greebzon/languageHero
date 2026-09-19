@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 2,
+  "id": "en-animals-05",
+  "version": 2,
+  "language": "en",
+  "title": "Праздник в лесу",
+  "presentation": {
+    "intro": "Помоги Тиму устроить праздник: проверь гостей и подпиши приглашения!",
+    "completionTitle": "Праздник удался!",
+    "completionMessage": "Все приглашения подписаны, и лесные друзья собрались вместе. Ты помог Тиму устроить праздник!"
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "A fox",
+      "spelling": "fox",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "A bear",
+      "spelling": "bear",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "A rabbit",
+      "spelling": "rabbit",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "An owl",
+      "spelling": "owl",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "match-0",
+      "prompt": "Проверь список гостей",
+      "hint": "В списке три гостя. Соедини каждое английское имя с его владельцем.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fox",
+        "owl",
+        "rabbit"
+      ],
+      "imageOrder": [
+        "rabbit",
+        "fox",
+        "owl"
+      ]
+    },
+    {
+      "id": "spell-1",
+      "prompt": "Подпиши приглашение медведю",
+      "hint": "На приглашении нужно написать bear. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "bear",
+      "tiles": [
+        {
+          "id": "tile-2",
+          "letter": "a"
+        },
+        {
+          "id": "tile-0",
+          "letter": "b"
+        },
+        {
+          "id": "tile-3",
+          "letter": "r"
+        },
+        {
+          "id": "tile-1",
+          "letter": "e"
+        },
+        {
+          "id": "extra-0",
+          "letter": "f"
+        },
+        {
+          "id": "extra-1",
+          "letter": "o"
+        }
+      ]
+    },
+    {
+      "id": "spell-2",
+      "prompt": "Пригласи кролика на праздник",
+      "hint": "На приглашении нужно написать rabbit. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "rabbit",
+      "tiles": [
+        {
+          "id": "tile-3",
+          "letter": "b"
+        },
+        {
+          "id": "tile-0",
+          "letter": "r"
+        },
+        {
+          "id": "tile-5",
+          "letter": "t"
+        },
+        {
+          "id": "tile-1",
+          "letter": "a"
+        },
+        {
+          "id": "tile-4",
+          "letter": "i"
+        },
+        {
+          "id": "tile-2",
+          "letter": "b"
+        },
+        {
+          "id": "extra-0",
+          "letter": "o"
+        },
+        {
+          "id": "extra-1",
+          "letter": "w"
+        }
+      ]
+    },
+    {
+      "id": "match-3",
+      "prompt": "Раздай именные приглашения",
+      "hint": "На приглашениях написаны английские имена. Найди владельца каждого приглашения.",
+      "type": "match-pairs",
+      "wordIds": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ],
+      "imageOrder": [
+        "owl",
+        "fox",
+        "bear",
+        "rabbit"
+      ]
+    },
+    {
+      "id": "spell-4",
+      "prompt": "Подпиши приглашение сове",
+      "hint": "На приглашении нужно написать owl. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "owl",
+      "tiles": [
+        {
+          "id": "tile-1",
+          "letter": "w"
+        },
+        {
+          "id": "tile-0",
+          "letter": "o"
+        },
+        {
+          "id": "tile-2",
+          "letter": "l"
+        },
+        {
+          "id": "extra-0",
+          "letter": "a"
+        },
+        {
+          "id": "extra-1",
+          "letter": "r"
+        }
+      ]
+    },
+    {
+      "id": "spell-5",
+      "prompt": "Осталось пригласить лису!",
+      "hint": "На приглашении нужно написать fox. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "fox",
+      "tiles": [
+        {
+          "id": "tile-1",
+          "letter": "o"
+        },
+        {
+          "id": "tile-0",
+          "letter": "f"
+        },
+        {
+          "id": "tile-2",
+          "letter": "x"
+        },
+        {
+          "id": "extra-0",
+          "letter": "b"
+        },
+        {
+          "id": "extra-1",
+          "letter": "l"
+        }
+      ]
+    }
+  ]
+}

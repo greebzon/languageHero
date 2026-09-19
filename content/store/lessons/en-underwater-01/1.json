@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 2,
+  "id": "en-underwater-01",
+  "version": 1,
+  "language": "en",
+  "title": "Друзья в волнах",
+  "presentation": {
+    "intro": "Привет! Я Тим-лисёнок. Давай познакомимся с добрыми жителями моря!",
+    "completionTitle": "Морские друзья найдены!",
+    "completionMessage": "Здорово! Ты узнал, как по-английски назвать дельфина, кита, краба и осьминога."
+  },
+  "words": [
+    {
+      "id": "dolphin",
+      "text": "A dolphin",
+      "spelling": "dolphin",
+      "translation": "дельфин",
+      "imageId": "dolphin-image",
+      "audioId": "dolphin-audio"
+    },
+    {
+      "id": "whale",
+      "text": "A whale",
+      "spelling": "whale",
+      "translation": "кит",
+      "imageId": "whale-image",
+      "audioId": "whale-audio"
+    },
+    {
+      "id": "crab",
+      "text": "A crab",
+      "spelling": "crab",
+      "translation": "краб",
+      "imageId": "crab-image",
+      "audioId": "crab-audio"
+    },
+    {
+      "id": "octopus",
+      "text": "An octopus",
+      "spelling": "octopus",
+      "translation": "осьминог",
+      "imageId": "octopus-image",
+      "audioId": "octopus-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "dolphin-image",
+      "path": "/v1/media/92c3b971a43002168a819654d35887db69a3f52aaf85fa31d812c1a4598ee519.png",
+      "kind": "image"
+    },
+    {
+      "id": "dolphin-audio",
+      "path": "/v1/media/57ff1c41f4bb2258463c2f0d97e2f9ab578733e6ce9f0be56063d7f4e37ffa43.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "whale-image",
+      "path": "/v1/media/a84473d57f96e4a8f2b2485bf00787d1896cbba8b1bac3c57ca93ca6c94fe652.png",
+      "kind": "image"
+    },
+    {
+      "id": "whale-audio",
+      "path": "/v1/media/0eaf3b94146fb3f78553ecab4c83c5d7b9e3bc24733585fe72878eb9765057f9.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "crab-image",
+      "path": "/v1/media/89554623c3edf06e5c996790ecc177697c0ecd1e3fc92658d725b8824765fc77.png",
+      "kind": "image"
+    },
+    {
+      "id": "crab-audio",
+      "path": "/v1/media/8688667db99045670bdbb35c1f4d96f75cd839708074ac2578797d9a71509508.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "octopus-image",
+      "path": "/v1/media/7ee1f13f7011862a1a4e7df1e74c4e6991046c713b6860a810d9120d88f52212.png",
+      "kind": "image"
+    },
+    {
+      "id": "octopus-audio",
+      "path": "/v1/media/a792e4a2dbf190f7408e790dba8a8ed1081fc60bd6098b5408630b256d202505.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим говорит: этот друг прыгает из воды и любит плавать рядом с кораблями.",
+      "type": "listen-and-select",
+      "wordId": "dolphin",
+      "choices": [
+        "whale",
+        "dolphin",
+        "crab"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: найди большого пловца и друга с клешнями.",
+      "type": "match-pairs",
+      "wordIds": [
+        "whale",
+        "crab"
+      ],
+      "imageOrder": [
+        "whale",
+        "crab"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: у этого морского друга гладкая кожа и весёлый прыжок.",
+      "type": "build-word",
+      "wordId": "dolphin",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "d"
+        },
+        {
+          "id": "t7",
+          "letter": "n"
+        },
+        {
+          "id": "t8",
+          "letter": "x"
+        },
+        {
+          "id": "t4",
+          "letter": "p"
+        },
+        {
+          "id": "t6",
+          "letter": "i"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t5",
+          "letter": "h"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим говорит: у этого огромного друга есть хвост, и он живёт в море.",
+      "type": "listen-and-select",
+      "wordId": "whale",
+      "choices": [
+        "whale",
+        "dolphin",
+        "crab",
+        "octopus"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: один друг прячется на дне, а другой машет длинными щупальцами.",
+      "type": "match-pairs",
+      "wordIds": [
+        "crab",
+        "octopus"
+      ],
+      "imageOrder": [
+        "crab",
+        "octopus"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: у этого морского друга восемь длинных щупалец.",
+      "type": "build-word",
+      "wordId": "octopus",
+      "tiles": [
+        {
+          "id": "t9",
+          "letter": "z"
+        },
+        {
+          "id": "t5",
+          "letter": "p"
+        },
+        {
+          "id": "t7",
+          "letter": "s"
+        },
+        {
+          "id": "t2",
+          "letter": "c"
+        },
+        {
+          "id": "t1",
+          "letter": "o"
+        },
+        {
+          "id": "t3",
+          "letter": "t"
+        },
+        {
+          "id": "t6",
+          "letter": "u"
+        },
+        {
+          "id": "t8",
+          "letter": "y"
+        },
+        {
+          "id": "t4",
+          "letter": "o"
+        }
+      ]
+    }
+  ]
+}

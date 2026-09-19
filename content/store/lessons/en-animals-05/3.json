@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 2,
+  "id": "en-animals-05",
+  "version": 3,
+  "language": "en",
+  "title": "Праздник в лесу",
+  "presentation": {
+    "intro": "Помоги Тиму устроить праздник: проверь гостей и подпиши приглашения!",
+    "completionTitle": "Праздник удался!",
+    "completionMessage": "Все приглашения подписаны, и лесные друзья собрались вместе. Ты помог Тиму устроить праздник!"
+  },
+  "texts": {
+    "en": {
+      "title": "A Party in the Forest",
+      "presentation": {
+        "intro": "Help Tim throw a party: check the guests and write on the invitations!",
+        "completionTitle": "The Party Was a Success!",
+        "completionMessage": "All the invitations are written, and the forest friends are together. You helped Tim throw a party!"
+      },
+      "exercises": {
+        "match-0": {
+          "prompt": "Check the guest list",
+          "hint": "There are three guests on the list. Match each English name to its owner."
+        },
+        "match-3": {
+          "prompt": "Hand out the name invitations",
+          "hint": "The invitations have English names on them. Find the owner of each invitation."
+        },
+        "spell-1": {
+          "prompt": "Write on the bear's invitation",
+          "hint": "You need to write bear on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-2": {
+          "prompt": "Invite the rabbit to the party",
+          "hint": "You need to write rabbit on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-4": {
+          "prompt": "Write on the owl's invitation",
+          "hint": "You need to write owl on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-5": {
+          "prompt": "Only the fox is left to invite!",
+          "hint": "You need to write fox on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "A fox"
+        },
+        "owl": {
+          "translation": "An owl"
+        },
+        "bear": {
+          "translation": "A bear"
+        },
+        "rabbit": {
+          "translation": "A rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "מסיבה ביער",
+      "presentation": {
+        "intro": "עזרו לטים לערוך מסיבה: בדקו את האורחים וכתבו על ההזמנות!",
+        "completionTitle": "המסיבה הצליחה!",
+        "completionMessage": "כל ההזמנות מוכנות, וחברי היער התאספו יחד. עזרתם לטים לערוך מסיבה!"
+      },
+      "exercises": {
+        "match-0": {
+          "prompt": "בדקו את רשימת האורחים",
+          "hint": "ברשימה יש שלושה אורחים. חברו כל שם באנגלית לבעלים שלו."
+        },
+        "match-3": {
+          "prompt": "חלקו הזמנות עם שמות",
+          "hint": "על ההזמנות כתובים שמות באנגלית. מצאו את הבעלים של כל הזמנה."
+        },
+        "spell-1": {
+          "prompt": "כתבו על ההזמנה לדוב",
+          "hint": "צריך לכתוב bear על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-2": {
+          "prompt": "הזמינו את הארנב למסיבה",
+          "hint": "צריך לכתוב rabbit על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-4": {
+          "prompt": "כתבו על ההזמנה לינשוף",
+          "hint": "צריך לכתוב owl על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-5": {
+          "prompt": "נשאר להזמין את השועל!",
+          "hint": "צריך לכתוב fox על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "A fox",
+      "spelling": "fox",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "A bear",
+      "spelling": "bear",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "A rabbit",
+      "spelling": "rabbit",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "An owl",
+      "spelling": "owl",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "match-0",
+      "prompt": "Проверь список гостей",
+      "hint": "В списке три гостя. Соедини каждое английское имя с его владельцем.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fox",
+        "owl",
+        "rabbit"
+      ],
+      "imageOrder": [
+        "rabbit",
+        "fox",
+        "owl"
+      ]
+    },
+    {
+      "id": "spell-1",
+      "prompt": "Подпиши приглашение медведю",
+      "hint": "На приглашении нужно написать bear. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "bear",
+      "tiles": [
+        {
+          "id": "tile-2",
+          "letter": "a"
+        },
+        {
+          "id": "tile-0",
+          "letter": "b"
+        },
+        {
+          "id": "tile-3",
+          "letter": "r"
+        },
+        {
+          "id": "tile-1",
+          "letter": "e"
+        },
+        {
+          "id": "extra-0",
+          "letter": "f"
+        },
+        {
+          "id": "extra-1",
+          "letter": "o"
+        }
+      ]
+    },
+    {
+      "id": "spell-2",
+      "prompt": "Пригласи кролика на праздник",
+      "hint": "На приглашении нужно написать rabbit. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "rabbit",
+      "tiles": [
+        {
+          "id": "tile-3",
+          "letter": "b"
+        },
+        {
+          "id": "tile-0",
+          "letter": "r"
+        },
+        {
+          "id": "tile-5",
+          "letter": "t"
+        },
+        {
+          "id": "tile-1",
+          "letter": "a"
+        },
+        {
+          "id": "tile-4",
+          "letter": "i"
+        },
+        {
+          "id": "tile-2",
+          "letter": "b"
+        },
+        {
+          "id": "extra-0",
+          "letter": "o"
+        },
+        {
+          "id": "extra-1",
+          "letter": "w"
+        }
+      ]
+    },
+    {
+      "id": "match-3",
+      "prompt": "Раздай именные приглашения",
+      "hint": "На приглашениях написаны английские имена. Найди владельца каждого приглашения.",
+      "type": "match-pairs",
+      "wordIds": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ],
+      "imageOrder": [
+        "owl",
+        "fox",
+        "bear",
+        "rabbit"
+      ]
+    },
+    {
+      "id": "spell-4",
+      "prompt": "Подпиши приглашение сове",
+      "hint": "На приглашении нужно написать owl. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "owl",
+      "tiles": [
+        {
+          "id": "tile-1",
+          "letter": "w"
+        },
+        {
+          "id": "tile-0",
+          "letter": "o"
+        },
+        {
+          "id": "tile-2",
+          "letter": "l"
+        },
+        {
+          "id": "extra-0",
+          "letter": "a"
+        },
+        {
+          "id": "extra-1",
+          "letter": "r"
+        }
+      ]
+    },
+    {
+      "id": "spell-5",
+      "prompt": "Осталось пригласить лису!",
+      "hint": "На приглашении нужно написать fox. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "fox",
+      "tiles": [
+        {
+          "id": "tile-1",
+          "letter": "o"
+        },
+        {
+          "id": "tile-0",
+          "letter": "f"
+        },
+        {
+          "id": "tile-2",
+          "letter": "x"
+        },
+        {
+          "id": "extra-0",
+          "letter": "b"
+        },
+        {
+          "id": "extra-1",
+          "letter": "l"
+        }
+      ]
+    }
+  ]
+}

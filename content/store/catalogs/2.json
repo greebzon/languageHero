@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "revision": 2,
+  "languages": [
+    {
+      "code": "en",
+      "title": "Английский",
+      "direction": "ltr"
+    }
+  ],
+  "courses": [
+    {
+      "id": "en-forest",
+      "language": "en",
+      "title": "Загадочный лес",
+      "lessons": [
+        {
+          "id": "en-animals-01",
+          "version": 1,
+          "title": "Лесные друзья",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "en-animals-02",
+          "version": 1,
+          "title": "Кто спрятался?",
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "en-animals-03",
+          "version": 1,
+          "title": "Найди пары",
+          "exerciseCount": 3,
+          "requiredTypes": [
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "en-animals-04",
+          "version": 1,
+          "title": "Собери слова",
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "build-word"
+          ]
+        },
+        {
+          "id": "en-animals-05",
+          "version": 2,
+          "title": "Праздник в лесу",
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "match-pairs",
+            "build-word"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 2,
+  "id": "en-colors-01",
+  "version": 2,
+  "language": "en",
+  "title": "Яркие краски",
+  "presentation": {
+    "intro": "Привет! Я Тим. Нас ждут шесть весёлых игр с красками: смотри, слушай и выбирай нужный цвет!",
+    "completionTitle": "Краски сияют!",
+    "completionMessage": "Отлично! Ты умеешь называть яркие цвета по-английски. Ещё немного игры — и слова будут звучать легко!"
+  },
+  "texts": {
+    "en": {
+      "title": "Bright Colors",
+      "presentation": {
+        "intro": "Hi! I'm Tim. Six fun color games are waiting for us: look, listen, and choose the right color!",
+        "completionTitle": "Colors Shine!",
+        "completionMessage": "Great job! You can name bright colors in English. Play a little more, and the words will be easy to say!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim the fox says: it is the color of a ripe strawberry."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim the fox says: look at the color of each picture."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox says: it is the color of grass."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim the fox says: this color can be on a violet."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim the fox says: find the colors of the sky and the sun."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox says: it is the color of an orange."
+        }
+      },
+      "words": {
+        "red": {
+          "translation": "red"
+        },
+        "blue": {
+          "translation": "blue"
+        },
+        "green": {
+          "translation": "green"
+        },
+        "orange": {
+          "translation": "orange"
+        },
+        "purple": {
+          "translation": "purple"
+        },
+        "yellow": {
+          "translation": "yellow"
+        }
+      }
+    },
+    "he": {
+      "title": "צבעים בהירים",
+      "presentation": {
+        "intro": "שלום! אני טים. מחכים לנו שישה משחקים כיפיים עם צבעים: להסתכל, להקשיב ולבחור את הצבע הנכון!",
+        "completionTitle": "הצבעים זוהרים!",
+        "completionMessage": "כל הכבוד! אפשר לקרוא לצבעים בהירים באנגלית. עוד קצת משחק, והמילים יישמעו בקלות!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל אומר: זה הצבע של תות בשל."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים השועל אומר: להסתכל על הצבע של כל תמונה."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל אומר: זה הצבע של הדשא."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל אומר: הצבע הזה יכול להיות על סיגלית."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים השועל אומר: למצוא את הצבעים של השמיים והשמש."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל אומר: זה הצבע של תפוז."
+        }
+      },
+      "words": {
+        "red": {
+          "translation": "אדום"
+        },
+        "blue": {
+          "translation": "כחול"
+        },
+        "green": {
+          "translation": "ירוק"
+        },
+        "orange": {
+          "translation": "כתום"
+        },
+        "purple": {
+          "translation": "סגול"
+        },
+        "yellow": {
+          "translation": "צהוב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "red",
+      "text": "Red",
+      "spelling": "red",
+      "translation": "красный",
+      "imageId": "red-image",
+      "audioId": "red-audio"
+    },
+    {
+      "id": "blue",
+      "text": "Blue",
+      "spelling": "blue",
+      "translation": "синий",
+      "imageId": "blue-image",
+      "audioId": "blue-audio"
+    },
+    {
+      "id": "green",
+      "text": "Green",
+      "spelling": "green",
+      "translation": "зелёный",
+      "imageId": "green-image",
+      "audioId": "green-audio"
+    },
+    {
+      "id": "yellow",
+      "text": "Yellow",
+      "spelling": "yellow",
+      "translation": "жёлтый",
+      "imageId": "yellow-image",
+      "audioId": "yellow-audio"
+    },
+    {
+      "id": "orange",
+      "text": "Orange",
+      "spelling": "orange",
+      "translation": "оранжевый",
+      "imageId": "orange-image",
+      "audioId": "orange-audio"
+    },
+    {
+      "id": "purple",
+      "text": "Purple",
+      "spelling": "purple",
+      "translation": "фиолетовый",
+      "imageId": "purple-image",
+      "audioId": "purple-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "red-image",
+      "path": "/v1/media/d2d40d0fff72d3ef3c1b73ac7b52eee12bd00ae3fe61a0c5974bc42793022ce7.png",
+      "kind": "image"
+    },
+    {
+      "id": "red-audio",
+      "path": "/v1/media/febf8ac508b515d8971e70341fba736a27cd59e2065873ff3b9c93b4335d1ece.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "blue-image",
+      "path": "/v1/media/49d4ee5e10a31f336691227f16e4edd041f474b54c492849e1229359688e9f99.png",
+      "kind": "image"
+    },
+    {
+      "id": "blue-audio",
+      "path": "/v1/media/b61b1acf7644aab188b71effb124935af0fffc54784c0f81ccb7cbf67d28b5d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "green-image",
+      "path": "/v1/media/f71b9bc08f3066874e69435ff56e8914f535dc958a719d1a4a1f54892ef14c2a.png",
+      "kind": "image"
+    },
+    {
+      "id": "green-audio",
+      "path": "/v1/media/0caf04c9d2196d5cf79f7626ad02719623a1410b5383ea513d57efe327d94959.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "yellow-image",
+      "path": "/v1/media/5d464a63c021f1058c7c4cfea7838cb51380d2ae2fedfd303a94c667106c2ec0.png",
+      "kind": "image"
+    },
+    {
+      "id": "yellow-audio",
+      "path": "/v1/media/d38e231cf6e3be5fc37b02d7cd56878c6261e7e137fea8147574157c6f3a40ba.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "orange-image",
+      "path": "/v1/media/11e416b164d04b054beea11c68ed5234f475f9f1579652240e3f3405f7471992.png",
+      "kind": "image"
+    },
+    {
+      "id": "orange-audio",
+      "path": "/v1/media/166a89b7454b975d5da05f27114a2047fef6c29da01f02bab462b317e692ffaf.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "purple-image",
+      "path": "/v1/media/4b1633c3ffa0f0513b12756f711e3179872e5b17821fe7d842cc30105cb45878.png",
+      "kind": "image"
+    },
+    {
+      "id": "purple-audio",
+      "path": "/v1/media/33059ce45837f3aa99ad80b34f9104560526e6eb1818dab5f5574df33d2cd3e2.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок подсказывает: это цвет спелой клубники.",
+      "type": "listen-and-select",
+      "wordId": "red",
+      "choices": [
+        "green",
+        "blue",
+        "red"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим-лисёнок советует: смотри на цвет каждой картинки.",
+      "type": "match-pairs",
+      "wordIds": [
+        "blue",
+        "yellow",
+        "orange"
+      ],
+      "imageOrder": [
+        "yellow",
+        "blue",
+        "orange"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это цвет травы.",
+      "type": "build-word",
+      "wordId": "green",
+      "tiles": [
+        {
+          "id": "t7",
+          "letter": "o"
+        },
+        {
+          "id": "t8",
+          "letter": "t"
+        },
+        {
+          "id": "t3",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "i"
+        },
+        {
+          "id": "t1",
+          "letter": "g"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок подсказывает: этот цвет бывает у фиалки.",
+      "type": "listen-and-select",
+      "wordId": "purple",
+      "choices": [
+        "purple",
+        "orange",
+        "red",
+        "yellow"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим-лисёнок советует: найди цвета неба и солнца.",
+      "type": "match-pairs",
+      "wordIds": [
+        "red",
+        "blue",
+        "yellow",
+        "purple"
+      ],
+      "imageOrder": [
+        "red",
+        "yellow",
+        "purple",
+        "blue"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это цвет апельсина.",
+      "type": "build-word",
+      "wordId": "orange",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "g"
+        },
+        {
+          "id": "t4",
+          "letter": "n"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t9",
+          "letter": "p"
+        },
+        {
+          "id": "t7",
+          "letter": "i"
+        },
+        {
+          "id": "t8",
+          "letter": "t"
+        },
+        {
+          "id": "t1",
+          "letter": "o"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        }
+      ]
+    }
+  ]
+}

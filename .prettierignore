@@ -1,0 +1,14 @@
+pnpm-lock.yaml
+node_modules
+node_modules_account_backup
+dist
+.expo
+test-results
+playwright-report
+.cache
+apps/mobile/expo-env.d.ts
+content/store
+docs/ARCHITECTURE.md
+docs/ROADMAP.md
+apps/api/drizzle
+apps/admin/dist

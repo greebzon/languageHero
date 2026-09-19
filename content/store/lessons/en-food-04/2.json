@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 2,
+  "id": "en-food-04",
+  "version": 2,
+  "language": "en",
+  "title": "Напитки и перекус",
+  "presentation": {
+    "intro": "Тим говорит: «Соберём небольшой перекус: слушай слово, находи картинку и повторяй!»",
+    "completionTitle": "Перекус собран!",
+    "completionMessage": "Рыба, вода, чай и бутерброд — готово! Теперь ты настоящий знаток еды!"
+  },
+  "texts": {
+    "en": {
+      "title": "Drinks and Snacks",
+      "presentation": {
+        "intro": "Tim says: “Let’s make a small snack: listen to the word, find the picture, and repeat!”",
+        "completionTitle": "Snack Ready!",
+        "completionMessage": "Fish, water, tea, and a sandwich — done! Now you are a real food expert!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: You drink it when it is hot. It is clear, with no color or taste."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: First, say each picture in English."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: It is a hot drink you drink from a cup."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: It is food made of bread with filling inside."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: Find the drinks and food, then match the pairs."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: People catch it in a river or sea, then cook it for lunch."
+        }
+      },
+      "words": {
+        "tea": {
+          "translation": "tea"
+        },
+        "fish": {
+          "translation": "fish"
+        },
+        "water": {
+          "translation": "water"
+        },
+        "sandwich": {
+          "translation": "a sandwich"
+        }
+      }
+    },
+    "he": {
+      "title": "שתייה ונשנוש",
+      "presentation": {
+        "intro": "טים אומר: ״בואו נכין נשנוש קטן: להקשיב למילה, למצוא את התמונה ולחזור!״",
+        "completionTitle": "הנשנוש מוכן!",
+        "completionMessage": "דג, מים, תה וכריך — מוכן! עכשיו אתם ממש מומחים לאוכל!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: שותים את זה כשחם. זה שקוף, בלי צבע ובלי טעם."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים השועל: קודם לומר כל תמונה באנגלית."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה משקה חם ששותים מכוס."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: זה אוכל מלחם עם מילוי בפנים."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים השועל: למצוא את המשקאות והאוכל, ואז לחבר את הזוגות."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: תופסים אותו בנהר או בים, ואז מבשלים אותו לארוחת צהריים."
+        }
+      },
+      "words": {
+        "tea": {
+          "translation": "תה"
+        },
+        "fish": {
+          "translation": "דג"
+        },
+        "water": {
+          "translation": "מים"
+        },
+        "sandwich": {
+          "translation": "כריך"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fish",
+      "text": "Fish",
+      "spelling": "fish",
+      "translation": "рыба",
+      "imageId": "fish-image",
+      "audioId": "fish-audio"
+    },
+    {
+      "id": "water",
+      "text": "Water",
+      "spelling": "water",
+      "translation": "вода",
+      "imageId": "water-image",
+      "audioId": "water-audio"
+    },
+    {
+      "id": "tea",
+      "text": "Tea",
+      "spelling": "tea",
+      "translation": "чай",
+      "imageId": "tea-image",
+      "audioId": "tea-audio"
+    },
+    {
+      "id": "sandwich",
+      "text": "A sandwich",
+      "spelling": "sandwich",
+      "translation": "бутерброд",
+      "imageId": "sandwich-image",
+      "audioId": "sandwich-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fish-image",
+      "path": "/v1/media/8b4ae9052ffef683165a1c174aea98bb6c29b243fdb077fae6180a75668dbcb1.png",
+      "kind": "image"
+    },
+    {
+      "id": "fish-audio",
+      "path": "/v1/media/5ea77efa5971be16a52343b3c4c75ffe4cbebb8e1b411c80870556f9cc28b3f7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "water-image",
+      "path": "/v1/media/dbe338790cc70a3acc05c1d9788d000b7a4afb67fa74bb77fa25483b8eaa7080.png",
+      "kind": "image"
+    },
+    {
+      "id": "water-audio",
+      "path": "/v1/media/f084342aae969af8eeaf43c56065f2a0487a367e5879600f422b5b129ab3f5a5.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "tea-image",
+      "path": "/v1/media/6d88c11b61bc203e600fa12e9ed41e01c5aa45894951c74e3dc7f2cb2d1d427e.png",
+      "kind": "image"
+    },
+    {
+      "id": "tea-audio",
+      "path": "/v1/media/0d58178689f085f682e11c452342982a6c5b231f79cf3cf68b23e7ccbde11352.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "sandwich-image",
+      "path": "/v1/media/3fdb02770a39148830a01f7ebb33792c87bae6be3d950eb59aeca5ea66277c2a.png",
+      "kind": "image"
+    },
+    {
+      "id": "sandwich-audio",
+      "path": "/v1/media/41757ba025eabc11c23b50f5a887aee57fb89c9a861699b228ca883d791ca9ea.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: её пьют, когда жарко. Она прозрачная, без цвета и вкуса.",
+      "type": "listen-and-select",
+      "wordId": "water",
+      "choices": [
+        "fish",
+        "tea",
+        "water"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: Сначала назови каждую картинку по-английски.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fish",
+        "tea",
+        "sandwich"
+      ],
+      "imageOrder": [
+        "tea",
+        "sandwich",
+        "fish"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: Это горячий напиток, который пьют из чашки.",
+      "type": "build-word",
+      "wordId": "tea",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "m"
+        },
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t2",
+          "letter": "e"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: Это еда из хлеба с начинкой внутри.",
+      "type": "listen-and-select",
+      "wordId": "sandwich",
+      "choices": [
+        "sandwich",
+        "tea",
+        "water",
+        "fish"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: Найди напитки и еду, затем соедини пары.",
+      "type": "match-pairs",
+      "wordIds": [
+        "water",
+        "fish",
+        "tea",
+        "sandwich"
+      ],
+      "imageOrder": [
+        "sandwich",
+        "water",
+        "fish",
+        "tea"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: её ловят в реке или море, а потом готовят на обед.",
+      "type": "build-word",
+      "wordId": "fish",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "m"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t3",
+          "letter": "s"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t4",
+          "letter": "h"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 2,
+  "id": "en-numbers-03",
+  "version": 1,
+  "language": "en",
+  "title": "Считаем до десяти",
+  "presentation": {
+    "intro": "Тим говорит: «Финиш уже рядом! Считаем восемь, девять, десять — и празднуем!»",
+    "completionTitle": "Ты считаешь до десяти!",
+    "completionMessage": "Отлично! Ты умеешь считать по-английски до десяти: восемь, девять, десять. Попробуй назвать все числа по порядку."
+  },
+  "words": [
+    {
+      "id": "eight",
+      "text": "Eight",
+      "spelling": "eight",
+      "translation": "восемь",
+      "imageId": "eight-image",
+      "audioId": "eight-audio"
+    },
+    {
+      "id": "nine",
+      "text": "Nine",
+      "spelling": "nine",
+      "translation": "девять",
+      "imageId": "nine-image",
+      "audioId": "nine-audio"
+    },
+    {
+      "id": "ten",
+      "text": "Ten",
+      "spelling": "ten",
+      "translation": "десять",
+      "imageId": "ten-image",
+      "audioId": "ten-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "eight-image",
+      "path": "/v1/media/8518f5f599540c07aad5ee0efa4f5a5697b228a34b6fa8685042c16e9ecdc6c7.png",
+      "kind": "image"
+    },
+    {
+      "id": "eight-audio",
+      "path": "/v1/media/cd30c4f06d4419b7327b203b5e534c11f416dac0b3e2c6c5b70240a6c81e7135.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "nine-image",
+      "path": "/v1/media/3311fde2f10e7377446ecd6516e84a0a708c9fbcf5b4345a8e0f2e6c95dbfa71.png",
+      "kind": "image"
+    },
+    {
+      "id": "nine-audio",
+      "path": "/v1/media/f4848320f51574ed472fe8ad4959c2f86d5d5f53d94405f2ed933d3bdc75ec86.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "ten-image",
+      "path": "/v1/media/f5808e5e26bf996332059b50a3737082dfcf6cd2629f52a8ddcc55801892eb4e.png",
+      "kind": "image"
+    },
+    {
+      "id": "ten-audio",
+      "path": "/v1/media/51d87aecd818b2a0adcf7efbe42c2a88b741af7422607e4dc104b8e0f5870479.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит: это число идёт после семи.",
+      "type": "listen-and-select",
+      "wordId": "eight",
+      "choices": [
+        "ten",
+        "nine",
+        "eight"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим считает по порядку: после восьми идёт следующее число.",
+      "type": "match-pairs",
+      "wordIds": [
+        "eight",
+        "nine",
+        "ten"
+      ],
+      "imageOrder": [
+        "ten",
+        "eight",
+        "nine"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим сложил восемь кубиков. Выбирай буквы внимательно!",
+      "type": "build-word",
+      "wordId": "eight",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "g"
+        },
+        {
+          "id": "t5",
+          "letter": "t"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t7",
+          "letter": "s"
+        },
+        {
+          "id": "t1",
+          "letter": "e"
+        },
+        {
+          "id": "t4",
+          "letter": "h"
+        },
+        {
+          "id": "t6",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим подсказывает: это число стоит перед десятью.",
+      "type": "listen-and-select",
+      "wordId": "nine",
+      "choices": [
+        "eight",
+        "ten",
+        "nine"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим считает: восемь, девять, десять. Найди пару для каждого слова.",
+      "type": "match-pairs",
+      "wordIds": [
+        "nine",
+        "ten"
+      ],
+      "imageOrder": [
+        "nine",
+        "ten"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим празднует: это последнее число в счёте до десяти!",
+      "type": "build-word",
+      "wordId": "ten",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "b"
+        },
+        {
+          "id": "t3",
+          "letter": "n"
+        }
+      ]
+    }
+  ]
+}

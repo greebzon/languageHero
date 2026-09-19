@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 2,
+  "id": "en-underwater-02",
+  "version": 2,
+  "language": "en",
+  "title": "Плывём и играем",
+  "presentation": {
+    "intro": "Тим-лисёнок зовёт в морскую прогулку. Смотри внимательно и повторяй английские слова!",
+    "completionTitle": "Отличное плавание!",
+    "completionMessage": "Ты уверенно называешь черепаху, тюленя, акулу и морского конька по-английски."
+  },
+  "texts": {
+    "en": {
+      "title": "Swim and Play",
+      "presentation": {
+        "intro": "Tim the fox invites you on a sea trip. Look carefully and repeat the English words!",
+        "completionTitle": "Great swimming!",
+        "completionMessage": "You can confidently name a turtle, a seal, a shark, and a seahorse in English."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and tap the right picture.",
+          "hint": "Tim: This animal wears a hard house on its back."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Look at the animals: each has its own shape."
+        },
+        "ex-3": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: This sea animal has a hard shell."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and tap the right picture.",
+          "hint": "Tim: This small sea animal looks like a little horse."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Find the animal with fins and the animal with whiskers."
+        },
+        "ex-6": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: This is a big fish that hunts, with sharp teeth."
+        }
+      },
+      "words": {
+        "seal": {
+          "translation": "seal"
+        },
+        "shark": {
+          "translation": "shark"
+        },
+        "turtle": {
+          "translation": "turtle"
+        },
+        "seahorse": {
+          "translation": "seahorse"
+        }
+      }
+    },
+    "he": {
+      "title": "שטים ומשחקים",
+      "presentation": {
+        "intro": "טים השועלון מזמין לטיול בים. כדאי להביט היטב ולחזור על המילים באנגלית!",
+        "completionTitle": "שחייה מצוינת!",
+        "completionMessage": "אפשר לומר בביטחון צב, כלב ים, כריש וסוסון ים באנגלית."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה וללחוץ על התמונה המתאימה.",
+          "hint": "טים: החיה הזאת נושאת בית קשה על הגב."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: כדאי להביט בחיות: לכל אחת יש צורה משלה."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זאת חיית ים עם שריון קשה."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה וללחוץ על התמונה המתאימה.",
+          "hint": "טים: זאת חיית ים קטנה שנראית כמו סוס קטן."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: למצוא את החיה עם הסנפירים ואת החיה עם השפם."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זה דג גדול וטורף עם שיניים חדות."
+        }
+      },
+      "words": {
+        "seal": {
+          "translation": "כלב ים"
+        },
+        "shark": {
+          "translation": "כריש"
+        },
+        "turtle": {
+          "translation": "צב"
+        },
+        "seahorse": {
+          "translation": "סוסון ים"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "turtle",
+      "text": "A turtle",
+      "spelling": "turtle",
+      "translation": "черепаха",
+      "imageId": "turtle-image",
+      "audioId": "turtle-audio"
+    },
+    {
+      "id": "seal",
+      "text": "A seal",
+      "spelling": "seal",
+      "translation": "тюлень",
+      "imageId": "seal-image",
+      "audioId": "seal-audio"
+    },
+    {
+      "id": "shark",
+      "text": "A shark",
+      "spelling": "shark",
+      "translation": "акула",
+      "imageId": "shark-image",
+      "audioId": "shark-audio"
+    },
+    {
+      "id": "seahorse",
+      "text": "A seahorse",
+      "spelling": "seahorse",
+      "translation": "морской конёк",
+      "imageId": "seahorse-image",
+      "audioId": "seahorse-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "turtle-image",
+      "path": "/v1/media/21ee2febb513fef62f6d4d75158d43e42a0389d93232656d092fe292f66672bf.png",
+      "kind": "image"
+    },
+    {
+      "id": "turtle-audio",
+      "path": "/v1/media/05381a89c4587997767a3eb80e6ce0272720716918f43faa17f2e31ee1c51bef.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "seal-image",
+      "path": "/v1/media/2205db9411a23d03d9c2f03d2dd999b5aa12c4f0e05cdb6c17ffcba79ec16f29.png",
+      "kind": "image"
+    },
+    {
+      "id": "seal-audio",
+      "path": "/v1/media/7bf71b0adeab2751ea7ec5cbcb1df20bccd338ebe467ced1d68a28ca66ec1cd0.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "shark-image",
+      "path": "/v1/media/db26273b7b0544c2a19f27296ac89861827f754833c6f0f781d77b0b2bf9a75f.png",
+      "kind": "image"
+    },
+    {
+      "id": "shark-audio",
+      "path": "/v1/media/bfcca2490611298f89aa26631f86f7ab54307a7b885318100cfdd41bc88e7afa.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "seahorse-image",
+      "path": "/v1/media/fee8cf507667996acedb48c09d91acc9bb385668aedaed065646597474979871.png",
+      "kind": "image"
+    },
+    {
+      "id": "seahorse-audio",
+      "path": "/v1/media/74908f5b2435308e51a0fb72d231fdd2f41218a24541dd0bd1129967ff79cf17.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и нажми на нужную картинку.",
+      "hint": "Тим: Это животное носит твёрдый домик на спине.",
+      "type": "listen-and-select",
+      "wordId": "turtle",
+      "choices": [
+        "seal",
+        "shark",
+        "turtle"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Рассмотри животных: у каждого свой силуэт.",
+      "type": "match-pairs",
+      "wordIds": [
+        "seal",
+        "seahorse",
+        "shark"
+      ],
+      "imageOrder": [
+        "shark",
+        "seal",
+        "seahorse"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это морское животное с твёрдым панцирем.",
+      "type": "build-word",
+      "wordId": "turtle",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t8",
+          "letter": "x"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t7",
+          "letter": "p"
+        },
+        {
+          "id": "t2",
+          "letter": "u"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и нажми на нужную картинку.",
+      "hint": "Тим: Это маленький житель моря, похожий на лошадку.",
+      "type": "listen-and-select",
+      "wordId": "seahorse",
+      "choices": [
+        "seal",
+        "turtle",
+        "seahorse",
+        "shark"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Найди животное с плавниками и животное с усами.",
+      "type": "match-pairs",
+      "wordIds": [
+        "turtle",
+        "seal",
+        "shark",
+        "seahorse"
+      ],
+      "imageOrder": [
+        "seal",
+        "seahorse",
+        "turtle",
+        "shark"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это большая хищная рыба с острыми зубами.",
+      "type": "build-word",
+      "wordId": "shark",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "k"
+        },
+        {
+          "id": "t2",
+          "letter": "h"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t4",
+          "letter": "r"
+        },
+        {
+          "id": "t7",
+          "letter": "u"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        }
+      ]
+    }
+  ]
+}

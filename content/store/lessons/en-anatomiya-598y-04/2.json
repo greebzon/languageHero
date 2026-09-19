@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 2,
+  "id": "en-anatomiya-598y-04",
+  "version": 2,
+  "language": "en",
+  "title": "Шагаем вместе",
+  "presentation": {
+    "intro": "Тим говорит: сделаем тихий шаг и познакомимся с ногами!",
+    "completionTitle": "Шаг за шагом!",
+    "completionMessage": "Ура! Ты знаешь английские слова для ноги, ступни, колена и лица."
+  },
+  "texts": {
+    "en": {
+      "title": "Let's Walk Together",
+      "presentation": {
+        "intro": "Tim says: Let's take a quiet step and meet our legs!",
+        "completionTitle": "Step by Step!",
+        "completionMessage": "Hooray! You know the English words for leg, foot, knee, and face."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim says: We use these to walk and run."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: One part helps you step, and another bends."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim says: It is the front of your head, where your eyes, nose, and mouth are."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim says: This part of your leg bends when you sit down."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: Find the body parts that help us walk."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim says: It is the part at the bottom of your leg. It touches the ground in your shoe."
+        }
+      },
+      "words": {
+        "leg": {
+          "translation": "leg"
+        },
+        "face": {
+          "translation": "face"
+        },
+        "foot": {
+          "translation": "foot"
+        },
+        "knee": {
+          "translation": "knee"
+        }
+      }
+    },
+    "he": {
+      "title": "צועדים יחד",
+      "presentation": {
+        "intro": "טים אומר: בואו נעשה צעד שקט ונכיר את הרגליים!",
+        "completionTitle": "צעד אחר צעד!",
+        "completionMessage": "הידד! עכשיו יודעים את המילים באנגלית לרגל, כף רגל, ברך ופנים."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים אומר: עם אלה הולכים ורצים."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים אומר: חלק אחד עוזר לצעוד, וחלק אחר מתכופף."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים אומר: זה החלק הקדמי של הראש, שבו העיניים, האף והפה."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים אומר: החלק הזה ברגל מתכופף כשיושבים."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים אומר: למצוא את חלקי הגוף שעוזרים ללכת."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים אומר: זה החלק בתחתית הרגל. הוא נוגע באדמה בתוך הנעל."
+        }
+      },
+      "words": {
+        "leg": {
+          "translation": "רגל"
+        },
+        "face": {
+          "translation": "פנים"
+        },
+        "foot": {
+          "translation": "כף רגל"
+        },
+        "knee": {
+          "translation": "ברך"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "leg",
+      "text": "A leg",
+      "spelling": "leg",
+      "translation": "нога",
+      "imageId": "leg-image",
+      "audioId": "leg-audio"
+    },
+    {
+      "id": "foot",
+      "text": "A foot",
+      "spelling": "foot",
+      "translation": "ступня",
+      "imageId": "foot-image",
+      "audioId": "foot-audio"
+    },
+    {
+      "id": "face",
+      "text": "A face",
+      "spelling": "face",
+      "translation": "лицо",
+      "imageId": "face-image",
+      "audioId": "face-audio"
+    },
+    {
+      "id": "knee",
+      "text": "A knee",
+      "spelling": "knee",
+      "translation": "колено",
+      "imageId": "knee-image",
+      "audioId": "knee-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "leg-image",
+      "path": "/v1/media/31d436c6d935f2a2fc000f3ca41da6cd111fa9de00abb89ea32986bae68a5c73.png",
+      "kind": "image"
+    },
+    {
+      "id": "leg-audio",
+      "path": "/v1/media/4b88225154b3d6ba145f9796f2f4eea342d435c27ba62d756f294817ab0a81b3.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "foot-image",
+      "path": "/v1/media/56c8413670855711fd75e40aceaf760385eff6d24904292dbec76e7d644b3f9e.png",
+      "kind": "image"
+    },
+    {
+      "id": "foot-audio",
+      "path": "/v1/media/d306fc11699f303aade0cfa9968984542d5dc9b31679eb3922d36bc3733df33f.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "face-image",
+      "path": "/v1/media/12791b9639ce35e8d543c7e71e7c5cec3e74827f690b36cb651a68b6f789f1c7.png",
+      "kind": "image"
+    },
+    {
+      "id": "face-audio",
+      "path": "/v1/media/0c8c95debc80896c50c89292580c7bbe2e62997705e1fe9daf65b8c6402a1660.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "knee-image",
+      "path": "/v1/media/59c641a03c9204b61a8e98410e407a1ac0a610fa55e28d37dcf4278cb6fc722a.png",
+      "kind": "image"
+    },
+    {
+      "id": "knee-audio",
+      "path": "/v1/media/2cc86e04ed536079ad1f4d7311d6df7d84cf3abc2abd3b947fba1a58d6292d69.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим говорит: этим мы шагаем и бегаем.",
+      "type": "listen-and-select",
+      "wordId": "leg",
+      "choices": [
+        "leg",
+        "face",
+        "foot"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: одна часть помогает шагать, а другая сгибается.",
+      "type": "match-pairs",
+      "wordIds": [
+        "foot",
+        "knee"
+      ],
+      "imageOrder": [
+        "foot",
+        "knee"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это передняя часть головы, где глаза, нос и рот.",
+      "type": "build-word",
+      "wordId": "face",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t3",
+          "letter": "c"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим говорит: эта часть ноги сгибается, когда мы садимся.",
+      "type": "listen-and-select",
+      "wordId": "knee",
+      "choices": [
+        "knee",
+        "leg",
+        "face",
+        "foot"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: найди части тела, которые помогают нам ходить.",
+      "type": "match-pairs",
+      "wordIds": [
+        "leg",
+        "foot",
+        "face"
+      ],
+      "imageOrder": [
+        "face",
+        "leg",
+        "foot"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это часть внизу ноги. Она касается земли в обуви.",
+      "type": "build-word",
+      "wordId": "foot",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t5",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t3",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        }
+      ]
+    }
+  ]
+}

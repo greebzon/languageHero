@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "forest-cover",
+      "path": "apps/mobile/assets/images/worlds/forest.png",
+      "source": "Generated with built-in imagegen; style references: user-provided underwater and space covers",
+      "date": "2026-09-18",
+      "prompt": "content/assets-manifest/forest-cover-prompt.md",
+      "usage": "Mysterious Forest set cover; fox, bear, rabbit and owl; no embedded text"
+    },
+    {
+      "id": "underwater-cover",
+      "path": "apps/mobile/assets/images/worlds/underwater.png",
+      "source": "User-provided main_s/cute_colorful_children_cartoon_illustration_of_an_underwater_sea_world/screen.png",
+      "usage": "Upcoming set cover; copied without editing"
+    },
+    {
+      "id": "space-cover",
+      "path": "apps/mobile/assets/images/worlds/space.png",
+      "source": "User-provided main_s/cute_colorful_children_cartoon_illustration_of_an_outer_space_adventure_with/screen.png",
+      "usage": "Upcoming set cover; copied without editing"
+    },
+    {
+      "id": "tim",
+      "path": "apps/mobile/assets/images/tim.png",
+      "source": "User-provided stitch_/logo/screen.png",
+      "usage": "Brand mascot; original copied without editing"
+    },
+    {
+      "id": "animals",
+      "path": "apps/mobile/assets/images/animals.png",
+      "source": "Generated with imagegen for this project",
+      "date": "2026-09-18",
+      "layout": "2x2: fox, bear, rabbit, owl",
+      "usage": "Four animal illustrations, clipped at render time; no external image URLs"
+    },
+    {
+      "id": "demo-audio",
+      "path": "apps/mobile/assets/audio/*.wav",
+      "source": "Windows SAPI, Microsoft Zira Desktop, en-US, rate -2",
+      "transcripts": {
+        "fox": "A fox.",
+        "bear": "A bear.",
+        "rabbit": "A rabbit.",
+        "owl": "An owl."
+      },
+      "usage": "Local synthesized demonstration audio; editorial/native-speaker review before public release"
+    },
+    {
+      "id": "fonts",
+      "source": "@expo-google-fonts/rubik and @expo-google-fonts/nunito-sans",
+      "license": "SIL Open Font License 1.1; included in respective packages",
+      "usage": "Bundled offline fonts"
+    }
+  ]
+}

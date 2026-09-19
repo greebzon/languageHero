@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 2,
+  "id": "en-animals-04",
+  "version": 2,
+  "language": "en",
+  "title": "Собери слова",
+  "texts": {
+    "en": {
+      "title": "Build the Words",
+      "exercises": {
+        "spell-0": {
+          "prompt": "Build the animal's name",
+          "hint": "The word is written like this: fox. Tap a letter you picked to put it back."
+        },
+        "spell-1": {
+          "prompt": "Build the animal's name",
+          "hint": "The word is written like this: bear. Tap a letter you picked to put it back."
+        },
+        "spell-2": {
+          "prompt": "Build the animal's name",
+          "hint": "The word is written like this: rabbit. Tap a letter you picked to put it back."
+        },
+        "spell-3": {
+          "prompt": "Build the animal's name",
+          "hint": "The word is written like this: owl. Tap a letter you picked to put it back."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "A fox"
+        },
+        "owl": {
+          "translation": "An owl"
+        },
+        "bear": {
+          "translation": "A bear"
+        },
+        "rabbit": {
+          "translation": "A rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "בואו נרכיב מילים",
+      "exercises": {
+        "spell-0": {
+          "prompt": "להרכיב את שם החיה",
+          "hint": "כך כותבים את המילה: fox. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-1": {
+          "prompt": "להרכיב את שם החיה",
+          "hint": "כך כותבים את המילה: bear. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-2": {
+          "prompt": "להרכיב את שם החיה",
+          "hint": "כך כותבים את המילה: rabbit. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-3": {
+          "prompt": "להרכיב את שם החיה",
+          "hint": "כך כותבים את המילה: owl. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "A fox",
+      "spelling": "fox",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "A bear",
+      "spelling": "bear",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "A rabbit",
+      "spelling": "rabbit",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "An owl",
+      "spelling": "owl",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "spell-0",
+      "prompt": "Собери название зверька",
+      "hint": "Слово пишется так: fox. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "fox",
+      "tiles": [
+        {
+          "id": "tile-2",
+          "letter": "x"
+        },
+        {
+          "id": "tile-1",
+          "letter": "o"
+        },
+        {
+          "id": "tile-0",
+          "letter": "f"
+        }
+      ]
+    },
+    {
+      "id": "spell-1",
+      "prompt": "Собери название зверька",
+      "hint": "Слово пишется так: bear. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "bear",
+      "tiles": [
+        {
+          "id": "tile-3",
+          "letter": "r"
+        },
+        {
+          "id": "tile-2",
+          "letter": "a"
+        },
+        {
+          "id": "tile-1",
+          "letter": "e"
+        },
+        {
+          "id": "tile-0",
+          "letter": "b"
+        }
+      ]
+    },
+    {
+      "id": "spell-2",
+      "prompt": "Собери название зверька",
+      "hint": "Слово пишется так: rabbit. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "rabbit",
+      "tiles": [
+        {
+          "id": "tile-5",
+          "letter": "t"
+        },
+        {
+          "id": "tile-4",
+          "letter": "i"
+        },
+        {
+          "id": "tile-3",
+          "letter": "b"
+        },
+        {
+          "id": "tile-2",
+          "letter": "b"
+        },
+        {
+          "id": "tile-1",
+          "letter": "a"
+        },
+        {
+          "id": "tile-0",
+          "letter": "r"
+        }
+      ]
+    },
+    {
+      "id": "spell-3",
+      "prompt": "Собери название зверька",
+      "hint": "Слово пишется так: owl. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "owl",
+      "tiles": [
+        {
+          "id": "tile-2",
+          "letter": "l"
+        },
+        {
+          "id": "tile-1",
+          "letter": "w"
+        },
+        {
+          "id": "tile-0",
+          "letter": "o"
+        }
+      ]
+    }
+  ]
+}

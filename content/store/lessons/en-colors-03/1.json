@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 2,
+  "id": "en-colors-03",
+  "version": 1,
+  "language": "en",
+  "title": "Радужная мастерская",
+  "presentation": {
+    "intro": "Я Тим! В шести играх мы соберём красивую дугу из красок. Слушай английские слова и смело выбирай ответы!",
+    "completionTitle": "Радуга готова!",
+    "completionMessage": "Замечательно! Ты умеешь узнавать цвета и говорить слово для разноцветной дуги в небе. Продолжай играть с английским!"
+  },
+  "words": [
+    {
+      "id": "red",
+      "text": "Red",
+      "spelling": "red",
+      "translation": "красный",
+      "imageId": "red-image",
+      "audioId": "red-audio"
+    },
+    {
+      "id": "blue",
+      "text": "Blue",
+      "spelling": "blue",
+      "translation": "синий",
+      "imageId": "blue-image",
+      "audioId": "blue-audio"
+    },
+    {
+      "id": "green",
+      "text": "Green",
+      "spelling": "green",
+      "translation": "зелёный",
+      "imageId": "green-image",
+      "audioId": "green-audio"
+    },
+    {
+      "id": "yellow",
+      "text": "Yellow",
+      "spelling": "yellow",
+      "translation": "жёлтый",
+      "imageId": "yellow-image",
+      "audioId": "yellow-audio"
+    },
+    {
+      "id": "purple",
+      "text": "Purple",
+      "spelling": "purple",
+      "translation": "фиолетовый",
+      "imageId": "purple-image",
+      "audioId": "purple-audio"
+    },
+    {
+      "id": "rainbow",
+      "text": "Rainbow",
+      "spelling": "rainbow",
+      "translation": "радуга",
+      "imageId": "rainbow-image",
+      "audioId": "rainbow-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "red-image",
+      "path": "/v1/media/d2d40d0fff72d3ef3c1b73ac7b52eee12bd00ae3fe61a0c5974bc42793022ce7.png",
+      "kind": "image"
+    },
+    {
+      "id": "red-audio",
+      "path": "/v1/media/febf8ac508b515d8971e70341fba736a27cd59e2065873ff3b9c93b4335d1ece.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "blue-image",
+      "path": "/v1/media/49d4ee5e10a31f336691227f16e4edd041f474b54c492849e1229359688e9f99.png",
+      "kind": "image"
+    },
+    {
+      "id": "blue-audio",
+      "path": "/v1/media/b61b1acf7644aab188b71effb124935af0fffc54784c0f81ccb7cbf67d28b5d8.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "green-image",
+      "path": "/v1/media/f71b9bc08f3066874e69435ff56e8914f535dc958a719d1a4a1f54892ef14c2a.png",
+      "kind": "image"
+    },
+    {
+      "id": "green-audio",
+      "path": "/v1/media/0caf04c9d2196d5cf79f7626ad02719623a1410b5383ea513d57efe327d94959.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "yellow-image",
+      "path": "/v1/media/5d464a63c021f1058c7c4cfea7838cb51380d2ae2fedfd303a94c667106c2ec0.png",
+      "kind": "image"
+    },
+    {
+      "id": "yellow-audio",
+      "path": "/v1/media/d38e231cf6e3be5fc37b02d7cd56878c6261e7e137fea8147574157c6f3a40ba.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "purple-image",
+      "path": "/v1/media/4b1633c3ffa0f0513b12756f711e3179872e5b17821fe7d842cc30105cb45878.png",
+      "kind": "image"
+    },
+    {
+      "id": "purple-audio",
+      "path": "/v1/media/33059ce45837f3aa99ad80b34f9104560526e6eb1818dab5f5574df33d2cd3e2.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rainbow-image",
+      "path": "/v1/media/c6c6104408b7d4c5e7d94a2f15f2870986139ec4fa7c1ee7937c7943d0381223.png",
+      "kind": "image"
+    },
+    {
+      "id": "rainbow-audio",
+      "path": "/v1/media/05898e0e207de30866e4639dcde734689f54f71117bd1e74be9d086c4c8ae01d.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим говорит слово. Сначала слушай внимательно, потом нажимай на картинку.",
+      "type": "listen-and-select",
+      "wordId": "red",
+      "choices": [
+        "blue",
+        "red",
+        "green"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим советует: читай слово и ищи его цвет на картинке.",
+      "type": "match-pairs",
+      "wordIds": [
+        "yellow",
+        "purple",
+        "blue"
+      ],
+      "imageOrder": [
+        "yellow",
+        "purple",
+        "blue"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Выложи из букв название цвета.",
+      "hint": "Тим показывает траву в солнечный день. Выбирай буквы по порядку.",
+      "type": "build-word",
+      "wordId": "green",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "q"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t1",
+          "letter": "g"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t7",
+          "letter": "x"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери нужную картинку.",
+      "hint": "Тим смотрит в небо после дождя. Слушай слово целиком.",
+      "type": "listen-and-select",
+      "wordId": "rainbow",
+      "choices": [
+        "red",
+        "rainbow",
+        "purple",
+        "yellow"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим раскладывает краски. Каждому слову нужна своя картинка.",
+      "type": "match-pairs",
+      "wordIds": [
+        "red",
+        "green",
+        "yellow",
+        "purple"
+      ],
+      "imageOrder": [
+        "red",
+        "purple",
+        "green",
+        "yellow"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Составь название цвета из букв.",
+      "hint": "Тим показывает чистое дневное небо. Лишние буквы можно не брать.",
+      "type": "build-word",
+      "wordId": "blue",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "u"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "t"
+        },
+        {
+          "id": "t2",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        }
+      ]
+    }
+  ]
+}

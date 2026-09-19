@@ -1,0 +1,371 @@
+{
+  "schemaVersion": 2,
+  "id": "en-space-04",
+  "version": 2,
+  "language": "en",
+  "title": "Цвет и свет космоса",
+  "presentation": {
+    "intro": "Тим говорит: «Добавим в космос цвет, свет и волшебный луч!»",
+    "completionTitle": "Космический художник!",
+    "completionMessage": "Прекрасно! Ты повторил слова о космосе, цвете и свете. Продолжай исследовать английский!"
+  },
+  "texts": {
+    "en": {
+      "title": "Color and Light in Space",
+      "presentation": {
+        "intro": "Tim says: “Let’s add color, light, and a magic beam to space!”",
+        "completionTitle": "Space Artist!",
+        "completionMessage": "Great! You reviewed words about space, color, and light. Keep exploring English!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: Look for a visitor from another planet."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: One is a color like a space cloud, and the other is about strong light."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: It is the huge place around our planet."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim the fox: Look for what shines very brightly."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim the fox: Find our planet and a thin beam of light."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox: It is a color found in faraway nebulae."
+        }
+      },
+      "words": {
+        "alien": {
+          "translation": "an alien"
+        },
+        "earth": {
+          "translation": "Earth"
+        },
+        "laser": {
+          "translation": "a laser"
+        },
+        "space": {
+          "translation": "space"
+        },
+        "bright": {
+          "translation": "bright"
+        },
+        "purple": {
+          "translation": "purple"
+        }
+      }
+    },
+    "he": {
+      "title": "צבע ואור בחלל",
+      "presentation": {
+        "intro": "טים אומר: ״בואו נוסיף לחלל צבע, אור וקרן קסם!״",
+        "completionTitle": "אמני החלל!",
+        "completionMessage": "נהדר! חזרנו על מילים על חלל, צבע ואור. בואו להמשיך לחקור אנגלית!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: לחפש אורח מכוכב אחר."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: צבע אחד הוא כמו ענן בחלל, והמילה השנייה היא על אור חזק."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה המקום הענקי סביב כדור הארץ שלנו."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל: לחפש את מה שמאיר חזק מאוד."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים השועל: למצוא את כוכב הלכת שלנו וקרן אור דקה."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל: זה צבע שיש בערפיליות רחוקות."
+        }
+      },
+      "words": {
+        "alien": {
+          "translation": "חייזר"
+        },
+        "earth": {
+          "translation": "כדור הארץ"
+        },
+        "laser": {
+          "translation": "לייזר"
+        },
+        "space": {
+          "translation": "חלל"
+        },
+        "bright": {
+          "translation": "בהיר"
+        },
+        "purple": {
+          "translation": "סגול"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "alien",
+      "text": "An alien",
+      "spelling": "alien",
+      "translation": "инопланетянин",
+      "imageId": "alien-image",
+      "audioId": "alien-audio"
+    },
+    {
+      "id": "earth",
+      "text": "Earth",
+      "spelling": "earth",
+      "translation": "Земля",
+      "imageId": "earth-image",
+      "audioId": "earth-audio"
+    },
+    {
+      "id": "space",
+      "text": "Space",
+      "spelling": "space",
+      "translation": "космос",
+      "imageId": "space-image",
+      "audioId": "space-audio"
+    },
+    {
+      "id": "purple",
+      "text": "Purple",
+      "spelling": "purple",
+      "translation": "фиолетовый",
+      "imageId": "purple-image",
+      "audioId": "purple-audio"
+    },
+    {
+      "id": "bright",
+      "text": "Bright",
+      "spelling": "bright",
+      "translation": "яркий",
+      "imageId": "bright-image",
+      "audioId": "bright-audio"
+    },
+    {
+      "id": "laser",
+      "text": "A laser",
+      "spelling": "laser",
+      "translation": "лазер",
+      "imageId": "laser-image",
+      "audioId": "laser-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "alien-image",
+      "path": "/v1/media/6e149cf367f45c99536e8d2f180b73a5cfa27aab4dfb94d6cb3e00703bc8ffaf.png",
+      "kind": "image"
+    },
+    {
+      "id": "alien-audio",
+      "path": "/v1/media/cec92e6d55191961b3b822b63e24c0a3a21fabaa2a456768fa33368360bff8ba.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "earth-image",
+      "path": "/v1/media/c298fda074afd10ef19f2d6b744207d592e4d9e3e0a7c1359504fa300fe9ac92.png",
+      "kind": "image"
+    },
+    {
+      "id": "earth-audio",
+      "path": "/v1/media/5b5c0fa1e9d1c165c0879fae11cca45909ee273b8750db7b9200459c1e399367.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "space-image",
+      "path": "/v1/media/22d5b7157e8e1c04b2dfea3255c6236fb239cf2ab853721f9d8c27911056748d.png",
+      "kind": "image"
+    },
+    {
+      "id": "space-audio",
+      "path": "/v1/media/0c51225a2eea4463477f97db848cb360015316d4539cfb9c84a900ce01540c1e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "purple-image",
+      "path": "/v1/media/6954961e4721e5df0f8c4a2b8b439e6ae866cfb567359a65fa3694b00c76b481.png",
+      "kind": "image"
+    },
+    {
+      "id": "purple-audio",
+      "path": "/v1/media/f42473d7de464962c6d1e03b7a635af992fd5061f8e286783583235039abc065.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bright-image",
+      "path": "/v1/media/5ab8c63927c679ca1a842b39fb26d824bfcfbb35b0230efa2eab387a8f8f5abf.png",
+      "kind": "image"
+    },
+    {
+      "id": "bright-audio",
+      "path": "/v1/media/1bbd4d4afeec9135e4f353ac62e3e98697cf171ee16637da33edf006c5b5aadf.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "laser-image",
+      "path": "/v1/media/50eabf67f09039acf092570681c0842add0ded48d88ddcfa1b1ca3085fc605ad.png",
+      "kind": "image"
+    },
+    {
+      "id": "laser-audio",
+      "path": "/v1/media/af7130b392d8c63e4bc35487b28d0070d05f427ca51193ff01217660f8c2b4f0.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: ищи гостя с другой планеты.",
+      "type": "listen-and-select",
+      "wordId": "alien",
+      "choices": [
+        "laser",
+        "earth",
+        "alien"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: один цвет как космическое облако, а другое слово — про сильный свет.",
+      "type": "match-pairs",
+      "wordIds": [
+        "purple",
+        "bright"
+      ],
+      "imageOrder": [
+        "purple",
+        "bright"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это всё огромное место вокруг нашей планеты.",
+      "type": "build-word",
+      "wordId": "space",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "c"
+        },
+        {
+          "id": "t6",
+          "letter": "l"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t7",
+          "letter": "n"
+        },
+        {
+          "id": "t2",
+          "letter": "p"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим-лисёнок: ищи то, что светит очень сильно.",
+      "type": "listen-and-select",
+      "wordId": "bright",
+      "choices": [
+        "laser",
+        "earth",
+        "bright",
+        "purple"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок: найди нашу планету и тонкий луч света.",
+      "type": "match-pairs",
+      "wordIds": [
+        "earth",
+        "laser"
+      ],
+      "imageOrder": [
+        "earth",
+        "laser"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это цвет, который бывает у далёких туманностей.",
+      "type": "build-word",
+      "wordId": "purple",
+      "tiles": [
+        {
+          "id": "t9",
+          "letter": "d"
+        },
+        {
+          "id": "t7",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "u"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t8",
+          "letter": "c"
+        },
+        {
+          "id": "t4",
+          "letter": "p"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "p"
+        }
+      ]
+    }
+  ]
+}

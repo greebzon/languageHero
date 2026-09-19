@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 2,
+  "id": "en-space-02",
+  "version": 2,
+  "language": "en",
+  "title": "Экипаж в космосе",
+  "presentation": {
+    "intro": "Тим говорит: «Соберём дружный экипаж и проверим, всё ли готово к полёту!»",
+    "completionTitle": "Экипаж готов!",
+    "completionMessage": "Здорово! Теперь ты знаешь, кто летит в космос и что нужно взять с собой."
+  },
+  "texts": {
+    "en": {
+      "title": "Space Crew",
+      "presentation": {
+        "intro": "Tim says: “Let’s make a friendly crew and check that everything is ready for the flight!”",
+        "completionTitle": "The Crew Is Ready!",
+        "completionMessage": "Great! Now you know who flies into space and what to take with you."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim says: this is a person in a special suit for flying in space."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: one character came from far away, and one thing helps you look at the stars."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim says: the crew flies among the stars in this big vehicle."
+        },
+        "ex-4": {
+          "prompt": "Listen and choose the right picture.",
+          "hint": "Tim says: this protects an astronaut’s head."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim says: find our blue home in space and the person in a space suit."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim says: this tool helps you look at faraway stars."
+        }
+      },
+      "words": {
+        "alien": {
+          "translation": "an alien"
+        },
+        "earth": {
+          "translation": "Earth"
+        },
+        "helmet": {
+          "translation": "a helmet"
+        },
+        "astronaut": {
+          "translation": "an astronaut"
+        },
+        "spaceship": {
+          "translation": "a spaceship"
+        },
+        "telescope": {
+          "translation": "a telescope"
+        }
+      }
+    },
+    "he": {
+      "title": "צוות בחלל",
+      "presentation": {
+        "intro": "טים אומר: ״בואו נרכיב צוות חברים ונבדוק שהכול מוכן לטיסה!״",
+        "completionTitle": "הצוות מוכן!",
+        "completionMessage": "נהדר! עכשיו יודעים מי טס לחלל ומה צריך לקחת."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים אומר: זה אדם בחליפה מיוחדת לטיסה בחלל."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים אומר: דמות אחת הגיעה מרחוק, וחפץ אחד עוזר להסתכל על הכוכבים."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים אומר: הצוות טס בין הכוכבים בכלי התחבורה הגדול הזה."
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור את התמונה הנכונה.",
+          "hint": "טים אומר: זה מגן על הראש של אסטרונאוט."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות הנכונות.",
+          "hint": "טים אומר: למצוא את הבית הכחול שלנו בחלל ואת האדם בחליפת חלל."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים אומר: דרך המכשיר הזה נוח לראות כוכבים רחוקים."
+        }
+      },
+      "words": {
+        "alien": {
+          "translation": "חייזר"
+        },
+        "earth": {
+          "translation": "כדור הארץ"
+        },
+        "helmet": {
+          "translation": "קסדה"
+        },
+        "astronaut": {
+          "translation": "אסטרונאוט"
+        },
+        "spaceship": {
+          "translation": "חללית"
+        },
+        "telescope": {
+          "translation": "טלסקופ"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "astronaut",
+      "text": "An astronaut",
+      "spelling": "astronaut",
+      "translation": "астронавт",
+      "imageId": "astronaut-image",
+      "audioId": "astronaut-audio"
+    },
+    {
+      "id": "alien",
+      "text": "An alien",
+      "spelling": "alien",
+      "translation": "инопланетянин",
+      "imageId": "alien-image",
+      "audioId": "alien-audio"
+    },
+    {
+      "id": "spaceship",
+      "text": "A spaceship",
+      "spelling": "spaceship",
+      "translation": "космический корабль",
+      "imageId": "spaceship-image",
+      "audioId": "spaceship-audio"
+    },
+    {
+      "id": "telescope",
+      "text": "A telescope",
+      "spelling": "telescope",
+      "translation": "телескоп",
+      "imageId": "telescope-image",
+      "audioId": "telescope-audio"
+    },
+    {
+      "id": "helmet",
+      "text": "A helmet",
+      "spelling": "helmet",
+      "translation": "шлем",
+      "imageId": "helmet-image",
+      "audioId": "helmet-audio"
+    },
+    {
+      "id": "earth",
+      "text": "Earth",
+      "spelling": "earth",
+      "translation": "Земля",
+      "imageId": "earth-image",
+      "audioId": "earth-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "astronaut-image",
+      "path": "/v1/media/89aa12c3c92481ba19890fc1f9b9ea8ff1f7e87fd031c8180b532b03085224c7.png",
+      "kind": "image"
+    },
+    {
+      "id": "astronaut-audio",
+      "path": "/v1/media/f6199c0e81992df6bf2e3448756e9255970cf05e56b0e9439313e48c2144781e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "alien-image",
+      "path": "/v1/media/6e149cf367f45c99536e8d2f180b73a5cfa27aab4dfb94d6cb3e00703bc8ffaf.png",
+      "kind": "image"
+    },
+    {
+      "id": "alien-audio",
+      "path": "/v1/media/cec92e6d55191961b3b822b63e24c0a3a21fabaa2a456768fa33368360bff8ba.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "spaceship-image",
+      "path": "/v1/media/301815f808208d244b7b441eb8254a0eedb8b67af373a65707d4ddbab1e33f60.png",
+      "kind": "image"
+    },
+    {
+      "id": "spaceship-audio",
+      "path": "/v1/media/8569a977fe0347bf2cbf914c6430e59b566323b9f762034cf6fc710a9bea444a.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "telescope-image",
+      "path": "/v1/media/dfaaeea5f3aedc6af261c1dbc7167625fca13dd990c2af5dda2b8a4fb375dfba.png",
+      "kind": "image"
+    },
+    {
+      "id": "telescope-audio",
+      "path": "/v1/media/daebc423d1b380a4913c21b788d96080752a91ba74fcab32aab0baf9482a10d5.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "helmet-image",
+      "path": "/v1/media/60a765de68df83535e09a0cbd3070cb84ebccd7f68b2f510fde64d38c161ec69.png",
+      "kind": "image"
+    },
+    {
+      "id": "helmet-audio",
+      "path": "/v1/media/a36aa650c3fa2c577d9c38cb51634d9d7fd810f65f869549d2752988e971a898.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "earth-image",
+      "path": "/v1/media/c298fda074afd10ef19f2d6b744207d592e4d9e3e0a7c1359504fa300fe9ac92.png",
+      "kind": "image"
+    },
+    {
+      "id": "earth-audio",
+      "path": "/v1/media/5b5c0fa1e9d1c165c0879fae11cca45909ee273b8750db7b9200459c1e399367.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим говорит: это человек в специальном костюме для полёта в космос.",
+      "type": "listen-and-select",
+      "wordId": "astronaut",
+      "choices": [
+        "helmet",
+        "alien",
+        "astronaut"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: один герой прилетел издалека, а предмет помогает смотреть на звёзды.",
+      "type": "match-pairs",
+      "wordIds": [
+        "alien",
+        "telescope"
+      ],
+      "imageOrder": [
+        "telescope",
+        "alien"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: на таком большом транспорте команда летит среди звёзд.",
+      "type": "build-word",
+      "wordId": "spaceship",
+      "tiles": [
+        {
+          "id": "t12",
+          "letter": "t"
+        },
+        {
+          "id": "t9",
+          "letter": "p"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t8",
+          "letter": "i"
+        },
+        {
+          "id": "t4",
+          "letter": "c"
+        },
+        {
+          "id": "t6",
+          "letter": "s"
+        },
+        {
+          "id": "t11",
+          "letter": "r"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t10",
+          "letter": "n"
+        },
+        {
+          "id": "t7",
+          "letter": "h"
+        },
+        {
+          "id": "t2",
+          "letter": "p"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим говорит: это защита для головы космонавта.",
+      "type": "listen-and-select",
+      "wordId": "helmet",
+      "choices": [
+        "earth",
+        "telescope",
+        "helmet"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим говорит: найди наш голубой дом в космосе и человека в скафандре.",
+      "type": "match-pairs",
+      "wordIds": [
+        "earth",
+        "astronaut"
+      ],
+      "imageOrder": [
+        "astronaut",
+        "earth"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: через этот прибор удобно разглядывать далёкие звёзды.",
+      "type": "build-word",
+      "wordId": "telescope",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t11",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "l"
+        },
+        {
+          "id": "t7",
+          "letter": "o"
+        },
+        {
+          "id": "t6",
+          "letter": "c"
+        },
+        {
+          "id": "t10",
+          "letter": "n"
+        },
+        {
+          "id": "t9",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "s"
+        },
+        {
+          "id": "t8",
+          "letter": "p"
+        },
+        {
+          "id": "t12",
+          "letter": "u"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "e"
+        }
+      ]
+    }
+  ]
+}

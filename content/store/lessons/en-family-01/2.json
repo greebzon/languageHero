@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 2,
+  "id": "en-family-01",
+  "version": 2,
+  "language": "en",
+  "title": "Мама, папа и малыш",
+  "presentation": {
+    "intro": "Тим говорит: «Давай познакомимся с твоей семьёй и скажем новые слова вместе!»",
+    "completionTitle": "Отличное знакомство!",
+    "completionMessage": "Ты уже умеешь говорить по-английски: мама, папа, сестра и малыш. Здорово получилось!"
+  },
+  "texts": {
+    "en": {
+      "title": "Mom, Dad and Baby",
+      "presentation": {
+        "intro": "Tim says: “Let’s meet your family and say new words together!”",
+        "completionTitle": "Great meeting!",
+        "completionMessage": "You can already say these English words: mother, father, sister and baby. Great job!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim the fox says: listen carefully and tap the right person."
+        },
+        "ex-2": {
+          "prompt": "Match the English words to the pictures.",
+          "hint": "Tim the fox says: name each person in Russian, then find the pair."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox says: this is the smallest family member."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim the fox says: this is father. Find him in the picture."
+        },
+        "ex-5": {
+          "prompt": "Match the English words to the pictures.",
+          "hint": "Tim the fox says: don’t rush, check every pair."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim the fox says: this is a girl in the family, not mother."
+        }
+      },
+      "words": {
+        "baby": {
+          "translation": "baby"
+        },
+        "father": {
+          "translation": "dad"
+        },
+        "mother": {
+          "translation": "mom"
+        },
+        "sister": {
+          "translation": "sister"
+        }
+      }
+    },
+    "he": {
+      "title": "אמא, אבא ותינוק",
+      "presentation": {
+        "intro": "טים אומר: ״בואו נכיר את המשפחה שלך ונגיד מילים חדשות יחד!״",
+        "completionTitle": "היכרות נהדרת!",
+        "completionMessage": "כבר אפשר להגיד באנגלית: אמא, אבא, אחות ותינוק. כל הכבוד!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל אומר: להקשיב היטב וללחוץ על האדם הנכון."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים באנגלית לתמונות.",
+          "hint": "טים השועל אומר: להגיד כל אדם ברוסית, ואז למצוא את הזוג."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל אומר: זה בן המשפחה הכי קטן."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה הנכונה.",
+          "hint": "טים השועל אומר: זה אבא. למצוא אותו בתמונה."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים באנגלית לתמונות.",
+          "hint": "טים השועל אומר: לא למהר, לבדוק כל זוג."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים השועל אומר: זאת ילדה במשפחה, לא אמא."
+        }
+      },
+      "words": {
+        "baby": {
+          "translation": "תינוק"
+        },
+        "father": {
+          "translation": "אבא"
+        },
+        "mother": {
+          "translation": "אמא"
+        },
+        "sister": {
+          "translation": "אחות"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "mother",
+      "text": "Mother",
+      "spelling": "mother",
+      "translation": "мама",
+      "imageId": "mother-image",
+      "audioId": "mother-audio"
+    },
+    {
+      "id": "father",
+      "text": "Father",
+      "spelling": "father",
+      "translation": "папа",
+      "imageId": "father-image",
+      "audioId": "father-audio"
+    },
+    {
+      "id": "sister",
+      "text": "Sister",
+      "spelling": "sister",
+      "translation": "сестра",
+      "imageId": "sister-image",
+      "audioId": "sister-audio"
+    },
+    {
+      "id": "baby",
+      "text": "Baby",
+      "spelling": "baby",
+      "translation": "малыш",
+      "imageId": "baby-image",
+      "audioId": "baby-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "mother-image",
+      "path": "/v1/media/cc68a55b4e01e6b9e58aeb96a061902ad8384d91fe907e3dc97a379060c391a2.png",
+      "kind": "image"
+    },
+    {
+      "id": "mother-audio",
+      "path": "/v1/media/52f45a6c5f2550399c7d0a855423166ff48ddc190fed043557791da22f25a2c2.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "father-image",
+      "path": "/v1/media/93770ca0cd5d796033e04a5bf69f8ce7c8e3deb75e00bfd1836e0e34c7b30a4b.png",
+      "kind": "image"
+    },
+    {
+      "id": "father-audio",
+      "path": "/v1/media/3a4fe44d4f440460e62e8af01fbc12cf7c5baf51076ce8ec2ef123dfd6aa8931.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "sister-image",
+      "path": "/v1/media/5c888bc4c0677c9ca810c2f2fa57ace1a50dbbe426c0ec348b91a9fc662da087.png",
+      "kind": "image"
+    },
+    {
+      "id": "sister-audio",
+      "path": "/v1/media/c5ea0e8a45185d89493ceddf3b84c2bff16fe01e1c2b497b5da07472df0cf0b7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "baby-image",
+      "path": "/v1/media/826274330628c6c5d5b41a1c4889683b0ce9e08af4f22cd42feb2551eb721731.png",
+      "kind": "image"
+    },
+    {
+      "id": "baby-audio",
+      "path": "/v1/media/75610403ede897021d3c698fbff836e2efae9bd3dc96054880f6b4120b1327b2.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок подсказывает: слушай внимательно и нажми на нужного человека.",
+      "type": "listen-and-select",
+      "wordId": "mother",
+      "choices": [
+        "baby",
+        "father",
+        "mother"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини английские слова с картинками.",
+      "hint": "Тим-лисёнок советует: назови каждого человека по-русски, а потом ищи пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "father",
+        "sister"
+      ],
+      "imageOrder": [
+        "father",
+        "sister"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это самый маленький член семьи.",
+      "type": "build-word",
+      "wordId": "baby",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t4",
+          "letter": "y"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t3",
+          "letter": "b"
+        },
+        {
+          "id": "t6",
+          "letter": "q"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок говорит: это папа. Найди его на картинке.",
+      "type": "listen-and-select",
+      "wordId": "father",
+      "choices": [
+        "sister",
+        "mother",
+        "father",
+        "baby"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини английские слова с картинками.",
+      "hint": "Тим-лисёнок советует: не спеши, проверь каждую пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "mother",
+        "baby"
+      ],
+      "imageOrder": [
+        "baby",
+        "mother"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это девочка в семье, не мама.",
+      "type": "build-word",
+      "wordId": "sister",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t8",
+          "letter": "q"
+        },
+        {
+          "id": "t6",
+          "letter": "r"
+        },
+        {
+          "id": "t3",
+          "letter": "s"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t7",
+          "letter": "b"
+        }
+      ]
+    }
+  ]
+}

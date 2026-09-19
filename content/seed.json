@@ -1,0 +1,1420 @@
+{
+  "catalog": {
+    "schemaVersion": 2,
+    "revision": 12,
+    "languages": [
+      {
+        "code": "en",
+        "title": "Английский",
+        "direction": "ltr",
+        "titles": {
+          "en": "English",
+          "he": "אנגלית"
+        }
+      }
+    ],
+    "courses": [
+      {
+        "id": "en-forest",
+        "language": "en",
+        "title": "Загадочный лес",
+        "description": "Слушаем, играем и учим слова",
+        "cover": {
+          "id": "forest-cover",
+          "kind": "image",
+          "path": "/v1/media/8ec735ed253cb35bcff391345345c802a749edceb1b349308297a2838fc2870b.png"
+        },
+        "texts": {
+          "en": {
+            "title": "Mystery Forest",
+            "description": "Listen, play, and learn words"
+          },
+          "he": {
+            "title": "יער מסתורי",
+            "description": "להקשיב, לשחק וללמוד מילים"
+          }
+        },
+        "locales": ["ru", "en", "he"],
+        "lessons": [
+          {
+            "id": "en-animals-01",
+            "version": 2,
+            "title": "Лесные друзья",
+            "titles": {
+              "en": "Forest Friends",
+              "he": "חברים מהיער"
+            },
+            "exerciseCount": 6,
+            "requiredTypes": ["listen-and-select"]
+          },
+          {
+            "id": "en-animals-02",
+            "version": 2,
+            "title": "Кто спрятался?",
+            "titles": {
+              "en": "Who Is Hiding?",
+              "he": "מי מתחבא?"
+            },
+            "exerciseCount": 4,
+            "requiredTypes": ["listen-and-select"]
+          },
+          {
+            "id": "en-animals-03",
+            "version": 2,
+            "title": "Найди пары",
+            "titles": {
+              "en": "Find the Pairs",
+              "he": "למצוא זוגות"
+            },
+            "exerciseCount": 3,
+            "requiredTypes": ["match-pairs"]
+          },
+          {
+            "id": "en-animals-04",
+            "version": 2,
+            "title": "Собери слова",
+            "titles": {
+              "en": "Build the Words",
+              "he": "בואו נרכיב מילים"
+            },
+            "exerciseCount": 4,
+            "requiredTypes": ["build-word"]
+          },
+          {
+            "id": "en-animals-05",
+            "version": 3,
+            "title": "Праздник в лесу",
+            "titles": {
+              "en": "A Party in the Forest",
+              "he": "מסיבה ביער"
+            },
+            "exerciseCount": 6,
+            "requiredTypes": ["build-word", "match-pairs"]
+          }
+        ]
+      }
+    ],
+    "previews": [
+      {
+        "id": "en-underwater",
+        "language": "en",
+        "title": "Подводный мир: Морские обитатели",
+        "description": "Глубоководные тайны и новые слова",
+        "cover": {
+          "id": "underwater-cover",
+          "kind": "image",
+          "path": "/v1/media/25030d3fa02b3d86fe9c6a469638dba08b0e5fd91b2f14c3e2b69c4dee07a1a0.png"
+        }
+      },
+      {
+        "id": "en-space",
+        "language": "en",
+        "title": "Космос: Планеты и звёзды",
+        "description": "Галактические приключения на английском",
+        "cover": {
+          "id": "space-cover",
+          "kind": "image",
+          "path": "/v1/media/befd9f7683d461ad69dd4fc0bcf067c22f60b8b1f0f06470a22d30d8d239885e.png"
+        }
+      }
+    ]
+  },
+  "lessons": [
+    {
+      "schemaVersion": 2,
+      "id": "en-animals-01",
+      "version": 2,
+      "language": "en",
+      "title": "Лесные друзья",
+      "texts": {
+        "en": {
+          "title": "Forest Friends",
+          "exercises": {
+            "listen-0": {
+              "prompt": "Listen and find the animal",
+              "hint": "This animal has orange fur and a fluffy tail."
+            },
+            "listen-1": {
+              "prompt": "Listen and find the animal",
+              "hint": "A big forest animal with round ears."
+            },
+            "listen-2": {
+              "prompt": "Listen and find the animal",
+              "hint": "This animal has long ears. It can jump!"
+            },
+            "listen-3": {
+              "prompt": "Listen and find the animal",
+              "hint": "This bird has big eyes and can see well in the dark."
+            },
+            "listen-4": {
+              "prompt": "Listen and find the animal",
+              "hint": "A big forest animal with round ears."
+            },
+            "listen-5": {
+              "prompt": "Listen and find the animal",
+              "hint": "This animal has orange fur and a fluffy tail."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "A fox"
+            },
+            "owl": {
+              "translation": "An owl"
+            },
+            "bear": {
+              "translation": "A bear"
+            },
+            "rabbit": {
+              "translation": "A rabbit"
+            }
+          }
+        },
+        "he": {
+          "title": "חברים מהיער",
+          "exercises": {
+            "listen-0": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לחיה הזאת יש פרווה כתומה וזנב רך."
+            },
+            "listen-1": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "חיית יער גדולה עם אוזניים עגולות."
+            },
+            "listen-2": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לחיה הזאת יש אוזניים ארוכות. היא יודעת לקפוץ!"
+            },
+            "listen-3": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "הציפור הזאת עם עיניים גדולות רואה טוב בחושך."
+            },
+            "listen-4": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "חיית יער גדולה עם אוזניים עגולות."
+            },
+            "listen-5": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לחיה הזאת יש פרווה כתומה וזנב רך."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "שועל"
+            },
+            "owl": {
+              "translation": "ינשוף"
+            },
+            "bear": {
+              "translation": "דוב"
+            },
+            "rabbit": {
+              "translation": "ארנב"
+            }
+          }
+        }
+      },
+      "words": [
+        {
+          "id": "fox",
+          "text": "A fox",
+          "spelling": "fox",
+          "translation": "Лиса",
+          "imageId": "fox-image",
+          "audioId": "fox-audio"
+        },
+        {
+          "id": "bear",
+          "text": "A bear",
+          "spelling": "bear",
+          "translation": "Медведь",
+          "imageId": "bear-image",
+          "audioId": "bear-audio"
+        },
+        {
+          "id": "rabbit",
+          "text": "A rabbit",
+          "spelling": "rabbit",
+          "translation": "Кролик",
+          "imageId": "rabbit-image",
+          "audioId": "rabbit-audio"
+        },
+        {
+          "id": "owl",
+          "text": "An owl",
+          "spelling": "owl",
+          "translation": "Сова",
+          "imageId": "owl-image",
+          "audioId": "owl-audio"
+        }
+      ],
+      "media": [
+        {
+          "id": "fox-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 0
+          }
+        },
+        {
+          "id": "fox-audio",
+          "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "bear-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 0
+          }
+        },
+        {
+          "id": "bear-audio",
+          "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "rabbit-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 1
+          }
+        },
+        {
+          "id": "rabbit-audio",
+          "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "owl-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "id": "owl-audio",
+          "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+          "kind": "audio"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "listen-0",
+          "prompt": "Послушай и найди зверька",
+          "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+          "type": "listen-and-select",
+          "wordId": "fox",
+          "choices": ["fox", "bear", "rabbit", "owl"]
+        },
+        {
+          "id": "listen-1",
+          "prompt": "Послушай и найди зверька",
+          "hint": "Большой лесной зверь с круглыми ушами.",
+          "type": "listen-and-select",
+          "wordId": "bear",
+          "choices": ["bear", "rabbit", "owl", "fox"]
+        },
+        {
+          "id": "listen-2",
+          "prompt": "Послушай и найди зверька",
+          "hint": "У этого зверька длинные ушки. Он умеет прыгать!",
+          "type": "listen-and-select",
+          "wordId": "rabbit",
+          "choices": ["rabbit", "owl", "fox", "bear"]
+        },
+        {
+          "id": "listen-3",
+          "prompt": "Послушай и найди зверька",
+          "hint": "Эта птица с большими глазами хорошо видит в темноте.",
+          "type": "listen-and-select",
+          "wordId": "owl",
+          "choices": ["owl", "fox", "bear", "rabbit"]
+        },
+        {
+          "id": "listen-4",
+          "prompt": "Послушай и найди зверька",
+          "hint": "Большой лесной зверь с круглыми ушами.",
+          "type": "listen-and-select",
+          "wordId": "bear",
+          "choices": ["fox", "bear", "rabbit", "owl"]
+        },
+        {
+          "id": "listen-5",
+          "prompt": "Послушай и найди зверька",
+          "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+          "type": "listen-and-select",
+          "wordId": "fox",
+          "choices": ["bear", "rabbit", "owl", "fox"]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 2,
+      "id": "en-animals-02",
+      "version": 2,
+      "language": "en",
+      "title": "Кто спрятался?",
+      "texts": {
+        "en": {
+          "title": "Who Is Hiding?",
+          "exercises": {
+            "listen-0": {
+              "prompt": "Listen and find the animal",
+              "hint": "This bird has big eyes and can see well in the dark."
+            },
+            "listen-1": {
+              "prompt": "Listen and find the animal",
+              "hint": "This animal has long ears. It can jump!"
+            },
+            "listen-2": {
+              "prompt": "Listen and find the animal",
+              "hint": "This animal has orange fur and a fluffy tail."
+            },
+            "listen-3": {
+              "prompt": "Listen and find the animal",
+              "hint": "A big forest animal with round ears."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "A fox"
+            },
+            "owl": {
+              "translation": "An owl"
+            },
+            "bear": {
+              "translation": "A bear"
+            },
+            "rabbit": {
+              "translation": "A rabbit"
+            }
+          }
+        },
+        "he": {
+          "title": "מי מתחבא?",
+          "exercises": {
+            "listen-0": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לציפור הזאת יש עיניים גדולות. היא רואה טוב בחושך."
+            },
+            "listen-1": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לחיה הזאת יש אוזניים ארוכות. היא יודעת לקפוץ!"
+            },
+            "listen-2": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "לחיה הזאת יש פרווה כתומה וזנב רך."
+            },
+            "listen-3": {
+              "prompt": "להקשיב ולמצוא את החיה",
+              "hint": "חיית יער גדולה עם אוזניים עגולות."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "שועל"
+            },
+            "owl": {
+              "translation": "ינשוף"
+            },
+            "bear": {
+              "translation": "דוב"
+            },
+            "rabbit": {
+              "translation": "ארנב"
+            }
+          }
+        }
+      },
+      "words": [
+        {
+          "id": "fox",
+          "text": "A fox",
+          "spelling": "fox",
+          "translation": "Лиса",
+          "imageId": "fox-image",
+          "audioId": "fox-audio"
+        },
+        {
+          "id": "bear",
+          "text": "A bear",
+          "spelling": "bear",
+          "translation": "Медведь",
+          "imageId": "bear-image",
+          "audioId": "bear-audio"
+        },
+        {
+          "id": "rabbit",
+          "text": "A rabbit",
+          "spelling": "rabbit",
+          "translation": "Кролик",
+          "imageId": "rabbit-image",
+          "audioId": "rabbit-audio"
+        },
+        {
+          "id": "owl",
+          "text": "An owl",
+          "spelling": "owl",
+          "translation": "Сова",
+          "imageId": "owl-image",
+          "audioId": "owl-audio"
+        }
+      ],
+      "media": [
+        {
+          "id": "fox-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 0
+          }
+        },
+        {
+          "id": "fox-audio",
+          "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "bear-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 0
+          }
+        },
+        {
+          "id": "bear-audio",
+          "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "rabbit-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 1
+          }
+        },
+        {
+          "id": "rabbit-audio",
+          "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "owl-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "id": "owl-audio",
+          "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+          "kind": "audio"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "listen-0",
+          "prompt": "Послушай и найди зверька",
+          "hint": "Эта птица с большими глазами хорошо видит в темноте.",
+          "type": "listen-and-select",
+          "wordId": "owl",
+          "choices": ["fox", "bear", "rabbit", "owl"]
+        },
+        {
+          "id": "listen-1",
+          "prompt": "Послушай и найди зверька",
+          "hint": "У этого зверька длинные ушки. Он умеет прыгать!",
+          "type": "listen-and-select",
+          "wordId": "rabbit",
+          "choices": ["bear", "rabbit", "owl", "fox"]
+        },
+        {
+          "id": "listen-2",
+          "prompt": "Послушай и найди зверька",
+          "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+          "type": "listen-and-select",
+          "wordId": "fox",
+          "choices": ["rabbit", "owl", "fox", "bear"]
+        },
+        {
+          "id": "listen-3",
+          "prompt": "Послушай и найди зверька",
+          "hint": "Большой лесной зверь с круглыми ушами.",
+          "type": "listen-and-select",
+          "wordId": "bear",
+          "choices": ["owl", "fox", "bear", "rabbit"]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 2,
+      "id": "en-animals-03",
+      "version": 2,
+      "language": "en",
+      "title": "Найди пары",
+      "texts": {
+        "en": {
+          "title": "Find the Pairs",
+          "exercises": {
+            "match-0": {
+              "prompt": "Find a pair for each word",
+              "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+            },
+            "match-1": {
+              "prompt": "Find a pair for each word",
+              "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+            },
+            "match-2": {
+              "prompt": "Find a pair for each word",
+              "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "A fox"
+            },
+            "owl": {
+              "translation": "An owl"
+            },
+            "bear": {
+              "translation": "A bear"
+            },
+            "rabbit": {
+              "translation": "A rabbit"
+            }
+          }
+        },
+        "he": {
+          "title": "למצוא זוגות",
+          "exercises": {
+            "match-0": {
+              "prompt": "למצוא זוג לכל מילה",
+              "hint": "ללחוץ על מילה, ואז על התמונה שלה. אפשר לשנות כל זוג."
+            },
+            "match-1": {
+              "prompt": "למצוא זוג לכל מילה",
+              "hint": "ללחוץ על מילה, ואז על התמונה שלה. אפשר לשנות כל זוג."
+            },
+            "match-2": {
+              "prompt": "למצוא זוג לכל מילה",
+              "hint": "ללחוץ על מילה, ואז על התמונה שלה. אפשר לשנות כל זוג."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "שועל"
+            },
+            "owl": {
+              "translation": "ינשוף"
+            },
+            "bear": {
+              "translation": "דוב"
+            },
+            "rabbit": {
+              "translation": "ארנב"
+            }
+          }
+        }
+      },
+      "words": [
+        {
+          "id": "fox",
+          "text": "A fox",
+          "spelling": "fox",
+          "translation": "Лиса",
+          "imageId": "fox-image",
+          "audioId": "fox-audio"
+        },
+        {
+          "id": "bear",
+          "text": "A bear",
+          "spelling": "bear",
+          "translation": "Медведь",
+          "imageId": "bear-image",
+          "audioId": "bear-audio"
+        },
+        {
+          "id": "rabbit",
+          "text": "A rabbit",
+          "spelling": "rabbit",
+          "translation": "Кролик",
+          "imageId": "rabbit-image",
+          "audioId": "rabbit-audio"
+        },
+        {
+          "id": "owl",
+          "text": "An owl",
+          "spelling": "owl",
+          "translation": "Сова",
+          "imageId": "owl-image",
+          "audioId": "owl-audio"
+        }
+      ],
+      "media": [
+        {
+          "id": "fox-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 0
+          }
+        },
+        {
+          "id": "fox-audio",
+          "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "bear-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 0
+          }
+        },
+        {
+          "id": "bear-audio",
+          "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "rabbit-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 1
+          }
+        },
+        {
+          "id": "rabbit-audio",
+          "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "owl-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "id": "owl-audio",
+          "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+          "kind": "audio"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "match-0",
+          "prompt": "Найди пару каждому слову",
+          "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+          "type": "match-pairs",
+          "wordIds": ["fox", "bear"],
+          "imageOrder": ["bear", "fox"]
+        },
+        {
+          "id": "match-1",
+          "prompt": "Найди пару каждому слову",
+          "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+          "type": "match-pairs",
+          "wordIds": ["bear", "rabbit", "owl"],
+          "imageOrder": ["rabbit", "owl", "bear"]
+        },
+        {
+          "id": "match-2",
+          "prompt": "Найди пару каждому слову",
+          "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+          "type": "match-pairs",
+          "wordIds": ["fox", "bear", "rabbit", "owl"],
+          "imageOrder": ["bear", "rabbit", "owl", "fox"]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 2,
+      "id": "en-animals-04",
+      "version": 2,
+      "language": "en",
+      "title": "Собери слова",
+      "texts": {
+        "en": {
+          "title": "Build the Words",
+          "exercises": {
+            "spell-0": {
+              "prompt": "Build the animal's name",
+              "hint": "The word is written like this: fox. Tap a letter you picked to put it back."
+            },
+            "spell-1": {
+              "prompt": "Build the animal's name",
+              "hint": "The word is written like this: bear. Tap a letter you picked to put it back."
+            },
+            "spell-2": {
+              "prompt": "Build the animal's name",
+              "hint": "The word is written like this: rabbit. Tap a letter you picked to put it back."
+            },
+            "spell-3": {
+              "prompt": "Build the animal's name",
+              "hint": "The word is written like this: owl. Tap a letter you picked to put it back."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "A fox"
+            },
+            "owl": {
+              "translation": "An owl"
+            },
+            "bear": {
+              "translation": "A bear"
+            },
+            "rabbit": {
+              "translation": "A rabbit"
+            }
+          }
+        },
+        "he": {
+          "title": "בואו נרכיב מילים",
+          "exercises": {
+            "spell-0": {
+              "prompt": "להרכיב את שם החיה",
+              "hint": "כך כותבים את המילה: fox. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-1": {
+              "prompt": "להרכיב את שם החיה",
+              "hint": "כך כותבים את המילה: bear. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-2": {
+              "prompt": "להרכיב את שם החיה",
+              "hint": "כך כותבים את המילה: rabbit. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-3": {
+              "prompt": "להרכיב את שם החיה",
+              "hint": "כך כותבים את המילה: owl. אפשר ללחוץ על אות שנבחרה כדי להחזיר אותה."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "שועל"
+            },
+            "owl": {
+              "translation": "ינשוף"
+            },
+            "bear": {
+              "translation": "דוב"
+            },
+            "rabbit": {
+              "translation": "ארנב"
+            }
+          }
+        }
+      },
+      "words": [
+        {
+          "id": "fox",
+          "text": "A fox",
+          "spelling": "fox",
+          "translation": "Лиса",
+          "imageId": "fox-image",
+          "audioId": "fox-audio"
+        },
+        {
+          "id": "bear",
+          "text": "A bear",
+          "spelling": "bear",
+          "translation": "Медведь",
+          "imageId": "bear-image",
+          "audioId": "bear-audio"
+        },
+        {
+          "id": "rabbit",
+          "text": "A rabbit",
+          "spelling": "rabbit",
+          "translation": "Кролик",
+          "imageId": "rabbit-image",
+          "audioId": "rabbit-audio"
+        },
+        {
+          "id": "owl",
+          "text": "An owl",
+          "spelling": "owl",
+          "translation": "Сова",
+          "imageId": "owl-image",
+          "audioId": "owl-audio"
+        }
+      ],
+      "media": [
+        {
+          "id": "fox-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 0
+          }
+        },
+        {
+          "id": "fox-audio",
+          "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "bear-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 0
+          }
+        },
+        {
+          "id": "bear-audio",
+          "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "rabbit-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 1
+          }
+        },
+        {
+          "id": "rabbit-audio",
+          "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "owl-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "id": "owl-audio",
+          "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+          "kind": "audio"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "spell-0",
+          "prompt": "Собери название зверька",
+          "hint": "Слово пишется так: fox. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "fox",
+          "tiles": [
+            {
+              "id": "tile-2",
+              "letter": "x"
+            },
+            {
+              "id": "tile-1",
+              "letter": "o"
+            },
+            {
+              "id": "tile-0",
+              "letter": "f"
+            }
+          ]
+        },
+        {
+          "id": "spell-1",
+          "prompt": "Собери название зверька",
+          "hint": "Слово пишется так: bear. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "bear",
+          "tiles": [
+            {
+              "id": "tile-3",
+              "letter": "r"
+            },
+            {
+              "id": "tile-2",
+              "letter": "a"
+            },
+            {
+              "id": "tile-1",
+              "letter": "e"
+            },
+            {
+              "id": "tile-0",
+              "letter": "b"
+            }
+          ]
+        },
+        {
+          "id": "spell-2",
+          "prompt": "Собери название зверька",
+          "hint": "Слово пишется так: rabbit. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "rabbit",
+          "tiles": [
+            {
+              "id": "tile-5",
+              "letter": "t"
+            },
+            {
+              "id": "tile-4",
+              "letter": "i"
+            },
+            {
+              "id": "tile-3",
+              "letter": "b"
+            },
+            {
+              "id": "tile-2",
+              "letter": "b"
+            },
+            {
+              "id": "tile-1",
+              "letter": "a"
+            },
+            {
+              "id": "tile-0",
+              "letter": "r"
+            }
+          ]
+        },
+        {
+          "id": "spell-3",
+          "prompt": "Собери название зверька",
+          "hint": "Слово пишется так: owl. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "owl",
+          "tiles": [
+            {
+              "id": "tile-2",
+              "letter": "l"
+            },
+            {
+              "id": "tile-1",
+              "letter": "w"
+            },
+            {
+              "id": "tile-0",
+              "letter": "o"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": 2,
+      "id": "en-animals-05",
+      "version": 3,
+      "language": "en",
+      "title": "Праздник в лесу",
+      "presentation": {
+        "intro": "Помоги Тиму устроить праздник: проверь гостей и подпиши приглашения!",
+        "completionTitle": "Праздник удался!",
+        "completionMessage": "Все приглашения подписаны, и лесные друзья собрались вместе. Ты помог Тиму устроить праздник!"
+      },
+      "texts": {
+        "en": {
+          "title": "A Party in the Forest",
+          "presentation": {
+            "intro": "Help Tim throw a party: check the guests and write on the invitations!",
+            "completionTitle": "The Party Was a Success!",
+            "completionMessage": "All the invitations are written, and the forest friends are together. You helped Tim throw a party!"
+          },
+          "exercises": {
+            "match-0": {
+              "prompt": "Check the guest list",
+              "hint": "There are three guests on the list. Match each English name to its owner."
+            },
+            "match-3": {
+              "prompt": "Hand out the name invitations",
+              "hint": "The invitations have English names on them. Find the owner of each invitation."
+            },
+            "spell-1": {
+              "prompt": "Write on the bear's invitation",
+              "hint": "You need to write bear on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+            },
+            "spell-2": {
+              "prompt": "Invite the rabbit to the party",
+              "hint": "You need to write rabbit on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+            },
+            "spell-4": {
+              "prompt": "Write on the owl's invitation",
+              "hint": "You need to write owl on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+            },
+            "spell-5": {
+              "prompt": "Only the fox is left to invite!",
+              "hint": "You need to write fox on the invitation. Not all letters are needed. Tap a chosen letter to put it back."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "A fox"
+            },
+            "owl": {
+              "translation": "An owl"
+            },
+            "bear": {
+              "translation": "A bear"
+            },
+            "rabbit": {
+              "translation": "A rabbit"
+            }
+          }
+        },
+        "he": {
+          "title": "מסיבה ביער",
+          "presentation": {
+            "intro": "עזרו לטים לערוך מסיבה: בדקו את האורחים וכתבו על ההזמנות!",
+            "completionTitle": "המסיבה הצליחה!",
+            "completionMessage": "כל ההזמנות מוכנות, וחברי היער התאספו יחד. עזרתם לטים לערוך מסיבה!"
+          },
+          "exercises": {
+            "match-0": {
+              "prompt": "בדקו את רשימת האורחים",
+              "hint": "ברשימה יש שלושה אורחים. חברו כל שם באנגלית לבעלים שלו."
+            },
+            "match-3": {
+              "prompt": "חלקו הזמנות עם שמות",
+              "hint": "על ההזמנות כתובים שמות באנגלית. מצאו את הבעלים של כל הזמנה."
+            },
+            "spell-1": {
+              "prompt": "כתבו על ההזמנה לדוב",
+              "hint": "צריך לכתוב bear על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-2": {
+              "prompt": "הזמינו את הארנב למסיבה",
+              "hint": "צריך לכתוב rabbit על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-4": {
+              "prompt": "כתבו על ההזמנה לינשוף",
+              "hint": "צריך לכתוב owl על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+            },
+            "spell-5": {
+              "prompt": "נשאר להזמין את השועל!",
+              "hint": "צריך לכתוב fox על ההזמנה. לא כל האותיות מתאימות. לחצו על אות שנבחרה כדי להחזיר אותה."
+            }
+          },
+          "words": {
+            "fox": {
+              "translation": "שועל"
+            },
+            "owl": {
+              "translation": "ינשוף"
+            },
+            "bear": {
+              "translation": "דוב"
+            },
+            "rabbit": {
+              "translation": "ארנב"
+            }
+          }
+        }
+      },
+      "words": [
+        {
+          "id": "fox",
+          "text": "A fox",
+          "spelling": "fox",
+          "translation": "Лиса",
+          "imageId": "fox-image",
+          "audioId": "fox-audio"
+        },
+        {
+          "id": "bear",
+          "text": "A bear",
+          "spelling": "bear",
+          "translation": "Медведь",
+          "imageId": "bear-image",
+          "audioId": "bear-audio"
+        },
+        {
+          "id": "rabbit",
+          "text": "A rabbit",
+          "spelling": "rabbit",
+          "translation": "Кролик",
+          "imageId": "rabbit-image",
+          "audioId": "rabbit-audio"
+        },
+        {
+          "id": "owl",
+          "text": "An owl",
+          "spelling": "owl",
+          "translation": "Сова",
+          "imageId": "owl-image",
+          "audioId": "owl-audio"
+        }
+      ],
+      "media": [
+        {
+          "id": "fox-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 0
+          }
+        },
+        {
+          "id": "fox-audio",
+          "path": "/v1/media/bf0a188092ee01f8e9cdbd31ff0bc3a97596432f0fd641f3001524853e35a2f6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "bear-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 0
+          }
+        },
+        {
+          "id": "bear-audio",
+          "path": "/v1/media/c37f53caa3c31537ac964bee5071de3b9c216e5a7d58e307f60e48501ab26fd6.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "rabbit-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 0,
+            "row": 1
+          }
+        },
+        {
+          "id": "rabbit-audio",
+          "path": "/v1/media/2bcfb1bcae096c694a401247244f463bebfb9206c1a300e03123712dc5f423d8.wav",
+          "kind": "audio"
+        },
+        {
+          "id": "owl-image",
+          "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+          "kind": "image",
+          "region": {
+            "columns": 2,
+            "rows": 2,
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "id": "owl-audio",
+          "path": "/v1/media/18b73f0449d85398158d408eee09f2e65fa787b2f0aa1fc1d41788baa5450985.wav",
+          "kind": "audio"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "match-0",
+          "prompt": "Проверь список гостей",
+          "hint": "В списке три гостя. Соедини каждое английское имя с его владельцем.",
+          "type": "match-pairs",
+          "wordIds": ["fox", "owl", "rabbit"],
+          "imageOrder": ["rabbit", "fox", "owl"]
+        },
+        {
+          "id": "spell-1",
+          "prompt": "Подпиши приглашение медведю",
+          "hint": "На приглашении нужно написать bear. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "bear",
+          "tiles": [
+            {
+              "id": "tile-2",
+              "letter": "a"
+            },
+            {
+              "id": "tile-0",
+              "letter": "b"
+            },
+            {
+              "id": "tile-3",
+              "letter": "r"
+            },
+            {
+              "id": "tile-1",
+              "letter": "e"
+            },
+            {
+              "id": "extra-0",
+              "letter": "f"
+            },
+            {
+              "id": "extra-1",
+              "letter": "o"
+            }
+          ]
+        },
+        {
+          "id": "spell-2",
+          "prompt": "Пригласи кролика на праздник",
+          "hint": "На приглашении нужно написать rabbit. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "rabbit",
+          "tiles": [
+            {
+              "id": "tile-3",
+              "letter": "b"
+            },
+            {
+              "id": "tile-0",
+              "letter": "r"
+            },
+            {
+              "id": "tile-5",
+              "letter": "t"
+            },
+            {
+              "id": "tile-1",
+              "letter": "a"
+            },
+            {
+              "id": "tile-4",
+              "letter": "i"
+            },
+            {
+              "id": "tile-2",
+              "letter": "b"
+            },
+            {
+              "id": "extra-0",
+              "letter": "o"
+            },
+            {
+              "id": "extra-1",
+              "letter": "w"
+            }
+          ]
+        },
+        {
+          "id": "match-3",
+          "prompt": "Раздай именные приглашения",
+          "hint": "На приглашениях написаны английские имена. Найди владельца каждого приглашения.",
+          "type": "match-pairs",
+          "wordIds": ["bear", "rabbit", "owl", "fox"],
+          "imageOrder": ["owl", "fox", "bear", "rabbit"]
+        },
+        {
+          "id": "spell-4",
+          "prompt": "Подпиши приглашение сове",
+          "hint": "На приглашении нужно написать owl. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "owl",
+          "tiles": [
+            {
+              "id": "tile-1",
+              "letter": "w"
+            },
+            {
+              "id": "tile-0",
+              "letter": "o"
+            },
+            {
+              "id": "tile-2",
+              "letter": "l"
+            },
+            {
+              "id": "extra-0",
+              "letter": "a"
+            },
+            {
+              "id": "extra-1",
+              "letter": "r"
+            }
+          ]
+        },
+        {
+          "id": "spell-5",
+          "prompt": "Осталось пригласить лису!",
+          "hint": "На приглашении нужно написать fox. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+          "type": "build-word",
+          "wordId": "fox",
+          "tiles": [
+            {
+              "id": "tile-1",
+              "letter": "o"
+            },
+            {
+              "id": "tile-0",
+              "letter": "f"
+            },
+            {
+              "id": "tile-2",
+              "letter": "x"
+            },
+            {
+              "id": "extra-0",
+              "letter": "b"
+            },
+            {
+              "id": "extra-1",
+              "letter": "l"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 2,
+  "id": "en-farm-demo-04",
+  "version": 1,
+  "language": "en",
+  "title": "Вкусный урожай",
+  "presentation": {
+    "intro": "Тим говорит: «Заглянем в фермерскую корзинку! Что же там выросло?»",
+    "completionTitle": "Урожай собран!",
+    "completionMessage": "У тебя отлично получилось! Теперь ты умеешь говорить о фермерских вкусностях."
+  },
+  "words": [
+    {
+      "id": "hay",
+      "text": "Hay",
+      "spelling": "hay",
+      "translation": "сено",
+      "imageId": "hay-image",
+      "audioId": "hay-audio"
+    },
+    {
+      "id": "fence",
+      "text": "A fence",
+      "spelling": "fence",
+      "translation": "забор",
+      "imageId": "fence-image",
+      "audioId": "fence-audio"
+    },
+    {
+      "id": "carrot",
+      "text": "A carrot",
+      "spelling": "carrot",
+      "translation": "морковь",
+      "imageId": "carrot-image",
+      "audioId": "carrot-audio"
+    },
+    {
+      "id": "corn",
+      "text": "Corn",
+      "spelling": "corn",
+      "translation": "кукуруза",
+      "imageId": "corn-image",
+      "audioId": "corn-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "hay-image",
+      "path": "/v1/media/39ecb505042fd9848ab8f7701b8f7a5b8211d68188eba2ba0d3bcc5b87240f96.png",
+      "kind": "image"
+    },
+    {
+      "id": "hay-audio",
+      "path": "/v1/media/6587ed02b26412d7d3db1e772311398e29373c9d6f840426f23dbc515709006b.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "fence-image",
+      "path": "/v1/media/25368a3d0b9f4a9ccc16c8ddccf518441617b8688dd381d18963ab2b78b3f54b.png",
+      "kind": "image"
+    },
+    {
+      "id": "fence-audio",
+      "path": "/v1/media/edac1f00c627d1bc74f6c96c48f22afff62be941ef40baa54e2ec90b7dde6855.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "carrot-image",
+      "path": "/v1/media/9faabd24654e44cd5e4c3d9ed0ccea8015b9c058d8d9063e5d5c20eb7a08eea4.png",
+      "kind": "image"
+    },
+    {
+      "id": "carrot-audio",
+      "path": "/v1/media/d97077c06eefe17e4bda46358783f49eea98df2346d5b8be739fb7d901ca56a3.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "corn-image",
+      "path": "/v1/media/d8d9c3c5fd8334d030ab27f5437da4119fc0431976e1aff649c5a0350e83a604.png",
+      "kind": "image"
+    },
+    {
+      "id": "corn-audio",
+      "path": "/v1/media/d98de467df4bc77a35a028582c5f742bc96f7193964487310294c4cb26d94411.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим лисёнок: это сухая трава, которую любят животные на ферме.",
+      "type": "listen-and-select",
+      "wordId": "hay",
+      "choices": [
+        "hay",
+        "corn",
+        "fence"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим лисёнок: найди оранжевый овощ и жёлтые зёрнышки.",
+      "type": "match-pairs",
+      "wordIds": [
+        "carrot",
+        "corn",
+        "fence"
+      ],
+      "imageOrder": [
+        "corn",
+        "fence",
+        "carrot"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим лисёнок: это оранжевый овощ, который растёт в земле.",
+      "type": "build-word",
+      "wordId": "carrot",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "o"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t6",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "r"
+        },
+        {
+          "id": "t8",
+          "letter": "q"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t7",
+          "letter": "b"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим лисёнок: это ограда вокруг поля или двора.",
+      "type": "listen-and-select",
+      "wordId": "fence",
+      "choices": [
+        "carrot",
+        "corn",
+        "fence",
+        "hay"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим лисёнок: вспомни сухую траву и овощ, который хрустит.",
+      "type": "match-pairs",
+      "wordIds": [
+        "hay",
+        "carrot",
+        "corn",
+        "fence"
+      ],
+      "imageOrder": [
+        "corn",
+        "fence",
+        "hay",
+        "carrot"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим лисёнок: это высокая фермерская культура с жёлтыми зёрнышками.",
+      "type": "build-word",
+      "wordId": "corn",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "n"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t5",
+          "letter": "x"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        }
+      ]
+    }
+  ]
+}

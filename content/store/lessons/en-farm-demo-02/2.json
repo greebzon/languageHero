@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 2,
+  "id": "en-farm-demo-02",
+  "version": 2,
+  "language": "en",
+  "title": "Урок 2: Ферма",
+  "presentation": {
+    "intro": "Тим приглашает в урок 2!",
+    "completionTitle": "Урок 2 пройден",
+    "completionMessage": "Ты справился, Тим гордится тобой!"
+  },
+  "texts": {
+    "en": {
+      "title": "Lesson 2: Farm",
+      "presentation": {
+        "intro": "Tim invites you to Lesson 2!",
+        "completionTitle": "Lesson 2 complete",
+        "completionMessage": "You did it! Tim is proud of you!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen and choose 1",
+          "hint": "This word starts with “e”"
+        },
+        "ex-2": {
+          "prompt": "Find the pairs 2",
+          "hint": "Match the word to the picture"
+        },
+        "ex-3": {
+          "prompt": "Build the word 3",
+          "hint": "Start with the first letter"
+        },
+        "ex-4": {
+          "prompt": "Listen and choose 4",
+          "hint": "This word starts with “h”"
+        },
+        "ex-5": {
+          "prompt": "Find the pairs 5",
+          "hint": "Match the word to the picture"
+        },
+        "ex-6": {
+          "prompt": "Build the word 6",
+          "hint": "Start with the first letter"
+        }
+      },
+      "words": {
+        "egg": {
+          "translation": "egg"
+        },
+        "hat": {
+          "translation": "hat"
+        },
+        "fish": {
+          "translation": "fish"
+        },
+        "goat": {
+          "translation": "goat"
+        }
+      }
+    },
+    "he": {
+      "title": "שיעור 2: חווה",
+      "presentation": {
+        "intro": "טים מזמין לשיעור 2!",
+        "completionTitle": "שיעור 2 הושלם",
+        "completionMessage": "הצלחת, טים גאה בך!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב ולבחור 1",
+          "hint": "המילה מתחילה ב־“e”"
+        },
+        "ex-2": {
+          "prompt": "למצוא זוגות 2",
+          "hint": "לחבר את המילה לתמונה"
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה 3",
+          "hint": "להתחיל באות הראשונה"
+        },
+        "ex-4": {
+          "prompt": "להקשיב ולבחור 4",
+          "hint": "המילה מתחילה ב־“h”"
+        },
+        "ex-5": {
+          "prompt": "למצוא זוגות 5",
+          "hint": "לחבר את המילה לתמונה"
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה 6",
+          "hint": "להתחיל באות הראשונה"
+        }
+      },
+      "words": {
+        "egg": {
+          "translation": "ביצה"
+        },
+        "hat": {
+          "translation": "כובע"
+        },
+        "fish": {
+          "translation": "דג"
+        },
+        "goat": {
+          "translation": "עז"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "egg",
+      "text": "Egg",
+      "spelling": "egg",
+      "translation": "Перевод egg",
+      "imageId": "egg-image",
+      "audioId": "egg-audio"
+    },
+    {
+      "id": "fish",
+      "text": "Fish",
+      "spelling": "fish",
+      "translation": "Перевод fish",
+      "imageId": "fish-image",
+      "audioId": "fish-audio"
+    },
+    {
+      "id": "goat",
+      "text": "Goat",
+      "spelling": "goat",
+      "translation": "Перевод goat",
+      "imageId": "goat-image",
+      "audioId": "goat-audio"
+    },
+    {
+      "id": "hat",
+      "text": "Hat",
+      "spelling": "hat",
+      "translation": "Перевод hat",
+      "imageId": "hat-image",
+      "audioId": "hat-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "egg-image",
+      "path": "/v1/media/36373d2aaf88124bc66ee7df4c23796946fb6fb0129c12d7a5756b0a99bb34bc.png",
+      "kind": "image"
+    },
+    {
+      "id": "egg-audio",
+      "path": "/v1/media/1f9c4ec31dcd810f01f6cd78c2e634a1a084c8fdb3fa3a4a668873b87d119f83.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "fish-image",
+      "path": "/v1/media/6db5ae93a33b33bffe4883285b40e5940f1726e9ed2803f930c1053dc74cf29f.png",
+      "kind": "image"
+    },
+    {
+      "id": "fish-audio",
+      "path": "/v1/media/5ea77efa5971be16a52343b3c4c75ffe4cbebb8e1b411c80870556f9cc28b3f7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "goat-image",
+      "path": "/v1/media/6acaaa199c9c931b6c4de7f9118c9d97fd614a845c079269354e7c9662b9c778.png",
+      "kind": "image"
+    },
+    {
+      "id": "goat-audio",
+      "path": "/v1/media/861b8c54cee55180e31f1de31f731534048f4cf6b160c4d11cbc2148d1c2205c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "hat-image",
+      "path": "/v1/media/19a63d9e67d69ceb210f6928d275b70eea4d0cfbdbcb683d82d67f69aa5c54ea.png",
+      "kind": "image"
+    },
+    {
+      "id": "hat-audio",
+      "path": "/v1/media/deb3154b59c65332cbe8707b1e255c1125a764d79ab2cf2d40aa6a341cbd33f6.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери 1",
+      "hint": "Это слово начинается на «e»",
+      "type": "listen-and-select",
+      "wordId": "egg",
+      "choices": [
+        "fish",
+        "egg"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Найди пары 2",
+      "hint": "Соедини слово с картинкой",
+      "type": "match-pairs",
+      "wordIds": [
+        "fish",
+        "egg",
+        "goat"
+      ],
+      "imageOrder": [
+        "egg",
+        "goat",
+        "fish"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово 3",
+      "hint": "Начни с первой буквы",
+      "type": "build-word",
+      "wordId": "goat",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "q"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t1",
+          "letter": "g"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери 4",
+      "hint": "Это слово начинается на «h»",
+      "type": "listen-and-select",
+      "wordId": "hat",
+      "choices": [
+        "hat",
+        "egg"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Найди пары 5",
+      "hint": "Соедини слово с картинкой",
+      "type": "match-pairs",
+      "wordIds": [
+        "egg",
+        "fish",
+        "goat"
+      ],
+      "imageOrder": [
+        "egg",
+        "fish",
+        "goat"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово 6",
+      "hint": "Начни с первой буквы",
+      "type": "build-word",
+      "wordId": "fish",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t5",
+          "letter": "q"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        },
+        {
+          "id": "t4",
+          "letter": "h"
+        },
+        {
+          "id": "t3",
+          "letter": "s"
+        }
+      ]
+    }
+  ]
+}

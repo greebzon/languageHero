@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 2,
+  "id": "en-underwater-04",
+  "version": 1,
+  "language": "en",
+  "title": "Секреты морского дна",
+  "presentation": {
+    "intro": "Тим-лисёнок ныряет к морскому дну. Давай найдём кальмара, ракушку, коралл и синий цвет!",
+    "completionTitle": "Секреты раскрыты!",
+    "completionMessage": "Ты отлично справился! Теперь ты знаешь слова squid, clam, coral и blue."
+  },
+  "words": [
+    {
+      "id": "squid",
+      "text": "A squid",
+      "spelling": "squid",
+      "translation": "кальмар",
+      "imageId": "squid-image",
+      "audioId": "squid-audio"
+    },
+    {
+      "id": "clam",
+      "text": "A clam",
+      "spelling": "clam",
+      "translation": "ракушка",
+      "imageId": "clam-image",
+      "audioId": "clam-audio"
+    },
+    {
+      "id": "coral",
+      "text": "Coral",
+      "spelling": "coral",
+      "translation": "коралл",
+      "imageId": "coral-image",
+      "audioId": "coral-audio"
+    },
+    {
+      "id": "blue",
+      "text": "Blue",
+      "spelling": "blue",
+      "translation": "синий",
+      "imageId": "blue-image",
+      "audioId": "blue-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "squid-image",
+      "path": "/v1/media/7691dd3cb94ebe29fd839b98bf6f58da1fc1a60792a1275e0e828b04788d8e0a.png",
+      "kind": "image"
+    },
+    {
+      "id": "squid-audio",
+      "path": "/v1/media/cd79991ddde21bfff53fcb17f5303983dafe042d000e805219a26352b30e6bcd.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "clam-image",
+      "path": "/v1/media/37d970a225a6c3056e860bc4f28e2094ac7a3991e98b9e5cd93f33b29e447299.png",
+      "kind": "image"
+    },
+    {
+      "id": "clam-audio",
+      "path": "/v1/media/b757d760951452eff63749822bdb4cdaf4b93b639c78eb9f425eab9c3c2a2ef9.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "coral-image",
+      "path": "/v1/media/e7493ecab290dfce78005de1f751358ad958c22baaf175ec7eff6d95337d9a51.png",
+      "kind": "image"
+    },
+    {
+      "id": "coral-audio",
+      "path": "/v1/media/8f5cbd9eb539da91692c27260b5682b511e7b452e403f1c128b0843c454331f1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "blue-image",
+      "path": "/v1/media/92672c7a62c34df28a0f8bf345a047b5a2690028d6baa759c0883920871c1486.png",
+      "kind": "image"
+    },
+    {
+      "id": "blue-audio",
+      "path": "/v1/media/1a0626686a852dc63fdddb7880e018de7530b4580c48bd478a4dcb98e7e63e76.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок говорит: этот морской житель плавает и выпускает чернила.",
+      "type": "listen-and-select",
+      "wordId": "squid",
+      "choices": [
+        "clam",
+        "squid",
+        "coral"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок советует: найди ракушку, коралл и цвет моря.",
+      "type": "match-pairs",
+      "wordIds": [
+        "clam",
+        "coral",
+        "blue"
+      ],
+      "imageOrder": [
+        "coral",
+        "blue",
+        "clam"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок говорит: это цвет чистого неба и моря.",
+      "type": "build-word",
+      "wordId": "blue",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "l"
+        },
+        {
+          "id": "t6",
+          "letter": "t"
+        },
+        {
+          "id": "t5",
+          "letter": "s"
+        },
+        {
+          "id": "t3",
+          "letter": "u"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери правильную картинку.",
+      "hint": "Тим-лисёнок говорит: это твёрдый домик, который лежит на дне.",
+      "type": "listen-and-select",
+      "wordId": "clam",
+      "choices": [
+        "blue",
+        "clam",
+        "coral",
+        "squid"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок советует: один житель плавает, а другой растёт на дне.",
+      "type": "match-pairs",
+      "wordIds": [
+        "squid",
+        "coral"
+      ],
+      "imageOrder": [
+        "coral",
+        "squid"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок говорит: это яркое твёрдое растение на морском дне.",
+      "type": "build-word",
+      "wordId": "coral",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "u"
+        },
+        {
+          "id": "t7",
+          "letter": "i"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t4",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        }
+      ]
+    }
+  ]
+}

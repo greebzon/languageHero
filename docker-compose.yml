@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: lingvohero-db
+    environment:
+      POSTGRES_USER: lingvohero
+      POSTGRES_PASSWORD: lingvohero
+      POSTGRES_DB: lingvohero
+    # 5432 on this machine may be taken by another project; the API reads DATABASE_URL anyway.
+    ports:
+      - '5433:5432'
+    volumes:
+      - lingvohero-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U lingvohero -d lingvohero']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  lingvohero-pg:

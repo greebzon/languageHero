@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 2,
+  "id": "en-farm-demo-05",
+  "version": 2,
+  "language": "en",
+  "title": "Цвета и фермерский день",
+  "presentation": {
+    "intro": "Тим говорит: «Посмотри вокруг: на ферме можно увидеть цвета, молоко и даже лужицу!»",
+    "completionTitle": "Ты мастер фермы!",
+    "completionMessage": "Замечательно! Ты повторил важные слова и уверенно говоришь о ферме по-английски."
+  },
+  "texts": {
+    "en": {
+      "title": "Colors and a Farm Day",
+      "presentation": {
+        "intro": "Tim says: “Look around: on the farm, you can see colors, milk, and even a puddle!”",
+        "completionTitle": "You are a farm master!",
+        "completionMessage": "Great! You reviewed important words and can talk about the farm in English with confidence."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: This is a white drink that cows give."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Remember the colors and what you can find on a farm."
+        },
+        "ex-3": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim: This is what you say about someone who got dirty in mud."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: This is the color of grass and leaves."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Find the color of the sun, the color of grass, and a muddy piglet."
+        },
+        "ex-6": {
+          "prompt": "Build the word from the letters.",
+          "hint": "Tim: This is the bright color of the sun and a chick."
+        }
+      },
+      "words": {
+        "milk": {
+          "translation": "milk"
+        },
+        "green": {
+          "translation": "green"
+        },
+        "muddy": {
+          "translation": "muddy"
+        },
+        "yellow": {
+          "translation": "yellow"
+        }
+      }
+    },
+    "he": {
+      "title": "צבעים ויום בחווה",
+      "presentation": {
+        "intro": "טים אומר: ״הביטו סביב: בחווה אפשר לראות צבעים, חלב ואפילו שלולית!״",
+        "completionTitle": "אלופים בחווה!",
+        "completionMessage": "נהדר! חזרנו על מילים חשובות ועכשיו אפשר לדבר על החווה באנגלית בביטחון."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים: זה משקה לבן שפרות נותנות."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: להיזכר בצבעים ובדברים שיש בחווה."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: כך אומרים על מי שהתלכלך בבוץ."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים: זה הצבע של דשא ועלים."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: למצוא את צבע השמש, צבע הדשא וחזרזיר בוצי."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זה הצבע הבהיר של השמש ושל אפרוח."
+        }
+      },
+      "words": {
+        "milk": {
+          "translation": "חלב"
+        },
+        "green": {
+          "translation": "ירוק"
+        },
+        "muddy": {
+          "translation": "בוצי"
+        },
+        "yellow": {
+          "translation": "צהוב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "milk",
+      "text": "Milk",
+      "spelling": "milk",
+      "translation": "молоко",
+      "imageId": "milk-image",
+      "audioId": "milk-audio"
+    },
+    {
+      "id": "muddy",
+      "text": "Muddy",
+      "spelling": "muddy",
+      "translation": "грязный",
+      "imageId": "muddy-image",
+      "audioId": "muddy-audio"
+    },
+    {
+      "id": "green",
+      "text": "Green",
+      "spelling": "green",
+      "translation": "зелёный",
+      "imageId": "green-image",
+      "audioId": "green-audio"
+    },
+    {
+      "id": "yellow",
+      "text": "Yellow",
+      "spelling": "yellow",
+      "translation": "жёлтый",
+      "imageId": "yellow-image",
+      "audioId": "yellow-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "milk-image",
+      "path": "/v1/media/feaeecf8840056bbc0c1e6cafe68b56d9693f5f1a8d5cbfb49e1824b5b252319.png",
+      "kind": "image"
+    },
+    {
+      "id": "milk-audio",
+      "path": "/v1/media/1b16e56cf962f39a4a77e420e80db8ad5a2da1e0585c116df50223f1b6051cf9.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "muddy-image",
+      "path": "/v1/media/97050d25c2668057f994dfa8759b80c18de256f5263b2e7a09d5f2aa515348ae.png",
+      "kind": "image"
+    },
+    {
+      "id": "muddy-audio",
+      "path": "/v1/media/b2f3ae2e82739ab2f2464120387223b55f0200d5dd1cd89edeb60364499e0f28.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "green-image",
+      "path": "/v1/media/00c551e2db5cf4084e1a29ffeed47ee747cf5d6485936dcd94ea95d96f7e6775.png",
+      "kind": "image"
+    },
+    {
+      "id": "green-audio",
+      "path": "/v1/media/d1e78b12b73718dea066756babf817868ea57da25a376c285d2d68d2da8df9c7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "yellow-image",
+      "path": "/v1/media/d0c8a15a43a47329a3c73b864bcbc6f01bc5ce99b7e5f70cb6562581473a4fe8.png",
+      "kind": "image"
+    },
+    {
+      "id": "yellow-audio",
+      "path": "/v1/media/29e73bb8a44dc6fa041d56e4e08c2f66f1d4411ba7a41616fc8b5a754d5367be.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: Это белый напиток, который дают коровы.",
+      "type": "listen-and-select",
+      "wordId": "milk",
+      "choices": [
+        "green",
+        "muddy",
+        "milk"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Вспомни цвета и то, что бывает на ферме.",
+      "type": "match-pairs",
+      "wordIds": [
+        "green",
+        "yellow",
+        "milk"
+      ],
+      "imageOrder": [
+        "yellow",
+        "green",
+        "milk"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Так говорят о том, кто испачкался в грязи.",
+      "type": "build-word",
+      "wordId": "muddy",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t5",
+          "letter": "y"
+        },
+        {
+          "id": "t1",
+          "letter": "m"
+        },
+        {
+          "id": "t7",
+          "letter": "l"
+        },
+        {
+          "id": "t3",
+          "letter": "d"
+        },
+        {
+          "id": "t2",
+          "letter": "u"
+        },
+        {
+          "id": "t4",
+          "letter": "d"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: Это цвет травы и листьев.",
+      "type": "listen-and-select",
+      "wordId": "green",
+      "choices": [
+        "yellow",
+        "green",
+        "muddy",
+        "milk"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Найди цвет солнца, цвет травы и грязного поросёнка.",
+      "type": "match-pairs",
+      "wordIds": [
+        "yellow",
+        "green",
+        "muddy"
+      ],
+      "imageOrder": [
+        "green",
+        "yellow",
+        "muddy"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это яркий цвет солнца и цыплёнка.",
+      "type": "build-word",
+      "wordId": "yellow",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "l"
+        },
+        {
+          "id": "t2",
+          "letter": "e"
+        },
+        {
+          "id": "t4",
+          "letter": "l"
+        },
+        {
+          "id": "t6",
+          "letter": "w"
+        },
+        {
+          "id": "t7",
+          "letter": "m"
+        },
+        {
+          "id": "t8",
+          "letter": "p"
+        },
+        {
+          "id": "t5",
+          "letter": "o"
+        },
+        {
+          "id": "t1",
+          "letter": "y"
+        }
+      ]
+    }
+  ]
+}

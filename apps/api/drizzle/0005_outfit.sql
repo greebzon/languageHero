@@ -1,0 +1,1 @@
+ALTER TABLE "learner_accounts" ADD COLUMN "outfit" jsonb DEFAULT '{}'::jsonb NOT NULL;

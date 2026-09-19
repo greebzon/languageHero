@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 2,
+  "id": "en-underwater-03",
+  "version": 1,
+  "language": "en",
+  "title": "Морские формы",
+  "presentation": {
+    "intro": "Я, Тим-лисёнок, нашёл необычных морских друзей. Поможешь назвать каждого?",
+    "completionTitle": "Вот это находка!",
+    "completionMessage": "Ты познакомился с морской звездой, медузой, омаром и пингвином. Молодец!"
+  },
+  "words": [
+    {
+      "id": "starfish",
+      "text": "A starfish",
+      "spelling": "starfish",
+      "translation": "морская звезда",
+      "imageId": "starfish-image",
+      "audioId": "starfish-audio"
+    },
+    {
+      "id": "jellyfish",
+      "text": "A jellyfish",
+      "spelling": "jellyfish",
+      "translation": "медуза",
+      "imageId": "jellyfish-image",
+      "audioId": "jellyfish-audio"
+    },
+    {
+      "id": "lobster",
+      "text": "A lobster",
+      "spelling": "lobster",
+      "translation": "омар",
+      "imageId": "lobster-image",
+      "audioId": "lobster-audio"
+    },
+    {
+      "id": "penguin",
+      "text": "A penguin",
+      "spelling": "penguin",
+      "translation": "пингвин",
+      "imageId": "penguin-image",
+      "audioId": "penguin-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "starfish-image",
+      "path": "/v1/media/8e28864ff10095c9dd2ce8ba7a05d399c6b05d0c7bbbc4fe3d01e326e0750573.png",
+      "kind": "image"
+    },
+    {
+      "id": "starfish-audio",
+      "path": "/v1/media/4f034ee5acd1d478c6d4eda77e06c85013db8a0936ee694e58c90daaaa8f8361.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "jellyfish-image",
+      "path": "/v1/media/be19aa63f159b62b96a4e5d83e59c26a24e3bf0ba20efcee79aa00545a7b4226.png",
+      "kind": "image"
+    },
+    {
+      "id": "jellyfish-audio",
+      "path": "/v1/media/0161f9c66cc8babfdd96611e7accb772be6ff8b6ce6e5c9558cccd2097c08964.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "lobster-image",
+      "path": "/v1/media/e12614fe0278d03fcb9c456f0c29461bfe40693f77a4030a04587e6d9971cd73.png",
+      "kind": "image"
+    },
+    {
+      "id": "lobster-audio",
+      "path": "/v1/media/6060bb6c078f3589c951549cd7781522c94e00686b620b3cd2f85e637aec33d5.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "penguin-image",
+      "path": "/v1/media/4310e242430b07d39b6c4c9610f0f40eb3eebed24839de63966a12588649ea8f.png",
+      "kind": "image"
+    },
+    {
+      "id": "penguin-audio",
+      "path": "/v1/media/5691fd22a4a711e3fab8c7316d5775e1c9f2984ffcacd4d4781e121c1c24efa7.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок шепчет: у этого морского жителя пять лучиков, как у звёздочки.",
+      "type": "listen-and-select",
+      "wordId": "starfish",
+      "choices": [
+        "jellyfish",
+        "starfish",
+        "lobster"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок советует: присмотрись к форме каждого морского жителя.",
+      "type": "match-pairs",
+      "wordIds": [
+        "jellyfish",
+        "lobster",
+        "penguin"
+      ],
+      "imageOrder": [
+        "lobster",
+        "penguin",
+        "jellyfish"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: это птица в чёрно-белом наряде, она отлично плавает.",
+      "type": "build-word",
+      "wordId": "penguin",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "n"
+        },
+        {
+          "id": "t1",
+          "letter": "p"
+        },
+        {
+          "id": "t5",
+          "letter": "u"
+        },
+        {
+          "id": "t9",
+          "letter": "y"
+        },
+        {
+          "id": "t4",
+          "letter": "g"
+        },
+        {
+          "id": "t2",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "i"
+        },
+        {
+          "id": "t8",
+          "letter": "x"
+        },
+        {
+          "id": "t7",
+          "letter": "n"
+        },
+        {
+          "id": "t10",
+          "letter": "z"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок шепчет: у этого жителя моря мягкое тело и длинные щупальца.",
+      "type": "listen-and-select",
+      "wordId": "jellyfish",
+      "choices": [
+        "jellyfish",
+        "starfish",
+        "lobster",
+        "penguin"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим-лисёнок говорит: найди жителя с клешнями и жителя с лучиками.",
+      "type": "match-pairs",
+      "wordIds": [
+        "starfish",
+        "lobster"
+      ],
+      "imageOrder": [
+        "lobster",
+        "starfish"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок подсказывает: у этого морского жителя есть большие клешни.",
+      "type": "build-word",
+      "wordId": "lobster",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "s"
+        },
+        {
+          "id": "t5",
+          "letter": "t"
+        },
+        {
+          "id": "t6",
+          "letter": "e"
+        },
+        {
+          "id": "t8",
+          "letter": "q"
+        },
+        {
+          "id": "t7",
+          "letter": "r"
+        },
+        {
+          "id": "t9",
+          "letter": "v"
+        },
+        {
+          "id": "t10",
+          "letter": "y"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t1",
+          "letter": "l"
+        },
+        {
+          "id": "t3",
+          "letter": "b"
+        }
+      ]
+    }
+  ]
+}

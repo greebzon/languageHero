@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "id": "en-numbers-01",
+  "version": 1,
+  "language": "en",
+  "title": "Считаем до четырёх",
+  "presentation": {
+    "intro": "Тим говорит: «Давай считать маленькие кубики вместе: один, два, три, четыре!»",
+    "completionTitle": "Первый счёт готов!",
+    "completionMessage": "Отлично! Ты умеешь считать по-английски от одного до четырёх. Повтори слова ещё раз и слушай их внимательно."
+  },
+  "words": [
+    {
+      "id": "one",
+      "text": "One",
+      "spelling": "one",
+      "translation": "один",
+      "imageId": "one-image",
+      "audioId": "one-audio"
+    },
+    {
+      "id": "two",
+      "text": "Two",
+      "spelling": "two",
+      "translation": "два",
+      "imageId": "two-image",
+      "audioId": "two-audio"
+    },
+    {
+      "id": "three",
+      "text": "Three",
+      "spelling": "three",
+      "translation": "три",
+      "imageId": "three-image",
+      "audioId": "three-audio"
+    },
+    {
+      "id": "four",
+      "text": "Four",
+      "spelling": "four",
+      "translation": "четыре",
+      "imageId": "four-image",
+      "audioId": "four-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "one-image",
+      "path": "/v1/media/2c9468b92031f498361d1189b5c10b71123424475af5213aa5363527161d2194.png",
+      "kind": "image"
+    },
+    {
+      "id": "one-audio",
+      "path": "/v1/media/8a754cf8b56f8dad9a750c41252e36e9bb1e21be68c78d92323a44a8bb79ed8f.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "two-image",
+      "path": "/v1/media/6808f8e3c489d78827df559e42456eebe3824bbb90eaa891ea320ea07a6a7a4d.png",
+      "kind": "image"
+    },
+    {
+      "id": "two-audio",
+      "path": "/v1/media/e4f801ec8e1834280d4896d6cb6917a7cffccf37edf6ea21980f283d61dee2e1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "three-image",
+      "path": "/v1/media/e1d2486564b1db51bdc10f36917d1f873ba9ad6b8ba35b4cd2815ec3fb18b520.png",
+      "kind": "image"
+    },
+    {
+      "id": "three-audio",
+      "path": "/v1/media/94e9ac0cd3542e7c541cf89c7e9437cf2155d79373ac4dcfddebc19bf12bda72.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "four-image",
+      "path": "/v1/media/db331fcf3d402835ceab5925868d0e922a7ad1f47fdcb7aee95b15662963bc02.png",
+      "kind": "image"
+    },
+    {
+      "id": "four-audio",
+      "path": "/v1/media/d576cdac1de066a3e780ce4e1250e6af8b4fad5e2a8f43edcf53aeb589564250.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери картинку.",
+      "hint": "Тим поставил один кубик. Слушай внимательно!",
+      "type": "listen-and-select",
+      "wordId": "one",
+      "choices": [
+        "one",
+        "two"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим считает кубики. Найди пару для каждого слова!",
+      "type": "match-pairs",
+      "wordIds": [
+        "one",
+        "two",
+        "three"
+      ],
+      "imageOrder": [
+        "two",
+        "three",
+        "one"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Сложи слово из букв.",
+      "hint": "Тим держит один кубик. Поставь буквы по порядку!",
+      "type": "build-word",
+      "wordId": "one",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "n"
+        },
+        {
+          "id": "t4",
+          "letter": "a"
+        },
+        {
+          "id": "t1",
+          "letter": "o"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери картинку.",
+      "hint": "Тим построил башенку из четырёх кубиков. Слушай слово!",
+      "type": "listen-and-select",
+      "wordId": "four",
+      "choices": [
+        "three",
+        "four",
+        "two"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим любит считать до четырёх. Соедини все пары!",
+      "type": "match-pairs",
+      "wordIds": [
+        "two",
+        "three",
+        "four"
+      ],
+      "imageOrder": [
+        "four",
+        "three",
+        "two"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Сложи слово из букв.",
+      "hint": "Тим сложил три кубика. Начни с первой буквы!",
+      "type": "build-word",
+      "wordId": "three",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "t"
+        },
+        {
+          "id": "t5",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t2",
+          "letter": "h"
+        }
+      ]
+    }
+  ]
+}

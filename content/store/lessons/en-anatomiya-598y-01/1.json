@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 2,
+  "id": "en-anatomiya-598y-01",
+  "version": 1,
+  "language": "en",
+  "title": "Личико Тима",
+  "presentation": {
+    "intro": "Привет! Я Тим. Давай найдём части лица и скажем их по-английски!",
+    "completionTitle": "Личико найдено!",
+    "completionMessage": "Отличная работа! Ты умеешь называть голову, глаз, ухо и нос по-английски."
+  },
+  "words": [
+    {
+      "id": "head",
+      "text": "A head",
+      "spelling": "head",
+      "translation": "голова",
+      "imageId": "head-image",
+      "audioId": "head-audio"
+    },
+    {
+      "id": "eye",
+      "text": "An eye",
+      "spelling": "eye",
+      "translation": "глаз",
+      "imageId": "eye-image",
+      "audioId": "eye-audio"
+    },
+    {
+      "id": "ear",
+      "text": "An ear",
+      "spelling": "ear",
+      "translation": "ухо",
+      "imageId": "ear-image",
+      "audioId": "ear-audio"
+    },
+    {
+      "id": "nose",
+      "text": "A nose",
+      "spelling": "nose",
+      "translation": "нос",
+      "imageId": "nose-image",
+      "audioId": "nose-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "head-image",
+      "path": "/v1/media/17ea57b1bea2ca3e4096a99c7451391b30832dde44ed863bc8523695da6e34ae.png",
+      "kind": "image"
+    },
+    {
+      "id": "head-audio",
+      "path": "/v1/media/aa6a811f7b73a361dc97c58a78b3739119081b303f191d54ae4ecbd510968b0c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "eye-image",
+      "path": "/v1/media/2ecf967a37d11b5f710cfad91d430a474a51cbb7e494ecfe78900861ccfb200a.png",
+      "kind": "image"
+    },
+    {
+      "id": "eye-audio",
+      "path": "/v1/media/657df380d896332cb8f9b6a3ca317a5948d5e4cd9ac074030335fd23e1b51d1e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "ear-image",
+      "path": "/v1/media/d4d6df427fc6476cf3365bc76756cda848a3090391bbe663a8f17e9a251b2319.png",
+      "kind": "image"
+    },
+    {
+      "id": "ear-audio",
+      "path": "/v1/media/6eb3071dc1bd32bfc97fd973e96f3787af1ae6f9c1dfe9e80efec0f8339e6bf1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "nose-image",
+      "path": "/v1/media/0ff6556a7ed9e6d98fdbb67c10aa6a391fa04fc82a2b71d6479f8d95cfb68d19.png",
+      "kind": "image"
+    },
+    {
+      "id": "nose-audio",
+      "path": "/v1/media/82da497916d62e95f738d57a4325f563c7b8e48426557a596288077914ab5b56.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим говорит: это вся верхняя часть тела, где находятся лицо и волосы.",
+      "type": "listen-and-select",
+      "wordId": "head",
+      "choices": [
+        "ear",
+        "eye",
+        "head"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим подмигивает и слушает: найди то, чем смотрят, и то, чем слышат.",
+      "type": "match-pairs",
+      "wordIds": [
+        "eye",
+        "ear"
+      ],
+      "imageOrder": [
+        "eye",
+        "ear"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим показывает на маленькую часть лица посередине.",
+      "type": "build-word",
+      "wordId": "nose",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "s"
+        },
+        {
+          "id": "t5",
+          "letter": "x"
+        },
+        {
+          "id": "t1",
+          "letter": "n"
+        },
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим говорит: этим мы смотрим на мир.",
+      "type": "listen-and-select",
+      "wordId": "eye",
+      "choices": [
+        "head",
+        "eye",
+        "nose",
+        "ear"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с правильными картинками.",
+      "hint": "Тим просит найти голову и носик на картинках.",
+      "type": "match-pairs",
+      "wordIds": [
+        "head",
+        "nose"
+      ],
+      "imageOrder": [
+        "nose",
+        "head"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим прислушивается: эта часть лица помогает слышать.",
+      "type": "build-word",
+      "wordId": "ear",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "r"
+        },
+        {
+          "id": "t4",
+          "letter": "t"
+        },
+        {
+          "id": "t1",
+          "letter": "e"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        }
+      ]
+    }
+  ]
+}

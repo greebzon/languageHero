@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 2,
+  "id": "en-space-01",
+  "version": 1,
+  "language": "en",
+  "title": "Солнечная прогулка",
+  "presentation": {
+    "intro": "Тим говорит: «Отправляемся в солнечное путешествие и найдём космические слова!»",
+    "completionTitle": "Солнечный исследователь!",
+    "completionMessage": "Отлично! Ты нашёл солнце, комету и спутник и назвал их по-английски."
+  },
+  "words": [
+    {
+      "id": "sun",
+      "text": "The sun",
+      "spelling": "sun",
+      "translation": "солнце",
+      "imageId": "sun-image",
+      "audioId": "sun-audio"
+    },
+    {
+      "id": "spaceship",
+      "text": "A spaceship",
+      "spelling": "spaceship",
+      "translation": "космический корабль",
+      "imageId": "spaceship-image",
+      "audioId": "spaceship-audio"
+    },
+    {
+      "id": "satellite",
+      "text": "A satellite",
+      "spelling": "satellite",
+      "translation": "спутник",
+      "imageId": "satellite-image",
+      "audioId": "satellite-audio"
+    },
+    {
+      "id": "comet",
+      "text": "A comet",
+      "spelling": "comet",
+      "translation": "комета",
+      "imageId": "comet-image",
+      "audioId": "comet-audio"
+    },
+    {
+      "id": "space",
+      "text": "Space",
+      "spelling": "space",
+      "translation": "космос",
+      "imageId": "space-image",
+      "audioId": "space-audio"
+    },
+    {
+      "id": "bright",
+      "text": "Bright",
+      "spelling": "bright",
+      "translation": "яркий",
+      "imageId": "bright-image",
+      "audioId": "bright-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "sun-image",
+      "path": "/v1/media/fb51e7a3e06d6467ca5c97b86fc5102b6213ab12fb2b2389eeabbfe8a849415d.png",
+      "kind": "image"
+    },
+    {
+      "id": "sun-audio",
+      "path": "/v1/media/fa795512a30d753aef4a51654850c2e53d8b88b675640fb57106ee06aefaea3f.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "spaceship-image",
+      "path": "/v1/media/301815f808208d244b7b441eb8254a0eedb8b67af373a65707d4ddbab1e33f60.png",
+      "kind": "image"
+    },
+    {
+      "id": "spaceship-audio",
+      "path": "/v1/media/8569a977fe0347bf2cbf914c6430e59b566323b9f762034cf6fc710a9bea444a.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "satellite-image",
+      "path": "/v1/media/7cbfb257174aeab297faebdfe2fba26e655bf56fe7d58ff6e47359691453de26.png",
+      "kind": "image"
+    },
+    {
+      "id": "satellite-audio",
+      "path": "/v1/media/e19775913ceb1d3a9ffdfedfb876c73119b4b6e94317c6287ecc688f732e455c.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "comet-image",
+      "path": "/v1/media/51c88e198d51e2eb47be15d6f24aa2287fc3ccb4911d3141cfee690fcb53fabd.png",
+      "kind": "image"
+    },
+    {
+      "id": "comet-audio",
+      "path": "/v1/media/01e2e5ef1dfb9d3ecbe12e4ee726e8a5b72eadd77d0f6b7f08922ade35deed36.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "space-image",
+      "path": "/v1/media/22d5b7157e8e1c04b2dfea3255c6236fb239cf2ab853721f9d8c27911056748d.png",
+      "kind": "image"
+    },
+    {
+      "id": "space-audio",
+      "path": "/v1/media/0c51225a2eea4463477f97db848cb360015316d4539cfb9c84a900ce01540c1e.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bright-image",
+      "path": "/v1/media/5ab8c63927c679ca1a842b39fb26d824bfcfbb35b0230efa2eab387a8f8f5abf.png",
+      "kind": "image"
+    },
+    {
+      "id": "bright-audio",
+      "path": "/v1/media/1bbd4d4afeec9135e4f353ac62e3e98697cf171ee16637da33edf006c5b5aadf.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим говорит: это яркая звезда, которую мы видим днём.",
+      "type": "listen-and-select",
+      "wordId": "sun",
+      "choices": [
+        "sun",
+        "comet",
+        "bright"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим говорит: найди космический корабль и спутник.",
+      "type": "match-pairs",
+      "wordIds": [
+        "spaceship",
+        "satellite"
+      ],
+      "imageOrder": [
+        "spaceship",
+        "satellite"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: это небесный гость с длинным хвостом.",
+      "type": "build-word",
+      "wordId": "comet",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "o"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t3",
+          "letter": "m"
+        },
+        {
+          "id": "t1",
+          "letter": "c"
+        },
+        {
+          "id": "t7",
+          "letter": "q"
+        },
+        {
+          "id": "t5",
+          "letter": "t"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай и выбери правильную картинку.",
+      "hint": "Тим говорит: там летают ракеты, планеты и звёзды.",
+      "type": "listen-and-select",
+      "wordId": "space",
+      "choices": [
+        "satellite",
+        "space",
+        "sun"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим говорит: найди яркий предмет, комету и корабль.",
+      "type": "match-pairs",
+      "wordIds": [
+        "bright",
+        "comet",
+        "spaceship"
+      ],
+      "imageOrder": [
+        "spaceship",
+        "bright",
+        "comet"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим говорит: этот аппарат летает вокруг планеты.",
+      "type": "build-word",
+      "wordId": "satellite",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "t"
+        },
+        {
+          "id": "t9",
+          "letter": "e"
+        },
+        {
+          "id": "t11",
+          "letter": "z"
+        },
+        {
+          "id": "t10",
+          "letter": "x"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        },
+        {
+          "id": "t7",
+          "letter": "i"
+        },
+        {
+          "id": "t8",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "e"
+        },
+        {
+          "id": "t6",
+          "letter": "l"
+        }
+      ]
+    }
+  ]
+}

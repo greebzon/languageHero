@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 2,
+  "id": "en-family-02",
+  "version": 2,
+  "language": "en",
+  "title": "Брат и старшие родные",
+  "presentation": {
+    "intro": "Тим говорит: «Поищем родных на картинках и дружно повторим английские слова!»",
+    "completionTitle": "Семейные слова найдены!",
+    "completionMessage": "Теперь ты знаешь, как по-английски брат, бабушка, дедушка и вся семья. Молодец!"
+  },
+  "texts": {
+    "en": {
+      "title": "Brother and Older Family Members",
+      "presentation": {
+        "intro": "Tim says: “Let’s find family members in the pictures and say the English words together!”",
+        "completionTitle": "Family words found!",
+        "completionMessage": "Now you know how to say brother, grandma, grandpa, and family in English. Great job!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim: This is a boy in your family, not your mum or dad."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Remember the older woman, the older man, and all the family members together."
+        },
+        "ex-3": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: These are all the family members together."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the right picture.",
+          "hint": "Tim: This is the older man in the family."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the right pictures.",
+          "hint": "Tim: Find the boy in the family and the older woman."
+        },
+        "ex-6": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: This is the older woman in the family. She may read you stories."
+        }
+      },
+      "words": {
+        "family": {
+          "translation": "family"
+        },
+        "brother": {
+          "translation": "brother"
+        },
+        "grandma": {
+          "translation": "grandma"
+        },
+        "grandpa": {
+          "translation": "grandpa"
+        }
+      }
+    },
+    "he": {
+      "title": "אח וקרובי משפחה מבוגרים",
+      "presentation": {
+        "intro": "טים אומר: ״בואו נחפש קרובי משפחה בתמונות ונחזור יחד על המילים באנגלית!״",
+        "completionTitle": "מילות המשפחה נמצאו!",
+        "completionMessage": "עכשיו אפשר לומר באנגלית אח, סבתא, סבא ומשפחה. כל הכבוד!"
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה המתאימה.",
+          "hint": "טים: זה ילד במשפחה, לא אמא ולא אבא."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: להיזכר באישה המבוגרת, בגבר המבוגר ובכל בני המשפחה יחד."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: אלה כל בני המשפחה יחד."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה המתאימה.",
+          "hint": "טים: זה הגבר המבוגר במשפחה."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות המתאימות.",
+          "hint": "טים: למצוא את הילד במשפחה ואת האישה המבוגרת."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: זו האישה המבוגרת במשפחה. היא יכולה לקרוא סיפורים."
+        }
+      },
+      "words": {
+        "family": {
+          "translation": "משפחה"
+        },
+        "brother": {
+          "translation": "אח"
+        },
+        "grandma": {
+          "translation": "סבתא"
+        },
+        "grandpa": {
+          "translation": "סבא"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "brother",
+      "text": "Brother",
+      "spelling": "brother",
+      "translation": "брат",
+      "imageId": "brother-image",
+      "audioId": "brother-audio"
+    },
+    {
+      "id": "grandma",
+      "text": "Grandma",
+      "spelling": "grandma",
+      "translation": "бабушка",
+      "imageId": "grandma-image",
+      "audioId": "grandma-audio"
+    },
+    {
+      "id": "grandpa",
+      "text": "Grandpa",
+      "spelling": "grandpa",
+      "translation": "дедушка",
+      "imageId": "grandpa-image",
+      "audioId": "grandpa-audio"
+    },
+    {
+      "id": "family",
+      "text": "Family",
+      "spelling": "family",
+      "translation": "семья",
+      "imageId": "family-image",
+      "audioId": "family-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "brother-image",
+      "path": "/v1/media/67b50478cbef5220f09977f95276d546bab161727f4d29045cfc7e45ef4d9b51.png",
+      "kind": "image"
+    },
+    {
+      "id": "brother-audio",
+      "path": "/v1/media/7264b82a8a8c6252e14b7d8c57224b749e77d756a2d47dd79d1b8c4505c042b7.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "grandma-image",
+      "path": "/v1/media/a16f28454d486e2d8f0793d1c9a8a54baf3684ce8ad2cde5f8d6b7211489040c.png",
+      "kind": "image"
+    },
+    {
+      "id": "grandma-audio",
+      "path": "/v1/media/0a9a938f55069ec74b26085a1c6016ee668b65119aa3be30bd44e906f78df995.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "grandpa-image",
+      "path": "/v1/media/59704faefa693d8e2f380fd922fbe7f8466c1ec9508603701dce055639fd1fcf.png",
+      "kind": "image"
+    },
+    {
+      "id": "grandpa-audio",
+      "path": "/v1/media/791ed2f83424219b24102a762e9447f3452cda39161162808f8f2760e3d043e1.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "family-image",
+      "path": "/v1/media/078b54c6757e8907565d51c81c97b7e7ca25dfd102126ff4108060624eca4ea3.png",
+      "kind": "image"
+    },
+    {
+      "id": "family-audio",
+      "path": "/v1/media/7ee2fb386bcb36a58882186f813ef8cc8e9d2825e04a17c8918ef1772d51c4b8.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим: Это мальчик из твоей семьи, не мама и не папа.",
+      "type": "listen-and-select",
+      "wordId": "brother",
+      "choices": [
+        "grandpa",
+        "grandma",
+        "brother"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Вспомни, кто старшая женщина, старший мужчина и все родные вместе.",
+      "type": "match-pairs",
+      "wordIds": [
+        "grandma",
+        "grandpa",
+        "family"
+      ],
+      "imageOrder": [
+        "family",
+        "grandma",
+        "grandpa"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это все родные люди вместе.",
+      "type": "build-word",
+      "wordId": "family",
+      "tiles": [
+        {
+          "id": "t7",
+          "letter": "x"
+        },
+        {
+          "id": "t1",
+          "letter": "f"
+        },
+        {
+          "id": "t8",
+          "letter": "o"
+        },
+        {
+          "id": "t2",
+          "letter": "a"
+        },
+        {
+          "id": "t3",
+          "letter": "m"
+        },
+        {
+          "id": "t5",
+          "letter": "l"
+        },
+        {
+          "id": "t4",
+          "letter": "i"
+        },
+        {
+          "id": "t6",
+          "letter": "y"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим: Это старший мужчина в семье.",
+      "type": "listen-and-select",
+      "wordId": "grandpa",
+      "choices": [
+        "grandpa",
+        "brother",
+        "family"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим: Найди мальчика из семьи и старшую женщину.",
+      "type": "match-pairs",
+      "wordIds": [
+        "brother",
+        "grandma"
+      ],
+      "imageOrder": [
+        "grandma",
+        "brother"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: Это старшая женщина в семье. Она может читать тебе сказки.",
+      "type": "build-word",
+      "wordId": "grandma",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "a"
+        },
+        {
+          "id": "t9",
+          "letter": "z"
+        },
+        {
+          "id": "t7",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "m"
+        },
+        {
+          "id": "t5",
+          "letter": "d"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t1",
+          "letter": "g"
+        },
+        {
+          "id": "t4",
+          "letter": "n"
+        },
+        {
+          "id": "t8",
+          "letter": "x"
+        }
+      ]
+    }
+  ]
+}

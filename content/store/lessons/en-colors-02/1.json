@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 2,
+  "id": "en-colors-02",
+  "version": 1,
+  "language": "en",
+  "title": "Нежные и спокойные цвета",
+  "presentation": {
+    "intro": "Тим предлагает шесть игр: найди нужную краску, послушай слово и повтори его вместе со мной!",
+    "completionTitle": "Отличная палитра!",
+    "completionMessage": "У тебя получилось! Теперь ты умеешь узнавать ещё пять цветов по-английски и выбирать их на картинке."
+  },
+  "words": [
+    {
+      "id": "pink",
+      "text": "Pink",
+      "spelling": "pink",
+      "translation": "розовый",
+      "imageId": "pink-image",
+      "audioId": "pink-audio"
+    },
+    {
+      "id": "brown",
+      "text": "Brown",
+      "spelling": "brown",
+      "translation": "коричневый",
+      "imageId": "brown-image",
+      "audioId": "brown-audio"
+    },
+    {
+      "id": "black",
+      "text": "Black",
+      "spelling": "black",
+      "translation": "чёрный",
+      "imageId": "black-image",
+      "audioId": "black-audio"
+    },
+    {
+      "id": "white",
+      "text": "White",
+      "spelling": "white",
+      "translation": "белый",
+      "imageId": "white-image",
+      "audioId": "white-audio"
+    },
+    {
+      "id": "grey",
+      "text": "Grey",
+      "spelling": "grey",
+      "translation": "серый",
+      "imageId": "grey-image",
+      "audioId": "grey-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "pink-image",
+      "path": "/v1/media/268900349177dfed9d85feda4bbeb4a480b6ccdbc6d1d7e34c4ecb8c486fd985.png",
+      "kind": "image"
+    },
+    {
+      "id": "pink-audio",
+      "path": "/v1/media/d103d65cbd91b505eaaf1e5a2afbfd4f64a1ae0c716c93004f526949559aba39.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "brown-image",
+      "path": "/v1/media/443813899a0019d0eaa606c0f10d3687cb7f35cbbb427c51e952cd68afa2a515.png",
+      "kind": "image"
+    },
+    {
+      "id": "brown-audio",
+      "path": "/v1/media/d018d6e0b82e6a611420ee0d4feaf78d15810f45d78b27b2dd9d3f42c6743610.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "black-image",
+      "path": "/v1/media/eaffbc24c34b566fab235a7416d4620d31adf187ac7b4c2364078f5ad128fb05.png",
+      "kind": "image"
+    },
+    {
+      "id": "black-audio",
+      "path": "/v1/media/9513a489973467bbbe0ef95ece516452afc45a88cabfb8a61698626941a373d4.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "white-image",
+      "path": "/v1/media/f0f38e67ffcffe40549c9cc2d1f31d4daec56576c474857b1a91c97242b83d74.png",
+      "kind": "image"
+    },
+    {
+      "id": "white-audio",
+      "path": "/v1/media/4e4115997b2ee89f569f6be5bd33aa7e6b81f68225c68bf705708d498a15b574.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "grey-image",
+      "path": "/v1/media/29cabca688fd7a1f7145ada03e5aa8cff211d2425d2a637e265d2ca94f009b93.png",
+      "kind": "image"
+    },
+    {
+      "id": "grey-audio",
+      "path": "/v1/media/28c33f2a1cd2e165610241bec5a049d68f38975a30ea309f817c30c934554b07.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок: слушай внимательно и найди цвет, который звучит в слове.",
+      "type": "listen-and-select",
+      "wordId": "pink",
+      "choices": [
+        "black",
+        "grey",
+        "pink"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: прочитай слова и найди для каждого свой цвет.",
+      "type": "match-pairs",
+      "wordIds": [
+        "brown",
+        "white",
+        "grey"
+      ],
+      "imageOrder": [
+        "white",
+        "brown",
+        "grey"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это нежный цвет. Поставь буквы по порядку.",
+      "type": "build-word",
+      "wordId": "pink",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "p"
+        },
+        {
+          "id": "t2",
+          "letter": "i"
+        },
+        {
+          "id": "t3",
+          "letter": "n"
+        },
+        {
+          "id": "t5",
+          "letter": "y"
+        },
+        {
+          "id": "t4",
+          "letter": "k"
+        },
+        {
+          "id": "t6",
+          "letter": "z"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери нужную картинку.",
+      "hint": "Тим-лисёнок: выбери картинку с тёмным цветом.",
+      "type": "listen-and-select",
+      "wordId": "black",
+      "choices": [
+        "brown",
+        "black",
+        "white",
+        "pink"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с подходящими картинками.",
+      "hint": "Тим-лисёнок: у каждого слова есть картинка такого же цвета.",
+      "type": "match-pairs",
+      "wordIds": [
+        "pink",
+        "black",
+        "white",
+        "brown"
+      ],
+      "imageOrder": [
+        "black",
+        "pink",
+        "brown",
+        "white"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим-лисёнок: это тёплый цвет шоколада и дерева. Найди нужные буквы.",
+      "type": "build-word",
+      "wordId": "brown",
+      "tiles": [
+        {
+          "id": "t7",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "w"
+        },
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t6",
+          "letter": "i"
+        },
+        {
+          "id": "t3",
+          "letter": "o"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 2,
+  "id": "en-anatomiya-598y-05",
+  "version": 2,
+  "language": "en",
+  "title": "Что внутри?",
+  "presentation": {
+    "intro": "Тим шепчет: внутри тела есть удивительные помощники. Узнаем их имена!",
+    "completionTitle": "Внутренние помощники!",
+    "completionMessage": "Замечательно! Теперь ты знаешь, как по-английски сердце, мозг, лёгкое и желудок."
+  },
+  "texts": {
+    "en": {
+      "title": "What's Inside?",
+      "presentation": {
+        "intro": "Tim whispers: Inside your body are amazing helpers. Let's learn their names!",
+        "completionTitle": "Inside Helpers!",
+        "completionMessage": "Great! Now you know how to say heart, brain, lung, and stomach in English."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: This organ beats in your chest and moves blood."
+        },
+        "ex-2": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim: One organ helps you think, and another helps you breathe."
+        },
+        "ex-3": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: This organ is in your belly and helps digest food."
+        },
+        "ex-4": {
+          "prompt": "Listen to the word and choose the picture.",
+          "hint": "Tim: This organ helps you breathe."
+        },
+        "ex-5": {
+          "prompt": "Match the words to the pictures.",
+          "hint": "Tim: Find the organs that beat, think, and help digest food."
+        },
+        "ex-6": {
+          "prompt": "Build the word from letters.",
+          "hint": "Tim: This organ helps you think and remember."
+        }
+      },
+      "words": {
+        "lung": {
+          "translation": "lung"
+        },
+        "brain": {
+          "translation": "brain"
+        },
+        "heart": {
+          "translation": "heart"
+        },
+        "stomach": {
+          "translation": "stomach"
+        }
+      }
+    },
+    "he": {
+      "title": "מה יש בפנים?",
+      "presentation": {
+        "intro": "טים לוחש: בתוך הגוף יש עוזרים מדהימים. בואו לגלות את השמות שלהם!",
+        "completionTitle": "עוזרים בפנים!",
+        "completionMessage": "נהדר! עכשיו יודעים איך אומרים באנגלית לב, מוח, ריאה וקיבה."
+      },
+      "exercises": {
+        "ex-1": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים: האיבר הזה פועם בחזה ומזרים דם."
+        },
+        "ex-2": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים: איבר אחד עוזר לחשוב, ואיבר אחר עוזר לנשום."
+        },
+        "ex-3": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: האיבר הזה נמצא בבטן ועוזר לעכל אוכל."
+        },
+        "ex-4": {
+          "prompt": "להקשיב למילה ולבחור את התמונה.",
+          "hint": "טים: האיבר הזה עוזר לנשום."
+        },
+        "ex-5": {
+          "prompt": "לחבר את המילים לתמונות.",
+          "hint": "טים: למצוא את האיברים שפועמים, חושבים ועוזרים לעכל אוכל."
+        },
+        "ex-6": {
+          "prompt": "לבנות את המילה מהאותיות.",
+          "hint": "טים: האיבר הזה עוזר לחשוב ולזכור."
+        }
+      },
+      "words": {
+        "lung": {
+          "translation": "ריאה"
+        },
+        "brain": {
+          "translation": "מוח"
+        },
+        "heart": {
+          "translation": "לב"
+        },
+        "stomach": {
+          "translation": "קיבה"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "heart",
+      "text": "A heart",
+      "spelling": "heart",
+      "translation": "сердце",
+      "imageId": "heart-image",
+      "audioId": "heart-audio"
+    },
+    {
+      "id": "brain",
+      "text": "A brain",
+      "spelling": "brain",
+      "translation": "мозг",
+      "imageId": "brain-image",
+      "audioId": "brain-audio"
+    },
+    {
+      "id": "lung",
+      "text": "A lung",
+      "spelling": "lung",
+      "translation": "лёгкое",
+      "imageId": "lung-image",
+      "audioId": "lung-audio"
+    },
+    {
+      "id": "stomach",
+      "text": "A stomach",
+      "spelling": "stomach",
+      "translation": "желудок",
+      "imageId": "stomach-image",
+      "audioId": "stomach-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "heart-image",
+      "path": "/v1/media/7af7e605b410904eb1e31537f2cce850148640414fd53649e2a1bcad06646efc.png",
+      "kind": "image"
+    },
+    {
+      "id": "heart-audio",
+      "path": "/v1/media/10e3c7811145d846acee69ed330fac7c75ab14ee55b1ba00e98a43e7f0ec5452.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "brain-image",
+      "path": "/v1/media/0e06e7e11611ca21d1d256db554aca593d1535e1119f82d13e65555288b0de68.png",
+      "kind": "image"
+    },
+    {
+      "id": "brain-audio",
+      "path": "/v1/media/fe3097c4e8fd0682ebf36fc4438d40c19c2e12363c1e844cd411456a031babef.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "lung-image",
+      "path": "/v1/media/dab0d1d1c4053cf47b7a15dc4411bc4e787f5da6381b55506de0a7ae4325673c.png",
+      "kind": "image"
+    },
+    {
+      "id": "lung-audio",
+      "path": "/v1/media/52bfce644971ff97c3806f5e123b48ee4fbcaca14da34cad3010294fa4157701.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "stomach-image",
+      "path": "/v1/media/d67370c5cb66a1241ec6398bd77b9117ed2ea87dfee02c9c39b818c92e1bd518.png",
+      "kind": "image"
+    },
+    {
+      "id": "stomach-audio",
+      "path": "/v1/media/64b9e2a8241f57adc41d39861fcb9b749821eab23ce487abf5285cc9d1e35dd0.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-1",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: этот орган стучит в груди и гоняет кровь.",
+      "type": "listen-and-select",
+      "wordId": "heart",
+      "choices": [
+        "brain",
+        "heart",
+        "lung"
+      ]
+    },
+    {
+      "id": "ex-2",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: один орган помогает думать, а другой помогает дышать.",
+      "type": "match-pairs",
+      "wordIds": [
+        "brain",
+        "lung"
+      ],
+      "imageOrder": [
+        "lung",
+        "brain"
+      ]
+    },
+    {
+      "id": "ex-3",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: этот орган находится в животе и помогает переваривать еду.",
+      "type": "build-word",
+      "wordId": "stomach",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "c"
+        },
+        {
+          "id": "t9",
+          "letter": "x"
+        },
+        {
+          "id": "t7",
+          "letter": "h"
+        },
+        {
+          "id": "t3",
+          "letter": "o"
+        },
+        {
+          "id": "t8",
+          "letter": "q"
+        },
+        {
+          "id": "t2",
+          "letter": "t"
+        },
+        {
+          "id": "t4",
+          "letter": "m"
+        },
+        {
+          "id": "t1",
+          "letter": "s"
+        }
+      ]
+    },
+    {
+      "id": "ex-4",
+      "prompt": "Послушай слово и выбери картинку.",
+      "hint": "Тим: этот орган помогает нам дышать.",
+      "type": "listen-and-select",
+      "wordId": "lung",
+      "choices": [
+        "lung",
+        "heart",
+        "stomach"
+      ]
+    },
+    {
+      "id": "ex-5",
+      "prompt": "Соедини слова с картинками.",
+      "hint": "Тим: найди органы, которые стучат, думают и помогают переваривать еду.",
+      "type": "match-pairs",
+      "wordIds": [
+        "heart",
+        "brain",
+        "stomach"
+      ],
+      "imageOrder": [
+        "heart",
+        "stomach",
+        "brain"
+      ]
+    },
+    {
+      "id": "ex-6",
+      "prompt": "Собери слово из букв.",
+      "hint": "Тим: этот орган помогает нам думать и запоминать.",
+      "type": "build-word",
+      "wordId": "brain",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "b"
+        },
+        {
+          "id": "t2",
+          "letter": "r"
+        },
+        {
+          "id": "t5",
+          "letter": "n"
+        },
+        {
+          "id": "t3",
+          "letter": "a"
+        },
+        {
+          "id": "t6",
+          "letter": "x"
+        },
+        {
+          "id": "t7",
+          "letter": "z"
+        },
+        {
+          "id": "t4",
+          "letter": "i"
+        }
+      ]
+    }
+  ]
+}
