@@ -43,8 +43,8 @@ test('purchases spend coins, refuse when poor or already owned, and chests grant
 
 test('a streak freeze covers one skipped day and is consumed once', () => {
   let j: Journal = { ...emptyJournal(), inventory: { items: [], freezes: 1 } };
-  j = recordLesson(j, { firstTime: true, words: 1, perfect: false, at: noon(15) });
-  j = recordLesson(j, { firstTime: true, words: 1, perfect: false, at: noon(16) });
+  j = recordLesson(j, { firstTime: true, words: 1, perfect: false, stars: 1, at: noon(15) });
+  j = recordLesson(j, { firstTime: true, words: 1, perfect: false, stars: 1, at: noon(16) });
   assert.equal(streakDays(j, noon(18)), 0);
   const kept = protectStreak(j, noon(18));
   assert.equal(kept.inventory.freezes, 0);
@@ -55,6 +55,7 @@ test('a streak freeze covers one skipped day and is consumed once', () => {
     firstTime: false,
     words: 0,
     perfect: true,
+    stars: 3,
     at: noon(18),
   });
   assert.equal(streakDays(afterLesson, noon(18)), 4);

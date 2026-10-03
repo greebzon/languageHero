@@ -118,6 +118,8 @@ const courseFields = {
   title: z.string().min(1).max(100),
   description: z.string().max(200).nullable(),
   coverAssetId: z.uuid().nullable(),
+  /** Stars a child needs to open the set; 0 = open from the start, null = after the previous set. */
+  unlockStars: z.number().int().min(0).max(100000).nullable(),
   visibility: courseVisibilitySchema,
   texts: courseTextsSchema,
 };
@@ -128,6 +130,7 @@ export const courseInputSchema = z.object({
   title: courseFields.title,
   description: courseFields.description.default(null),
   coverAssetId: courseFields.coverAssetId.default(null),
+  unlockStars: courseFields.unlockStars.default(null),
   visibility: courseFields.visibility.default('draft'),
   texts: courseFields.texts.default({}),
 });

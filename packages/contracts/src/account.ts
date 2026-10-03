@@ -71,6 +71,8 @@ export const journalSchema = z.object({
   trophies: z.record(z.string(), z.string()),
   bonusCoins: z.number().int().nonnegative(),
   spentCoins: z.number().int().nonnegative(),
+  /** Stars of every verified completion, repeats included: what opens sets. */
+  stars: z.number().int().nonnegative().default(0),
   inventory: z.object({ items: z.array(z.string()), freezes: z.number().int().nonnegative() }),
 });
 export type JournalDay = z.infer<typeof journalDaySchema>;

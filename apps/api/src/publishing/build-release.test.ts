@@ -97,6 +97,7 @@ const course = (
   description: null,
   texts: {},
   coverAssetId: null,
+  unlockStars: null,
   position: 0,
   visibility,
   editRevision: 1,

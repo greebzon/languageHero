@@ -17,7 +17,8 @@ export type ChildStats = {
   words: number;
   /** Lessons finished at least once, out of all lessons of the language. */
   lessons: { done: number; total: number };
-  stars: { earned: number; max: number };
+  /** Star total: every completion, repeats included (what opens sets). */
+  stars: number;
   /** Lessons finished with three stars. */
   perfect: number;
   sets: { done: number; total: number };
@@ -65,7 +66,7 @@ export function childStats(
   today: Date,
   wordsTotal: number,
 ): ChildStats {
-  const cards = courseCards(catalog, state, language);
+  const cards = courseCards(catalog, state, language, journal.stars);
   const lessons = cards.flatMap((c) => c.course.lessons);
   const done = lessons.filter((l) => state.progress[l.id]);
   const monday = shift(today, -((today.getDay() + 6) % 7));
@@ -74,10 +75,7 @@ export function childStats(
   return {
     words: wordsTotal,
     lessons: { done: done.length, total: lessons.length },
-    stars: {
-      earned: done.reduce((sum, l) => sum + state.progress[l.id]!.bestStars, 0),
-      max: lessons.length * 3,
-    },
+    stars: journal.stars,
     perfect: done.filter((l) => state.progress[l.id]!.bestStars === 3).length,
     sets: { done: cards.filter((c) => c.complete).length, total: cards.length },
     streak: { current, best: Math.max(current, bestStreak(journal)) },

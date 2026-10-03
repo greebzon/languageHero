@@ -53,6 +53,7 @@ export function CoursePage() {
           title: value.title,
           description: value.description || null,
           coverAssetId: value.coverAssetId,
+          unlockStars: value.unlockStars,
           visibility: value.visibility,
           texts: value.texts,
           editRevision: query.data!.course.editRevision,

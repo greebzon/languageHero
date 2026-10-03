@@ -145,6 +145,7 @@ async function importCourses(
       coverAssetId: course.cover
         ? (assetIdBySha.get(shaFromPath(course.cover.path)) ?? null)
         : null,
+      unlockStars: 'unlockStars' in course ? (course.unlockStars ?? null) : null,
       position,
       visibility: course.visibility,
       publishedRevision: catalog.revision,

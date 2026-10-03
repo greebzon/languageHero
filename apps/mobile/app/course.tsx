@@ -14,6 +14,7 @@ import { refTitle } from '../src/i18n/content';
 export default function MapScreen() {
   const {
     state,
+    journal,
     catalog,
     fullCatalog,
     refresh,
@@ -26,7 +27,9 @@ export default function MapScreen() {
   const { t, tn, locale, isRTL } = useT();
   const { id } = useLocalSearchParams<{ id: string }>();
   const card = catalog.courses.find((c) => c.id === id);
-  const access = card && courseCards(catalog, state, card.language).find((c) => c.course.id === id);
+  const access =
+    card &&
+    courseCards(catalog, state, card.language, journal.stars).find((c) => c.course.id === id);
   const [locked, setLocked] = useState(false);
   const resume = resumableSession(state, fullCatalog);
   async function start(id: string) {

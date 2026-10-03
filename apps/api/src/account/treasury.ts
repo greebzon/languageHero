@@ -58,6 +58,7 @@ export async function loadJournal(
       lessonId: r.lessonId,
       words: r.words,
       perfect: r.stars === 3,
+      stars: r.stars,
       at: wallClock(r.createdAt, user.tzOffset),
     })),
     entries.map((e) => ({

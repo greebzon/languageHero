@@ -17,14 +17,26 @@ test('child statistics: lessons, stars, sets, streaks, trophies and the current 
   let journal = emptyJournal();
   // A three-day run (14-16), a gap, then two days (17 is empty; 18-19). 19 is a Saturday.
   for (const day of [14, 15, 16, 18, 19])
-    journal = recordLesson(journal, { firstTime: true, words: 4, perfect: false, at: at(day) });
-  journal = recordLesson(journal, { firstTime: false, words: 4, perfect: true, at: at(19, 19) });
+    journal = recordLesson(journal, {
+      firstTime: true,
+      words: 4,
+      perfect: false,
+      stars: 1,
+      at: at(day),
+    });
+  journal = recordLesson(journal, {
+    firstTime: false,
+    words: 4,
+    perfect: true,
+    stars: 3,
+    at: at(19, 19),
+  });
   journal = { ...journal, trophies: { owl: '2026-09-19' } };
 
   const stats = childStats(catalog, state, journal, 'en', at(19), 8);
   assert.equal(stats.words, 8);
   assert.deepEqual(stats.lessons, { done: 2, total: lessons.length });
-  assert.deepEqual(stats.stars, { earned: 5, max: lessons.length * 3 });
+  assert.equal(stats.stars, 8); // every completion counts, the repeat too
   assert.equal(stats.perfect, 1);
   assert.deepEqual(stats.sets, { done: 0, total: 1 });
   assert.deepEqual(stats.streak, { current: 2, best: 3 });

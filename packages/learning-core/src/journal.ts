@@ -73,6 +73,7 @@ export function emptyJournal(): Journal {
     trophies: {},
     bonusCoins: 0,
     spentCoins: 0,
+    stars: 0,
     inventory: { items: [], freezes: 0 },
   };
 }
@@ -86,6 +87,7 @@ export function restoreJournal(value: unknown): Journal {
     trophies: j.trophies ?? {},
     bonusCoins: typeof j.bonusCoins === 'number' ? j.bonusCoins : 0,
     spentCoins: typeof j.spentCoins === 'number' ? j.spentCoins : 0,
+    stars: typeof j.stars === 'number' ? j.stars : 0,
     inventory: {
       items: Array.isArray(j.inventory?.items)
         ? j.inventory.items.filter((i): i is string => typeof i === 'string')
@@ -107,12 +109,13 @@ function shift(date: Date, days: number): Date {
 }
 export function recordLesson(
   journal: Journal,
-  lesson: { firstTime: boolean; words: number; perfect: boolean; at: Date },
+  lesson: { firstTime: boolean; words: number; perfect: boolean; stars: number; at: Date },
 ): Journal {
   const key = dayKey(lesson.at);
   const day = journal.days[key] ?? { lessons: 0, perfect: 0, words: 0, evening: false };
   return {
     ...journal,
+    stars: journal.stars + lesson.stars,
     days: {
       ...journal.days,
       [key]: {
@@ -204,7 +207,14 @@ export type LedgerEntry = {
   coins: number;
   itemId: string | null;
 };
-export type Completion = { lessonId: string; words: number; perfect: boolean; at: Date };
+export type Completion = {
+  lessonId: string;
+  words: number;
+  perfect: boolean;
+  /** Stars of this completion (a repeat earns them again). */
+  stars: number;
+  at: Date;
+};
 /* Rebuilds the journal from verified lesson completions (wall-clock dates) and the coin ledger. */
 export function buildJournal(completions: Completion[], ledger: LedgerEntry[]): Journal {
   let journal = emptyJournal();
@@ -244,6 +254,7 @@ export function buildJournal(completions: Completion[], ledger: LedgerEntry[]): 
     trophies,
     bonusCoins,
     spentCoins,
+    stars: journal.stars,
     inventory: { items, freezes: Math.max(0, freezes) },
   };
 }

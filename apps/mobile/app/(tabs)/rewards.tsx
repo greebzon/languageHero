@@ -195,7 +195,7 @@ export default function RewardsScreen() {
                 />
                 <Tile
                   emoji="🌟"
-                  value={rewards.stars}
+                  value={journal.stars}
                   label={t('rewards.tiles.stars')}
                   color={colors.amberDark}
                 />

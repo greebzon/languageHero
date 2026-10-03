@@ -546,3 +546,47 @@ test('security: newest code only, guessing capped per email, tz jumps once a day
   assert.equal(legacy.json().profile.coins, 0);
   assert.equal(legacy.json().profile.xp, 0);
 });
+test('stars: every completion counts, repeats too, and the total opens a set by its threshold', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  // The forest set is open from the start; a bonus set needs six stars.
+  const release = structuredClone(seed);
+  release.catalog.revision += 200;
+  const forest = release.catalog.courses[0]!;
+  forest.unlockStars = 0;
+  const bonusLesson = { ...structuredClone(release.lessons[0]!), id: 'bonus-01', version: 1 };
+  release.lessons.push(bonusLesson);
+  release.catalog.courses.push({
+    ...structuredClone(forest),
+    id: 'en-bonus',
+    unlockStars: 6,
+    lessons: [{ ...structuredClone(forest.lessons[0]!), id: 'bonus-01', version: 1 }],
+  });
+  await publishRelease(releaseSchema.parse(release), ctx.contentRoot);
+  const user = await login(ctx, 'stars@example.test');
+  const body = { deviceId: randomUUID(), session: null, soundEnabled: true };
+  const first = release.lessons[0]!;
+  // One perfect run: three stars, not enough for the bonus set.
+  const once = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 1, attempts: [attempt(first), attempt(bonusLesson)] },
+    user.token,
+  );
+  assert.equal(once.statusCode, 200, once.body);
+  assert.equal(once.json().journal.stars, 3);
+  assert.equal(once.json().rejected[0].code, 'lesson_locked');
+  // The same lesson again earns its stars again: six open the bonus set.
+  const again = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 2, attempts: [attempt(first), attempt(bonusLesson)] },
+    user.token,
+  );
+  assert.equal(again.statusCode, 200, again.body);
+  assert.equal(again.json().rejected.length, 0);
+  assert.equal(again.json().journal.stars, 9);
+  assert.ok(again.json().learning.unlockedCourseIds.includes('en-bonus'));
+  // The repeat paid no second reward: XP counts each lesson once.
+  assert.equal(again.json().profile.xp, 200);
+});

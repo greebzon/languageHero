@@ -230,6 +230,7 @@ export function buildRelease(input: BuildInput): BuildOutput {
       ...(cover ? { cover } : {}),
       ...texts,
       locales,
+      ...(course.unlockStars === null ? {} : { unlockStars: course.unlockStars }),
       lessons: refs,
     });
   }

@@ -28,6 +28,7 @@ import {
   recordLesson,
   restoreJournal,
   resumableSession,
+  starsFor,
   type Journal,
   type LearningAction,
   type PurchaseOutcome,
@@ -163,6 +164,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
             firstTime: !current.state.progress[s.lesson.id],
             words: s.lesson.words.length,
             perfect: s.mistakes === 0,
+            stars: starsFor(s.mistakes),
             at: new Date(),
           });
         }
@@ -473,8 +475,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(timer);
   }, [ready, auth.expired]);
   useEffect(() => {
-    if (ready) setState((current) => reconcileCourseAccess(visible, current));
-  }, [ready, visible, state]);
+    if (ready) setState((current) => reconcileCourseAccess(visible, current, record.journal.stars));
+  }, [ready, visible, state, record.journal.stars]);
   const wordsTotal = new Set(
     library
       .filter((l) => state.progress[l.id])
@@ -554,8 +556,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       if (
         !course ||
         index < 0 ||
-        !courseCards(visible, state, course.language).find((c) => c.course.id === course.id)
-          ?.unlocked ||
+        !courseCards(visible, state, course.language, record.journal.stars).find(
+          (c) => c.course.id === course.id,
+        )?.unlocked ||
         (!state.progress[id] && course.lessons.slice(0, index).some((l) => !state.progress[l.id]))
       )
         throw new Error('Locked lesson');

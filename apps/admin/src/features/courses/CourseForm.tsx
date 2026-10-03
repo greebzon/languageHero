@@ -14,6 +14,9 @@ export type CourseFormValue = {
   title: string;
   description: string;
   coverAssetId: string | null;
+  /** Stars a child needs to open the set (every completion counts, repeats too); null = after
+      the previous set. */
+  unlockStars: number | null;
   visibility: CourseVisibility;
   /* The card in the other interface languages (filled by «Перевести тексты» or by hand). */
   texts: CourseTexts;
@@ -47,6 +50,7 @@ export function CourseForm({
     title: course?.title ?? '',
     description: course?.description ?? '',
     coverAssetId: course?.coverAssetId ?? null,
+    unlockStars: course?.unlockStars ?? null,
     visibility: course?.visibility ?? 'draft',
     texts: course?.texts ?? {},
   });
@@ -79,6 +83,7 @@ export function CourseForm({
           'title',
           'description',
           'coverAssetId',
+          'unlockStars',
           'visibility',
         ]}
       />
@@ -198,6 +203,25 @@ export function CourseForm({
           }}
         />
         {course && <CoverGenerator courseId={course.id} />}
+      </Field>
+      <Field
+        label="Звёзд для открытия"
+        hint="0 — открыт сразу; пусто — откроется после завершения предыдущего сета. Звёзды ребёнок получает за каждое прохождение урока (1–3), повторные тоже считаются"
+        error={errors.unlockStars}
+      >
+        <input
+          type="number"
+          min={0}
+          step={1}
+          placeholder="после предыдущего сета"
+          value={form.unlockStars ?? ''}
+          onChange={(e) =>
+            set(
+              'unlockStars',
+              e.target.value === '' ? null : Math.max(0, Math.floor(Number(e.target.value) || 0)),
+            )
+          }
+        />
       </Field>
       <Field label="Видимость" error={errors.visibility}>
         <select

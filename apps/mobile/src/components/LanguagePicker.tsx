@@ -24,7 +24,8 @@ export function LanguagePicker({
   onPicked: (code: string) => void;
 }) {
   const { t, tn, locale } = useT();
-  const { catalog, fullCatalog, state, language, languages, chooseLanguage, refresh } = useDemo();
+  const { catalog, fullCatalog, state, journal, language, languages, chooseLanguage, refresh } =
+    useDemo();
   // A language published a minute ago must be here: fetch the catalog when the picker opens.
   useEffect(() => {
     void refresh();
@@ -46,7 +47,7 @@ export function LanguagePicker({
     else onPicked(code);
   }
   const row = (code: string, own: boolean) => {
-    const cards = courseCards(catalog, state, code);
+    const cards = courseCards(catalog, state, code, journal.stars);
     const current = own && mode === 'screen' && code === language;
     const name = languageName(fullCatalog, code, locale);
     return (

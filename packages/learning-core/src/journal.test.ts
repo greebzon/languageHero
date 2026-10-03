@@ -19,9 +19,9 @@ const noon = (day: number) => new Date(2026, 8, day, 12, 0, 0);
 
 test('daily quests count today only and pay out once', () => {
   let j = emptyJournal();
-  j = recordLesson(j, { firstTime: true, words: 4, perfect: true, at: noon(18) });
-  j = recordLesson(j, { firstTime: false, words: 4, perfect: false, at: noon(18) });
-  j = recordLesson(j, { firstTime: true, words: 6, perfect: true, at: noon(17) });
+  j = recordLesson(j, { firstTime: true, words: 4, perfect: true, stars: 3, at: noon(18) });
+  j = recordLesson(j, { firstTime: false, words: 4, perfect: false, stars: 1, at: noon(18) });
+  j = recordLesson(j, { firstTime: true, words: 6, perfect: true, stars: 3, at: noon(17) });
   const today = questProgress(j, noon(18));
   assert.deepEqual(
     today.map((q) => [q.quest.id, q.value, q.done]),
@@ -42,7 +42,7 @@ test('daily quests count today only and pay out once', () => {
 test('streak counts consecutive days and survives the morning before the first lesson', () => {
   let j = emptyJournal();
   for (const day of [14, 15, 16])
-    j = recordLesson(j, { firstTime: true, words: 1, perfect: false, at: noon(day) });
+    j = recordLesson(j, { firstTime: true, words: 1, perfect: false, stars: 1, at: noon(day) });
   assert.equal(streakDays(j, noon(16)), 3);
   assert.equal(streakDays(j, noon(17)), 3);
   assert.equal(streakDays(j, noon(18)), 0);
@@ -55,6 +55,7 @@ test('trophies are earned once, keep their reward and stay when the streak break
       firstTime: true,
       words: 8,
       perfect: true,
+      stars: 3,
       at: new Date(2026, 8, day, 19),
     });
   const before = trophyProgress(j, noon(16), 56);
@@ -90,9 +91,9 @@ test('buildJournal rebuilds days and coins from verified completions and the led
   const at = (day: number, hour = 12) => new Date(2026, 8, day, hour);
   const journal = buildJournal(
     [
-      { lessonId: 'a', words: 4, perfect: true, at: at(18, 19) },
-      { lessonId: 'a', words: 4, perfect: false, at: at(18) },
-      { lessonId: 'b', words: 3, perfect: true, at: at(17) },
+      { lessonId: 'a', words: 4, perfect: true, stars: 3, at: at(18, 19) },
+      { lessonId: 'a', words: 4, perfect: false, stars: 1, at: at(18) },
+      { lessonId: 'b', words: 3, perfect: true, stars: 3, at: at(17) },
     ],
     [
       { kind: 'quest', ref: 'lesson', day: '2026-09-18', coins: 20, itemId: null },

@@ -97,6 +97,7 @@ export async function cloneRoutes(app: FastifyInstance, options: AdminOptions) {
           title: input.title,
           description: source.description,
           coverAssetId: source.coverAssetId,
+          unlockStars: source.unlockStars,
           position: last ? last.position + 1 : 0,
           visibility: 'draft',
         })

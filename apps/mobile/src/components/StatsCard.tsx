@@ -60,11 +60,7 @@ export function StatsCard({ stats }: { stats: ChildStats }) {
           note={stats.perfect ? t('stats.perfect', { n: stats.perfect }) : undefined}
           testID="stat-lessons"
         />
-        <Tile
-          emoji="⭐"
-          value={outOf(stats.stars.earned, stats.stars.max)}
-          label={t('stats.stars')}
-        />
+        <Tile emoji="⭐" value={String(stats.stars)} label={t('stats.stars')} testID="stat-stars" />
         <Tile emoji="🗺️" value={outOf(stats.sets.done, stats.sets.total)} label={t('stats.sets')} />
         <Tile
           emoji="🔥"

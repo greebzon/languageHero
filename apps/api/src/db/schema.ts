@@ -249,6 +249,9 @@ export const courses = pgTable('courses', {
   description: text('description'),
   texts: jsonb('texts').$type<CourseTexts>().notNull().default({}),
   coverAssetId: uuid('cover_asset_id').references((): AnyPgColumn => assets.id),
+  /** Stars a child needs to open the set (0 = open from the start); null keeps the old rule:
+      the set opens once the previous one is complete. */
+  unlockStars: integer('unlock_stars'),
   position: integer('position').notNull().default(0),
   visibility: text('visibility').$type<CourseVisibility>().notNull().default('draft'),
   editRevision: integer('edit_revision').notNull().default(1),

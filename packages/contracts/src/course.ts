@@ -220,6 +220,10 @@ export const catalogSchema = z
         /* Interface locales every lesson of the set is fully translated to (always has 'ru').
            A child whose interface is in another locale does not see the set. */
         locales: z.array(localeSchema).optional(),
+        /* Stars (earned over every completion, repeats included) that open the set. Absent (no
+           threshold set, or a release made before thresholds existed): the set opens when the
+           previous one is complete. */
+        unlockStars: z.number().int().nonnegative().optional(),
         lessons: z
           .array(
             z.object({

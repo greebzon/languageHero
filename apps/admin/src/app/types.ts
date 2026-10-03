@@ -48,6 +48,7 @@ export type Course = {
   description: string | null;
   texts: CourseTexts;
   coverAssetId: string | null;
+  unlockStars: number | null;
   position: number;
   visibility: CourseVisibility;
   editRevision: number;

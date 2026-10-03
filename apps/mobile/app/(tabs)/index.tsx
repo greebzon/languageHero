@@ -20,6 +20,7 @@ export default function WorldsScreen() {
   const { account } = useAccount();
   const {
     state,
+    journal,
     catalog,
     fullCatalog,
     language,
@@ -33,7 +34,7 @@ export default function WorldsScreen() {
   } = useDemo();
   const { t, tn, locale, isRTL } = useT();
   const [message, setMessage] = useState<string | null>(null);
-  const cards = courseCards(catalog, state, language);
+  const cards = courseCards(catalog, state, language, journal.stars);
   const previews = (catalog.previews ?? []).filter((c) => c.language === language);
   const current = cards.find((c) => c.unlocked && !c.complete) ?? cards.find((c) => c.unlocked);
   const resume = resumableSession(state, fullCatalog);
@@ -63,7 +64,7 @@ export default function WorldsScreen() {
             </View>
           </View>
           <View style={s.headerActions}>
-            <Badge icon="star" value={rewards.stars} />
+            <Badge icon="star" value={journal.stars} />
           </View>
         </View>
       }
@@ -159,9 +160,12 @@ export default function WorldsScreen() {
           const percent = Math.round((completed / course.lessons.length) * 100);
           const isCurrent = current?.course.id === course.id && !complete;
           const previous = cards.slice(0, index).find((c) => !c.complete);
-          const lockedMessage = t('home.lockedMessage', {
-            title: previous?.course.title ?? t('home.previousAdventure'),
-          });
+          const lockedMessage =
+            course.unlockStars === undefined
+              ? t('home.lockedMessage', {
+                  title: previous?.course.title ?? t('home.previousAdventure'),
+                })
+              : t('home.starsMessage', { total: course.unlockStars, need: card.starsNeeded });
           const caption = (
             <View style={[s.coverCopy, course.cover && { backgroundColor: '#235F43' }]}>
               <Label style={s.eyebrow}>{t('common.yourAdventure')}</Label>
@@ -195,7 +199,9 @@ export default function WorldsScreen() {
                             ? t('home.currentSet')
                             : unlocked
                               ? t('home.canPlay')
-                              : t('home.closed')}
+                              : course.unlockStars === undefined
+                                ? t('home.closed')
+                                : t('home.closedStars', { total: course.unlockStars })}
                       </Label>
                     </View>
                     <Badge icon="star" value={fraction(stars, course.lessons.length * 3, isRTL)} />

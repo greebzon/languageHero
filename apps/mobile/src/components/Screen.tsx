@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { learningRewards } from '@lingvohero/learning-core';
 import { useDemo } from '../state/DemoProvider';
 import { Badge, Heading, Label, Tim } from './ui';
 import { NetworkNotice } from './NetworkNotice';
@@ -10,9 +9,8 @@ import { colors, fonts } from '../theme';
 import { useT } from '../i18n';
 
 export function Header() {
-  const { state } = useDemo();
+  const { journal } = useDemo();
   const { t } = useT();
-  const rewards = learningRewards(state);
   return (
     <View style={styles.header}>
       <View style={styles.brand}>
@@ -23,7 +21,7 @@ export function Header() {
           <Label style={styles.brandSub}>{t('common.tagline')}</Label>
         </View>
       </View>
-      <Badge icon="star" value={rewards.stars} />
+      <Badge icon="star" value={journal.stars} />
     </View>
   );
 }

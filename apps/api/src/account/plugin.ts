@@ -39,6 +39,7 @@ import {
   reconcileCourseAccess,
   shopItem,
   shopItemsFrom,
+  starsFor,
   DEFAULT_SHOP_ITEMS,
   DEFAULT_MASCOT_LEVELS,
   wallClock,
@@ -567,6 +568,14 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       .values({ key: `${userId}:${lessonId}`, userId, lessonId, xp: 100, coins: 30, source })
       .onConflictDoNothing();
   }
+  /** The child's star total: every verified completion, repeats included (opens sets). */
+  async function starTotal(tx: Tx, userId: string) {
+    const [row] = await tx
+      .select({ stars: sql<number>`coalesce(sum(${attempts.stars}), 0)::int` })
+      .from(attempts)
+      .where(eq(attempts.userId, userId));
+    return row?.stars ?? 0;
+  }
   async function replay(input: z.infer<typeof attemptSchema>, state: LearningState) {
     const lesson = await cachedLesson(input.lessonId, input.version);
     return { lesson, state: replayLesson(input, state, lesson) };
@@ -608,6 +617,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         const locale: Locale = input.locale ?? current.uiLocale ?? 'ru';
         const visible = visibleCatalog(catalog, locale);
         let state = current.learning;
+        let stars = await starTotal(tx, user.id);
         const accepted: string[] = [];
         const rejected: { id: string; code: FaultCode; message: string }[] = [];
         function assertAccessible(lessonId: string, version: number) {
@@ -619,7 +629,9 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
           const course = visible.courses.find((c) => c.lessons.some((l) => l.id === lessonId));
           const card =
             course &&
-            courseCards(visible, state, course.language).find((c) => c.course.id === course.id);
+            courseCards(visible, state, course.language, stars).find(
+              (c) => c.course.id === course.id,
+            );
           const index = course?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
           if (
             !card?.unlocked ||
@@ -641,19 +653,21 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
             assertAccessible(attempt.lessonId, attempt.version);
             const { state: result, lesson } = await replay(attempt, state);
             if (!result.session?.finished) throw new Fault(422, 'lesson_unfinished');
-            const stars = result.progress[attempt.lessonId].bestStars;
+            // This run's stars, not the lesson's best: a repeat earns them again.
+            const runStars = starsFor(result.session.mistakes);
             await tx.insert(attempts).values({
               id: attempt.id,
               userId: user.id,
               lessonId: attempt.lessonId,
               version: attempt.version,
-              stars,
+              stars: runStars,
               words: lesson.words.length,
               payloadHash: hash,
               createdAt: now(),
             });
             await applyReward(tx, user.id, attempt.lessonId, 'verified');
-            state = reconcileCourseAccess(visible, { ...result, session: state.session });
+            stars += runStars;
+            state = reconcileCourseAccess(visible, { ...result, session: state.session }, stars);
             accepted.push(attempt.id);
           } catch (error) {
             if (error instanceof Fault || (error as NodeJS.ErrnoException).code === 'ENOENT')
@@ -698,7 +712,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         const [updated] = await tx
           .update(users)
           .set({
-            learning: reconcileCourseAccess(visible, state),
+            learning: reconcileCourseAccess(visible, state, stars),
             ...tzChange(current, input.tzOffset),
             updatedAt: now(),
           })
@@ -839,7 +853,11 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         .update(users)
         .set({
           legacyImported: 1,
-          learning: reconcileCourseAccess(catalog, { ...current.learning, progress }),
+          learning: reconcileCourseAccess(
+            catalog,
+            { ...current.learning, progress },
+            await starTotal(tx, user.id),
+          ),
         })
         .where(eq(users.id, user.id))
         .returning();

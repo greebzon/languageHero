@@ -156,6 +156,7 @@ export function diffCatalogs(base: Catalog | null, next: Catalog): CatalogDiff {
       title: c.title,
       description: c.description,
       cover: c.cover?.path,
+      unlockStars: c.unlockStars,
       lessons: c.lessons.map((l) => ({ ...l, requiredTypes: [...l.requiredTypes].sort() })),
     });
   const changed = next.courses
