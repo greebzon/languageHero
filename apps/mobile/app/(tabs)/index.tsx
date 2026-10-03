@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Image, Modal, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { courseCards, learningRewards } from '@lingvohero/learning-core';
+import { courseCards, learningRewards, resumableSession } from '@lingvohero/learning-core';
 import { localizeLesson, type Media } from '@lingvohero/contracts';
 import { Screen } from '../../src/components/Screen';
 import { MenuButton } from '../../src/components/MenuButton';
@@ -36,7 +36,7 @@ export default function WorldsScreen() {
   const cards = courseCards(catalog, state, language);
   const previews = (catalog.previews ?? []).filter((c) => c.language === language);
   const current = cards.find((c) => c.unlocked && !c.complete) ?? cards.find((c) => c.unlocked);
-  const resume = state.session && !state.session.finished ? state.session : null;
+  const resume = resumableSession(state, fullCatalog);
   const rewards = learningRewards(state);
   // A lesson started in another learning language waits there; switching takes the child back.
   const elsewhere = resume && resume.lesson.language !== language ? resume.lesson.language : null;

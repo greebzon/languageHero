@@ -1,4 +1,4 @@
-import { courseCards } from '@lingvohero/learning-core';
+import { courseCards, resumableSession } from '@lingvohero/learning-core';
 import { localizeLesson } from '@lingvohero/contracts';
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
@@ -15,6 +15,7 @@ export default function MapScreen() {
   const {
     state,
     catalog,
+    fullCatalog,
     refresh,
     refreshing,
     catalogStatus,
@@ -27,7 +28,7 @@ export default function MapScreen() {
   const card = catalog.courses.find((c) => c.id === id);
   const access = card && courseCards(catalog, state, card.language).find((c) => c.course.id === id);
   const [locked, setLocked] = useState(false);
-  const resume = state.session && !state.session.finished ? state.session : null;
+  const resume = resumableSession(state, fullCatalog);
   async function start(id: string) {
     if (await startLesson(id)) router.push('/lesson');
   }

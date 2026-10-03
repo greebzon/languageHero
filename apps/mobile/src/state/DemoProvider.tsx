@@ -27,6 +27,7 @@ import {
   emptyJournal,
   recordLesson,
   restoreJournal,
+  resumableSession,
   type Journal,
   type LearningAction,
   type PurchaseOutcome,
@@ -543,8 +544,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     setLoadingLesson(true);
     setLessonError(false);
     try {
-      if (state.session && !state.session.finished) {
-        await prepareLesson(state.session.lesson);
+      const resumable = resumableSession(state, catalog);
+      if (resumable) {
+        await prepareLesson(resumable.lesson);
         return true;
       }
       const course = visible.courses.find((c) => c.lessons.some((l) => l.id === id));
@@ -564,7 +566,14 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       packages.current.set(packageKey(lesson), lesson);
       setLibrary([...packages.current.values()]);
       saveCache(catalog);
-      setState((current) => learn(current, { type: 'start', lesson, attemptId: randomUUID() }));
+      // A stale unfinished session (its lesson was republished) gives way to the new version.
+      setState((current) =>
+        learn(resumableSession(current, catalog) ? current : { ...current, session: null }, {
+          type: 'start',
+          lesson,
+          attemptId: randomUUID(),
+        }),
+      );
       return true;
     } catch {
       setLessonError(true);

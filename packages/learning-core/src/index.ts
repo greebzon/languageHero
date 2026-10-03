@@ -87,5 +87,5 @@ export function demoRewards(state: DemoState) {
   // A single completion flag is the source of truth; repeat play cannot mint coins.
   return { xp: state.completed ? 100 : 0, coins: state.completed ? 30 : 0, stars: state.bestStars };
 }
-export { courseCards, reconcileCourseAccess } from './catalog';
+export { courseCards, reconcileCourseAccess, resumableSession } from './catalog';
 export * from './stats';

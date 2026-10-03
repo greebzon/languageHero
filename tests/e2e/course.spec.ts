@@ -232,7 +232,7 @@ test('offline audio on a later question, narrow screen, sound persistence and mi
   await page.reload();
   await expect(page.getByRole('switch', { name: 'Звук', exact: true })).not.toBeChecked();
 });
-test('real API publication appears on refresh; an active lesson keeps its old version', async ({
+test('real API publication appears on refresh; an open lesson keeps its version until restarted', async ({
   page,
 }) => {
   test.setTimeout(120000);
@@ -286,7 +286,12 @@ test('real API publication appears on refresh; an active lesson keeps its old ve
   await page.reload();
   await expect(page.getByTestId('question-counter')).toHaveText('2 / 6');
   await expect(page.getByText('Лесные друзья', { exact: true })).toBeVisible();
-  for (const ex of seed.lessons[0].exercises.slice(1)) await solve(page, ex, seed.lessons[0]);
+  // Started again from the map, the republished lesson begins on its new version.
+  await page.goto('/');
+  await page.getByTestId('start-lesson').click();
+  await expect(page.getByTestId('question-counter')).toHaveText('1 / 6');
+  await expect(page.getByText('Лесные друзья: обновление', { exact: true })).toBeVisible();
+  for (const ex of seed.lessons[0].exercises) await solve(page, ex, seed.lessons[0]);
   await page.getByTestId('back-to-map').click();
   await page.getByRole('button', { name: 'Обновить уроки' }).click();
   await expect(page.getByTestId('course-en-bonus')).toContainText('Новое приключение');

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { catalogSchema } from '@lingvohero/contracts';
+import { catalogSchema, courseLessonSchema } from '@lingvohero/contracts';
 import seed from '../../../content/seed.json';
-import { courseCards, reconcileCourseAccess } from './catalog';
-import { newLearningState, restoreLearningState } from './course';
+import { courseCards, reconcileCourseAccess, resumableSession } from './catalog';
+import { learn, newLearningState, restoreLearningState } from './course';
 
 test('sets unlock per language; progress and earned access survive catalog changes', () => {
   const catalog = catalogSchema.parse(seed.catalog);
@@ -67,4 +67,18 @@ test('catalog previews cannot collide with published sets or reference another l
   catalog.previews[0].id = 'upcoming';
   catalog.previews[0].language = 'unknown';
   assert.equal(catalogSchema.safeParse(catalog).success, false);
+});
+
+test('a session on an outdated lesson version is not offered for resuming', () => {
+  const catalog = catalogSchema.parse(seed.catalog);
+  const lesson = courseLessonSchema.parse(seed.lessons[0]);
+  const started = learn(newLearningState(), { type: 'start', lesson });
+  assert.equal(resumableSession(started, catalog), started.session);
+  const republished = structuredClone(catalog);
+  republished.courses[0].lessons[0].version = lesson.version + 1;
+  assert.equal(resumableSession(started, republished), null);
+  const unlisted = structuredClone(catalog);
+  unlisted.courses[0].lessons = unlisted.courses[0].lessons.slice(1);
+  assert.equal(resumableSession(started, unlisted), started.session);
+  assert.equal(resumableSession(newLearningState(), catalog), null);
 });

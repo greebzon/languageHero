@@ -41,3 +41,16 @@ export function reconcileCourseAccess(catalog: Catalog, state: LearningState): L
     return state;
   return { ...state, unlockedCourseIds: [...unlocked], completedCourseIds: [...completed] };
 }
+
+/**
+ * The unfinished lesson the child can resume, or null. A session keeps a full snapshot of the
+ * version it started on; once the catalog publishes a newer version (fixed pictures or sound),
+ * resuming would keep showing the old material, so the stale session is not offered and the
+ * next start begins the new version. A lesson the catalog does not list is left alone.
+ */
+export function resumableSession(state: LearningState, catalog: Catalog) {
+  const session = state.session;
+  if (!session || session.finished) return null;
+  const ref = catalog.courses.flatMap((c) => c.lessons).find((l) => l.id === session.lesson.id);
+  return ref && ref.version > session.lesson.version ? null : session;
+}
