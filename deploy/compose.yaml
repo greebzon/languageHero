@@ -1,0 +1,71 @@
+# LingvoHero on a server that already runs another stack behind Caddy (chatmill).
+# Only the API joins that stack's network (Caddy proxies lang.<domain> to it); the database
+# stays on a private network and publishes no port. Secrets live in $DATA_DIR/api.env and
+# $DATA_DIR/db.env (chmod 600), data in $DATA_DIR — outside the code directory.
+name: lingvohero
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file: ${DATA_DIR:-/home/dima/lingvohero-data}/db.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgres-init.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [internal]
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: lingvohero-api:latest
+    restart: unless-stopped
+    env_file: ${DATA_DIR:-/home/dima/lingvohero-data}/api.env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ${DATA_DIR:-/home/dima/lingvohero-data}/content-store:/app/content/store
+      - ${DATA_DIR:-/home/dima/lingvohero-data}/drafts:/data/drafts
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(''http://127.0.0.1:3001/health'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      internal:
+      proxy:
+        aliases: [lingvohero-api]
+
+  worker:
+    image: lingvohero-api:latest
+    restart: unless-stopped
+    command: ['node', 'node_modules/tsx/dist/cli.mjs', 'apps/api/src/worker/index.ts']
+    env_file: ${DATA_DIR:-/home/dima/lingvohero-data}/api.env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ${DATA_DIR:-/home/dima/lingvohero-data}/content-store:/app/content/store
+      - ${DATA_DIR:-/home/dima/lingvohero-data}/drafts:/data/drafts
+    networks: [internal]
+
+volumes:
+  pg_data:
+
+networks:
+  internal: {}
+  # The reverse proxy's network (chatmill's Caddy terminates TLS for lang.chatmill.app).
+  proxy:
+    external: true
+    name: botplatform_botnet

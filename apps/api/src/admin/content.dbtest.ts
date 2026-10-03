@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import sharp from 'sharp';
 import seed from '../../../../content/seed.json' with { type: 'json' };
 import { defaultContentRoot } from '../content.js';
 import { importPublishedContent } from './import.js';
-import { createTestContext } from './testing.js';
+import { createTestContext, samplePicture } from './testing.js';
 
 /** Files the seeded test catalog references (the working store may hold newer ones too). */
 async function storeFiles() {
@@ -120,7 +121,7 @@ test('languages, courses, lessons and assets: manual editing rules', async (t) =
   assert.equal(duplicate.statusCode, 200);
   assert.equal(duplicate.json().created, false);
   assert.equal(duplicate.json().asset.status, 'published');
-  const tim = await readFile(new URL('../../../mobile/assets/images/tim.png', import.meta.url));
+  const tim = await samplePicture();
   const upload = await app.inject({
     method: 'POST',
     url: '/v1/admin/assets',
@@ -137,6 +138,13 @@ test('languages, courses, lessons and assets: manual editing rules', async (t) =
   assert.equal(served.headers['content-type'], 'image/png');
   assert.deepEqual(served.rawPayload, tim);
   assert.equal((await app.inject(asset.url)).statusCode, 401);
+  // `?w=` serves a shrunken copy (the panel's previews); other widths are refused.
+  const shrunk = await app.inject({ url: `${asset.url}?w=320`, headers });
+  assert.equal(shrunk.statusCode, 200);
+  assert.equal(shrunk.headers['content-type'], 'image/png');
+  assert.equal((await sharp(shrunk.rawPayload).metadata()).width, 320);
+  assert.ok(shrunk.rawPayload.length < tim.length / 4);
+  assert.equal((await app.inject({ url: `${asset.url}?w=100`, headers })).statusCode, 400);
   const jpeg = await app.inject({
     method: 'POST',
     url: '/v1/admin/assets',

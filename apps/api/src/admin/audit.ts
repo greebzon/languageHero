@@ -12,7 +12,8 @@ export type AuditInput = {
     | 'catalog'
     | 'mascot'
     | 'item'
-    | 'wardrobe';
+    | 'wardrobe'
+    | 'admin-login';
   entityId: string;
   action: string;
   payload?: Record<string, unknown>;

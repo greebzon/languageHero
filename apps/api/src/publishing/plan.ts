@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { and, desc, eq, inArray, lt } from 'drizzle-orm';
 import {
@@ -11,8 +11,17 @@ import { AdminError } from '../admin/errors.js';
 import { shaFromPath } from '../admin/media.js';
 import { readCatalog, readLesson } from '../content.js';
 import type { Db, Tx } from '../db/client.js';
-import { adminUsers, assets, courses, languages, lessons, publications } from '../db/schema.js';
+import {
+  adminUsers,
+  assetRenditions,
+  assets,
+  courses,
+  languages,
+  lessons,
+  publications,
+} from '../db/schema.js';
 import { assetExt } from '../admin/routes/shared.js';
+import { DELIVERY, deliveryAssets, largerBox, type Box } from '../admin/renditions.js';
 import { audit } from '../admin/audit.js';
 import {
   buildRelease,
@@ -62,6 +71,62 @@ export async function loadAssetRefMap(db: Db | Tx) {
   for (const row of await db.select().from(assets))
     refs.set(row.id, { id: row.id, sha256: row.sha256, ext: assetExt(row) });
   return refs;
+}
+
+/**
+ * The size each picture of the next release is needed in: a cover for published and announced
+ * sets, one word picture per atlas cell for lessons of published sets. Drafts are skipped.
+ */
+export function deliveryBoxes(input: Pick<BuildInput, 'courses' | 'lessons'>) {
+  const boxes = new Map<string, Box>();
+  const want = (id: string, box: Box) => boxes.set(id, largerBox(boxes.get(id), box));
+  const published = new Set<string>();
+  for (const course of input.courses) {
+    if (course.visibility !== 'published' && course.visibility !== 'preview') continue;
+    if (course.visibility === 'published') published.add(course.id);
+    if (course.coverAssetId) want(course.coverAssetId, DELIVERY.cover);
+  }
+  for (const lesson of input.lessons) {
+    if (!published.has(lesson.courseId)) continue;
+    for (const media of lesson.document.media) {
+      if (media.kind !== 'image') continue;
+      want(media.assetId, {
+        width: DELIVERY.word.width * (media.region?.columns ?? 1),
+        height: DELIVERY.word.height * (media.region?.rows ?? 1),
+      });
+    }
+  }
+  return boxes;
+}
+
+/**
+ * The build input a release is made from: pictures point at their smaller delivery copies
+ * (`deliveryAssets`), so the app never downloads the multi-megabyte originals.
+ */
+export async function loadReleaseInput(
+  db: Db,
+  roots: { contentRoot: string; storageRoot: string },
+  revision: number,
+): Promise<BuildInput> {
+  const input = await loadBuildInput(db, revision);
+  const delivered = await deliveryAssets(db, roots, deliveryBoxes(input));
+  const assets = new Map(input.assets);
+  for (const [id, row] of delivered) assets.set(id, { id, sha256: row.sha256, ext: assetExt(row) });
+  return { ...input, assets, storedVersions: await storedLessonVersions(roots.contentRoot) };
+}
+
+/** The highest published version of every lesson in the store (`lessons/<id>/<version>.json`). */
+export async function storedLessonVersions(contentRoot: string) {
+  const versions = new Map<string, number>();
+  const ids = await readdir(join(contentRoot, 'lessons')).catch(() => [] as string[]);
+  for (const id of ids)
+    for (const file of await readdir(join(contentRoot, 'lessons', id)).catch(
+      () => [] as string[],
+    )) {
+      const version = /^(\d+)\.json$/.exec(file)?.[1];
+      if (version) versions.set(id, Math.max(versions.get(id) ?? 0, Number(version)));
+    }
+  return versions;
 }
 
 export async function loadBuildInput(db: Db | Tx, revision: number): Promise<BuildInput> {
@@ -131,12 +196,13 @@ export type PlanResult =
 /** Builds and stores an immutable snapshot of the next release without touching the store. */
 export async function preparePlan(
   db: Db,
-  contentRoot: string,
+  roots: { contentRoot: string; storageRoot: string },
   actorId: string | null,
 ): Promise<PlanResult> {
+  const { contentRoot } = roots;
   await recoverPublications(db, contentRoot);
   const base = await currentRevision(contentRoot);
-  const built = buildRelease(await loadBuildInput(db, base + 1));
+  const built = buildRelease(await loadReleaseInput(db, roots, base + 1));
   if (!built.release) return { errors: built.errors, warnings: built.warnings };
   const publication = await insertPlan(db, {
     kind: 'release',
@@ -235,11 +301,23 @@ export async function applyPublished(tx: Tx, publication: PublicationRow) {
       ...(catalog.previews ?? []).map((c) => shaFromPath(c.cover.path)),
     ]),
   ];
-  if (shas.length)
+  if (shas.length) {
     await tx
       .update(assets)
       .set({ status: 'published', storageKey: 'store', updatedAt: now })
       .where(inArray(assets.sha256, shas));
+    // The app got smaller copies; the originals they came from count as published in the
+    // panel too, but their bytes stay in the draft storage.
+    const delivered = tx
+      .select({ id: assetRenditions.sourceAssetId })
+      .from(assetRenditions)
+      .innerJoin(assets, eq(assets.id, assetRenditions.assetId))
+      .where(inArray(assets.sha256, shas));
+    await tx
+      .update(assets)
+      .set({ status: 'published', updatedAt: now })
+      .where(inArray(assets.id, delivered));
+  }
   await tx
     .update(publications)
     .set({ status: 'published', finishedAt: now, error: null })

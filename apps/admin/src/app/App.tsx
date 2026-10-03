@@ -16,6 +16,7 @@ import { MascotsPage } from '../features/wardrobe/MascotsPage';
 import { MascotPage } from '../features/wardrobe/MascotPage';
 import { ShopItemsPage } from '../features/wardrobe/ShopItemsPage';
 import { ShopItemPage } from '../features/wardrobe/ShopItemPage';
+import { PasswordPage } from '../features/account/PasswordPage';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false, staleTime: 5_000 } },
@@ -50,6 +51,7 @@ export function App() {
               <Route path="/mascots/:id" element={<MascotPage />} />
               <Route path="/shop" element={<ShopItemsPage />} />
               <Route path="/shop/:id" element={<ShopItemPage />} />
+              <Route path="/password" element={<PasswordPage />} />
               <Route path="*" element={<p>Страница не найдена</p>} />
             </Route>
           </Routes>
@@ -78,6 +80,9 @@ function Shell() {
         <NavLink to="/shop">Магазин</NavLink>
         <div className="sidebar-footer">
           <span className="muted">{user?.login}</span>
+          <NavLink to="/password" className="link" title="Сменить пароль">
+            Пароль
+          </NavLink>
           <button type="button" className="link" onClick={() => void logout()}>
             Выйти
           </button>

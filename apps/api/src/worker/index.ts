@@ -17,6 +17,12 @@ for (const signal of ['SIGINT', 'SIGTERM'] as const)
     log('stopping…');
     controller.abort();
   });
+// An unexpected failure ends the process; the service manager (systemd) starts it again and
+// the queue's leases hand its tasks to the next run.
+process.on('unhandledRejection', (reason) => {
+  console.error(`[worker ${workerId}] unhandled rejection`, (reason as Error)?.name ?? reason);
+  process.exit(1);
+});
 log(`provider ${settings.provider.name}, concurrency ${env.GENERATION_CONCURRENCY}`);
 try {
   await runWorkerLoop(

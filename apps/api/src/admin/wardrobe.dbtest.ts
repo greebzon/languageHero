@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
+import sharp from 'sharp';
 import {
+  assets,
   mascots,
   outfitLayers,
   shopItems,
@@ -191,8 +193,22 @@ test('mascots and shop items: creation queues asset jobs, layers appear for ever
   const media = await app.inject({ method: 'GET', url: catalog.mascots[0].body });
   assert.equal(media.statusCode, 200);
   assert.equal(media.headers['content-type'], 'image/png');
+  // The app gets delivery copies, never the 1024×1536 originals.
+  const bodyMeta = await sharp(media.rawPayload).metadata();
+  assert.ok(
+    bodyMeta.width! <= 512 && bodyMeta.height! <= 768,
+    `${bodyMeta.width}×${bodyMeta.height}`,
+  );
   assert.equal(
     (await app.inject({ method: 'GET', url: '/v1/shop-media/deadbeef.png' })).statusCode,
+    404,
+  );
+  // A picture of an unpublished mascot stays private even with its hash.
+  const draftOwl = (await db.select().from(mascots).where(eq(mascots.id, 'owl-test')))[0]!;
+  const [draftBody] = await db.select().from(assets).where(eq(assets.id, draftOwl.bodyAssetId!));
+  assert.equal(
+    (await app.inject({ method: 'GET', url: `/v1/shop-media/${draftBody!.sha256}.png` }))
+      .statusCode,
     404,
   );
 

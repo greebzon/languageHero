@@ -12,6 +12,16 @@ export function useAssets(kind?: 'image' | 'audio') {
   });
 }
 
+/** One asset by id, for a selected file older than the newest 100 the library lists. */
+function useAsset(id: string | null, enabled: boolean) {
+  return useQuery({
+    queryKey: ['asset', id],
+    queryFn: () => api<{ asset: Asset }>(`/assets/${id}`).then((r) => r.asset),
+    enabled: Boolean(id) && enabled,
+    retry: false,
+  });
+}
+
 export function useUpload() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -24,13 +34,18 @@ export function useUpload() {
   });
 }
 
+/** A narrower copy of a library picture: originals are up to 3 MB, the server shrinks them. */
+export function previewUrl(url: string, width: 320 | 640) {
+  return `${url}?w=${width}`;
+}
+
 export function AssetThumb({ asset, size = 44 }: { asset: Asset; size?: number }) {
   if (asset.kind === 'image')
     return (
       <img
         className="thumb"
         style={{ width: size, height: size }}
-        src={asset.url}
+        src={previewUrl(asset.url, 320)}
         alt={asset.altText ?? asset.provenance.originalName ?? ''}
       />
     );
@@ -105,9 +120,11 @@ export function AssetPicker({
 }) {
   const assets = useAssets(kind);
   const [open, setOpen] = useState(false);
-  const current =
+  const listed =
     assets.data?.items.find((a) => a.id === value) ??
     (selected && selected.id === value ? selected : null);
+  const single = useAsset(value, Boolean(assets.data) && !listed);
+  const current = listed ?? (single.data?.id === value ? single.data : null);
   return (
     <div className="stack">
       <div className="row">
@@ -144,7 +161,7 @@ export function AssetPicker({
                 }}
               >
                 {asset.kind === 'image' ? (
-                  <img src={asset.url} alt="" />
+                  <img src={previewUrl(asset.url, 320)} alt="" loading="lazy" />
                 ) : (
                   <audio
                     controls

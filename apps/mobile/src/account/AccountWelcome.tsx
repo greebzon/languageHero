@@ -247,19 +247,19 @@ export function AccountWelcome({
                   </View>
                   <TextInput
                     accessibilityLabel={t('welcome.codeLabel')}
-                    placeholder="•••••"
+                    placeholder="••••••"
                     placeholderTextColor="#B9C6D6"
                     value={code}
                     onChangeText={setCode}
                     keyboardType="number-pad"
-                    maxLength={5}
+                    maxLength={6}
                     autoComplete="one-time-code"
                     style={s.code}
                   />
                   <ToyButton
                     title={t('welcome.confirmEmail')}
                     icon="checkmark"
-                    disabled={busy || code.length !== 5}
+                    disabled={busy || code.length !== 6}
                     onPress={() =>
                       void run(async () => {
                         const data = await accountRequest<

@@ -1,6 +1,8 @@
-/* Minimal PNG codec for the asset pipeline: 8-bit greyscale/RGB/RGBA (with or without alpha),
-   non-interlaced, all five scanline filters. Enough for what the Images API returns and what
-   the outfit compositor writes; anything else is rejected so it is never silently mangled. */
+/* Minimal PNG codec for the asset pipeline: 8-bit greyscale/RGB/RGBA (with or without alpha)
+   and palette images (1–8 bit, as `sharp` writes the app's delivery copies and the bundled
+   artwork), non-interlaced, all five scanline filters. Enough for what the Images API returns
+   and what the outfit compositor writes; anything else is rejected so it is never silently
+   mangled. */
 import { deflateSync, inflateSync } from 'node:zlib';
 
 export type Raster = { width: number; height: number; rgba: Uint8Array };
@@ -36,6 +38,7 @@ const paeth = (a: number, b: number, c: number) => {
   return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
 };
 
+const MAX_SIDE = 8192;
 export function decodePng(file: Buffer): Raster {
   if (!file.subarray(0, 8).equals(SIGNATURE)) throw new Error('Not a PNG');
   let width = 0;
@@ -43,29 +46,43 @@ export function decodePng(file: Buffer): Raster {
   let colorType = -1;
   let bitDepth = 0;
   let interlace = 0;
+  let header = false;
+  let palette: Buffer | null = null;
+  let transparency: Buffer | null = null;
   const idat: Buffer[] = [];
   let offset = 8;
   while (offset + 8 <= file.length) {
     const length = file.readUInt32BE(offset);
+    if (offset + 12 + length > file.length) throw new Error('Truncated PNG chunk');
     const type = file.toString('ascii', offset + 4, offset + 8);
     const data = file.subarray(offset + 8, offset + 8 + length);
     if (type === 'IHDR') {
+      if (header) throw new Error('Repeated PNG header');
+      header = true;
       width = data.readUInt32BE(0);
       height = data.readUInt32BE(4);
       bitDepth = data[8]!;
       colorType = data[9]!;
       interlace = data[12]!;
     } else if (type === 'IDAT') idat.push(data);
+    else if (type === 'PLTE') palette = data;
+    else if (type === 'tRNS') transparency = data;
     else if (type === 'IEND') break;
     offset += 12 + length;
   }
-  const channels = { 0: 1, 2: 3, 4: 2, 6: 4 }[colorType];
-  if (!channels || bitDepth !== 8 || interlace !== 0)
+  const indexed = colorType === 3;
+  const channels = indexed ? 1 : { 0: 1, 2: 3, 4: 2, 6: 4 }[colorType];
+  const depthOk = indexed ? [1, 2, 4, 8].includes(bitDepth) && palette : bitDepth === 8;
+  if (!channels || !depthOk || interlace !== 0)
     throw new Error(
       `Unsupported PNG (colour type ${colorType}, depth ${bitDepth}, interlace ${interlace})`,
     );
-  const stride = width * channels;
-  const raw = inflateSync(Buffer.concat(idat));
+  // Hostile or broken input must not exhaust memory: bounded size, bounded decompression.
+  if (!width || !height || width > MAX_SIDE || height > MAX_SIDE)
+    throw new Error(`PNG is too large (${width}×${height})`);
+  // Filters work on whole bytes; a palette row packs 8 / bitDepth pixels into each.
+  const stride = indexed ? Math.ceil((width * bitDepth) / 8) : width * channels;
+  const raw = inflateSync(Buffer.concat(idat), { maxOutputLength: (stride + 1) * height });
   const rgba = new Uint8Array(width * height * 4);
   const previous = new Uint8Array(stride);
   const current = new Uint8Array(stride);
@@ -91,7 +108,14 @@ export function decodePng(file: Buffer): Raster {
     for (let x = 0; x < width; x += 1) {
       const o = (y * width + x) * 4;
       const i = x * channels;
-      if (channels >= 3) {
+      if (indexed) {
+        const bit = x * bitDepth;
+        const index = (current[bit >> 3]! >> (8 - bitDepth - (bit & 7))) & ((1 << bitDepth) - 1);
+        rgba[o] = palette![index * 3] ?? 0;
+        rgba[o + 1] = palette![index * 3 + 1] ?? 0;
+        rgba[o + 2] = palette![index * 3 + 2] ?? 0;
+        rgba[o + 3] = transparency?.[index] ?? 255;
+      } else if (channels >= 3) {
         rgba[o] = current[i]!;
         rgba[o + 1] = current[i + 1]!;
         rgba[o + 2] = current[i + 2]!;

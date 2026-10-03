@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import type { TestContext } from 'node:test';
 import pg from 'pg';
+import sharp from 'sharp';
 import { releaseSchema } from '@lingvohero/contracts';
 import seed from '../../../../content/seed.json' with { type: 'json' };
 import { buildApp } from '../app.js';
@@ -13,9 +14,24 @@ import { env } from '../env.js';
 import { FakeProvider } from '../generation/fake-provider.js';
 import type { GenerationSettings } from '../generation/factory.js';
 import { SESSION_COOKIE, createAdminUser } from './auth.js';
-import type { AccountMail } from '../account/mail.js';
+import type { AccountMail, AccountNotice } from '../account/mail.js';
 
 export const TEST_ADMIN = { login: 'admin', password: 'correct horse battery' };
+
+/** A large noisy PNG, like generated art: its delivery copies and previews really are smaller. */
+export function samplePicture(width = 1024, height = 1024) {
+  const raw = Buffer.alloc(width * height * 3);
+  let seed = 2463534242; // xorshift32: real noise, PNG filters cannot predict it
+  for (let i = 0; i < raw.length; i += 1) {
+    seed ^= seed << 13;
+    seed ^= seed >>> 17;
+    seed ^= seed << 5;
+    raw[i] = seed & 0xff;
+  }
+  return sharp(raw, { raw: { width, height, channels: 3 } })
+    .png()
+    .toBuffer();
+}
 /** Simulates a browser on the API's own origin (what the Vite proxy / static panel produce). */
 export const sameOrigin = { host: 'admin.test', origin: 'http://admin.test' };
 
@@ -80,6 +96,7 @@ export async function createTestContext(t: TestContext) {
     costLimitUsd: 5,
   };
   const mails: AccountMail[] = [];
+  const notices: AccountNotice[] = [];
   const app = buildApp({
     contentRoot,
     account: {
@@ -90,7 +107,8 @@ export async function createTestContext(t: TestContext) {
       sessionDays: 30,
       levelStep: 300,
       mailer: async (mail) => {
-        mails.push(mail);
+        if ('kind' in mail) notices.push(mail);
+        else mails.push(mail);
       },
     },
     admin: { db: handle.db, storageRoot, cookieSecure: false, sessionTtlHours: 1, generation },
@@ -130,5 +148,6 @@ export async function createTestContext(t: TestContext) {
     provider,
     generation,
     mails,
+    notices,
   };
 }

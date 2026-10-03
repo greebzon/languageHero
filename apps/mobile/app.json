@@ -12,7 +12,8 @@
       "bundleIdentifier": "com.lingvohero.app"
     },
     "android": {
-      "package": "com.lingvohero.app"
+      "package": "com.lingvohero.app",
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",

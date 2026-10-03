@@ -4,6 +4,7 @@ import { api, describeError } from '../../app/api';
 import type { Course } from '../../app/types';
 import { Badge, Notice } from '../../components/ui';
 import { useLanguages } from '../languages/LanguagesPage';
+import { previewUrl } from '../media/AssetPicker';
 
 export function useCourses(language?: string) {
   return useQuery({
@@ -107,7 +108,9 @@ export function CoursesPage() {
                 )}
                 <td>
                   <span className="row">
-                    {course.cover && <img className="thumb" src={course.cover.url} alt="" />}
+                    {course.cover && (
+                      <img className="thumb" src={previewUrl(course.cover.url, 320)} alt="" />
+                    )}
                     <span>
                       <Link to={`/courses/${course.id}`}>{course.title}</Link>
                       <div className="muted small">

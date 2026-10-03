@@ -163,6 +163,11 @@ export const loginInputSchema = z.object({
   login: z.string().min(1).max(100),
   password: z.string().min(1).max(200),
 });
+/* «Сменить пароль» in the panel: the current password proves it is the admin at the keyboard. */
+export const passwordChangeSchema = z.object({
+  currentPassword: z.string().min(1).max(200),
+  newPassword: z.string().min(8, 'Не короче 8 символов').max(200),
+});
 
 export type LessonDocument = z.infer<typeof lessonDocumentSchema>;
 export type DraftMedia = z.infer<typeof draftMediaSchema>;

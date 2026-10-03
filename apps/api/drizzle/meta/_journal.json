@@ -71,6 +71,20 @@
       "when": 1789829519071,
       "tag": "0009_mascot_levels",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1789837937772,
+      "tag": "0010_security",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789841763067,
+      "tag": "0011_asset_renditions",
+      "breakpoints": true
     }
   ]
 }

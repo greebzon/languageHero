@@ -34,32 +34,38 @@ import type {
 const createdAt = () => timestamp('created_at', { withTimezone: true }).notNull().defaultNow();
 const updatedAt = () => timestamp('updated_at', { withTimezone: true }).notNull().defaultNow();
 
-export const learnerAccounts = pgTable('learner_accounts', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: text('email').notNull().unique(),
-  name: text('name').notNull().default(''),
-  avatar: text('avatar').notNull().default('fox'),
-  /** Null only for accounts awaiting migration from the old fixed XP step. */
-  levelFloor: integer('level_floor').default(1),
-  /** The current learning language; `languages` holds all of them (empty until the first pick). */
-  language: text('language').notNull().default('en'),
-  languages: jsonb('languages').$type<string[]>().notNull().default([]),
-  /** Interface language the child chose (ru/en/he); null = the device language. */
-  uiLocale: text('ui_locale').$type<Locale>(),
-  onboarded: integer('onboarded').notNull().default(0),
-  recoveryHash: text('recovery_hash'),
-  legacyImported: integer('legacy_imported').notNull().default(0),
-  /* Minutes east of UTC on the learner's last device, for «сегодня» in quests. */
-  tzOffset: integer('tz_offset').notNull().default(0),
-  /** What the mascot wears (slot → shop item id); only owned items pass validation. */
-  outfit: jsonb('outfit').$type<Outfit>().notNull().default({}),
-  learning: jsonb('learning')
-    .$type<LearningState>()
-    .notNull()
-    .default({ version: 2, soundEnabled: true, progress: {}, session: null }),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
-});
+export const learnerAccounts = pgTable(
+  'learner_accounts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: text('email').notNull().unique(),
+    name: text('name').notNull().default(''),
+    avatar: text('avatar').notNull().default('fox'),
+    /** Null only for accounts awaiting migration from the old fixed XP step. */
+    levelFloor: integer('level_floor').default(1),
+    /** The current learning language; `languages` holds all of them (empty until the first pick). */
+    language: text('language').notNull().default('en'),
+    languages: jsonb('languages').$type<string[]>().notNull().default([]),
+    /** Interface language the child chose (ru/en/he); null = the device language. */
+    uiLocale: text('ui_locale').$type<Locale>(),
+    onboarded: integer('onboarded').notNull().default(0),
+    recoveryHash: text('recovery_hash'),
+    legacyImported: integer('legacy_imported').notNull().default(0),
+    /* Minutes east of UTC on the learner's last device, for «сегодня» in quests. */
+    tzOffset: integer('tz_offset').notNull().default(0),
+    /** Last big time-zone jump; another is allowed a day later (quests follow «сегодня»). */
+    tzChangedAt: timestamp('tz_changed_at', { withTimezone: true }),
+    /** What the mascot wears (slot → shop item id); only owned items pass validation. */
+    outfit: jsonb('outfit').$type<Outfit>().notNull().default({}),
+    learning: jsonb('learning')
+      .$type<LearningState>()
+      .notNull()
+      .default({ version: 2, soundEnabled: true, progress: {}, session: null }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [index('learner_accounts_recovery').on(table.recoveryHash)],
+);
 export const learnerMascots = pgTable('learner_mascots', {
   key: text('key').primaryKey(),
   userId: uuid('user_id')
@@ -78,30 +84,38 @@ export const learnerSessions = pgTable('learner_sessions', {
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   createdAt: createdAt(),
 });
-export const learnerChallenges = pgTable('learner_challenges', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: text('email').notNull(),
-  purpose: text('purpose').notNull(),
-  userId: uuid('user_id').references(() => learnerAccounts.id, { onDelete: 'cascade' }),
-  codeHash: text('code_hash').notNull(),
-  attempts: integer('attempts').notNull().default(0),
-  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-  consumedAt: timestamp('consumed_at', { withTimezone: true }),
-  createdAt: createdAt(),
-});
-export const learnerAttempts = pgTable('learner_attempts', {
-  id: uuid('id').primaryKey(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => learnerAccounts.id, { onDelete: 'cascade' }),
-  lessonId: text('lesson_id').notNull(),
-  version: integer('version').notNull(),
-  stars: integer('stars').notNull(),
-  /* Words in the lesson package, for the «новые слова» quest. */
-  words: integer('words').notNull().default(0),
-  payloadHash: text('payload_hash').notNull(),
-  createdAt: createdAt(),
-});
+export const learnerChallenges = pgTable(
+  'learner_challenges',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: text('email').notNull(),
+    purpose: text('purpose').notNull(),
+    userId: uuid('user_id').references(() => learnerAccounts.id, { onDelete: 'cascade' }),
+    codeHash: text('code_hash').notNull(),
+    attempts: integer('attempts').notNull().default(0),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (table) => [index('learner_challenges_email_created').on(table.email, table.createdAt)],
+);
+export const learnerAttempts = pgTable(
+  'learner_attempts',
+  {
+    id: uuid('id').primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => learnerAccounts.id, { onDelete: 'cascade' }),
+    lessonId: text('lesson_id').notNull(),
+    version: integer('version').notNull(),
+    stars: integer('stars').notNull(),
+    /* Words in the lesson package, for the «новые слова» quest. */
+    words: integer('words').notNull().default(0),
+    payloadHash: text('payload_hash').notNull(),
+    createdAt: createdAt(),
+  },
+  (table) => [index('learner_attempts_user').on(table.userId)],
+);
 export const learnerDevices = pgTable('learner_devices', {
   key: text('key').primaryKey(),
   userId: uuid('user_id')
@@ -175,7 +189,9 @@ export const languages = pgTable('languages', {
 });
 
 export type AssetProvenance = {
-  source: 'upload' | 'import' | 'generated';
+  source: 'upload' | 'import' | 'generated' | 'rendition';
+  /** For renditions: the original picture this smaller copy was made from. */
+  renditionOf?: string;
   uploadedBy?: string;
   originalName?: string;
   /** For generated media: which model and prompt produced the file. */
@@ -202,6 +218,26 @@ export const assets = pgTable('assets', {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
+
+/**
+ * What the app gets instead of an original picture: a copy no larger than `box` (`512x768`),
+ * made once and reused so a release stays byte-for-byte stable. `asset_id` equals the source
+ * when the original is already small enough.
+ */
+export const assetRenditions = pgTable(
+  'asset_renditions',
+  {
+    sourceAssetId: uuid('source_asset_id')
+      .notNull()
+      .references((): AnyPgColumn => assets.id),
+    box: text('box').notNull(),
+    assetId: uuid('asset_id')
+      .notNull()
+      .references((): AnyPgColumn => assets.id),
+    createdAt: createdAt(),
+  },
+  (table) => [uniqueIndex('asset_renditions_source_box').on(table.sourceAssetId, table.box)],
+);
 
 export const courses = pgTable('courses', {
   id: text('id').primaryKey(),

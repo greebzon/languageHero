@@ -11,7 +11,14 @@ export { schema };
 const migrationsFolder = fileURLToPath(new URL('../../drizzle/', import.meta.url));
 
 export function createDb(url: string) {
-  const pool = new pg.Pool({ connectionString: url, max: 10 });
+  const pool = new pg.Pool({
+    connectionString: url,
+    max: 10,
+    // A flood of slow requests fails fast instead of queueing every caller forever.
+    connectionTimeoutMillis: 5_000,
+    statement_timeout: 20_000,
+    idle_in_transaction_session_timeout: 30_000,
+  });
   const db = drizzle(pool, { schema });
   return {
     db,

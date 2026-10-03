@@ -100,7 +100,7 @@ test('mandatory auth, one-time email codes, attempt limits, profile and isolated
   const p = await proof(ctx, 'alice@example.test');
   for (let n = 0; n < 5; n++)
     assert.equal(
-      (await call(ctx, '/auth/verify', { ...p, code: '00000', deviceName: 'test' })).statusCode,
+      (await call(ctx, '/auth/verify', { ...p, code: '000000', deviceName: 'test' })).statusCode,
       400,
     );
   assert.equal((await call(ctx, '/auth/verify', { ...p, deviceName: 'test' })).statusCode, 400);
@@ -501,4 +501,48 @@ test('legacy accounts retain selected mascot and their old level after the curve
   assert.ok(snapshot.profile.unlockedMascotIds.includes('owl'));
   assert.equal(snapshot.profile.nextLevelXp, 4500);
   assert.equal((await call(ctx, '/me', undefined, user.token)).json().profile.level, 11);
+});
+test('security: newest code only, guessing capped per email, tz jumps once a day, legacy import earns nothing', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  // A newer code cancels the older one.
+  const first = await proof(ctx, 'guess@example.test');
+  const second = await proof(ctx, 'guess@example.test');
+  const stale = await call(ctx, '/auth/verify', { ...first, deviceName: 'x' });
+  assert.equal(stale.json().code, 'code_invalid');
+  // 15 wrong codes a day for one email, whatever the challenge: then even the right one waits.
+  for (let round = 0; round < 3; round++) {
+    const p = round === 0 ? second : await proof(ctx, 'guess@example.test');
+    for (let n = 0; n < 5; n++)
+      await call(ctx, '/auth/verify', { ...p, code: '000000', deviceName: 'x' });
+  }
+  const right = await proof(ctx, 'guess@example.test');
+  const locked = await call(ctx, '/auth/verify', { ...right, deviceName: 'x' });
+  assert.equal(locked.statusCode, 429);
+  assert.equal(locked.json().code, 'code_locked');
+
+  const user = await login(ctx, 'tz@example.test');
+  const body = { deviceId: randomUUID(), attempts: [], session: null, soundEnabled: true };
+  const tz = async () =>
+    (await ctx.db.select().from(learnerAccounts).where(eq(learnerAccounts.id, user.profile.id)))[0]!
+      .tzOffset;
+  await call(ctx, '/sync', { ...body, sequence: 1, tzOffset: 600 }, user.token);
+  assert.equal(await tz(), 600);
+  await call(ctx, '/sync', { ...body, sequence: 2, tzOffset: -600 }, user.token);
+  assert.equal(await tz(), 600, 'a second big jump the same day is ignored');
+  await call(ctx, '/sync', { ...body, sequence: 3, tzOffset: 660 }, user.token);
+  assert.equal(await tz(), 660, 'daylight saving shifts pass');
+  await call(ctx, `/treasury?tzOffset=-600`, undefined, user.token);
+  assert.equal(await tz(), 660, 'a GET never changes the zone');
+
+  const legacy = await call(
+    ctx,
+    '/legacy/import',
+    { [seed.lessons[0]!.id]: { bestStars: 3, completedVersion: 1 } },
+    user.token,
+  );
+  assert.equal(legacy.statusCode, 200, legacy.body);
+  assert.ok(legacy.json().learning.progress[seed.lessons[0]!.id]);
+  assert.equal(legacy.json().profile.coins, 0);
+  assert.equal(legacy.json().profile.xp, 0);
 });

@@ -14,6 +14,9 @@ export const apiUrl = (
   process.env.EXPO_PUBLIC_API_URL ||
   (Platform.OS === 'android' ? 'http://10.0.2.2:3001' : 'http://localhost:3001')
 ).replace(/\/$/, '');
+// A release build talks to the server only over TLS: sign-in codes and cookies travel there.
+if (!__DEV__ && !apiUrl.startsWith('https://'))
+  throw new Error(`EXPO_PUBLIC_API_URL must be an https address in release builds: ${apiUrl}`);
 const builtins = new Map<string, number>();
 const audio: Record<string, number> = {
   fox: require('../../assets/audio/fox.wav'),

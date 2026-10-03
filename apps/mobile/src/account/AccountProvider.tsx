@@ -17,6 +17,12 @@ export { useAccount } from './context';
 
 const KEY = `lingvohero.account:${apiUrl}`;
 const LOGGED_OUT = `${KEY}:logged-out`;
+/* The device cache keeps what the game needs offline, not the child's email (it comes from
+   the server with every /me). */
+const forDisk = (snapshot: AccountSnapshot) => ({
+  ...snapshot,
+  profile: { ...snapshot.profile, email: '' },
+});
 export function AccountProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<AccountSnapshot | null>(null);
   const [ready, setReady] = useState(false);
@@ -25,10 +31,12 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [recovery, setRecovery] = useState<string | null>(null);
   const writes = useRef(Promise.resolve());
   const update = (data: AccountSnapshot) => {
+    // Only a well-formed profile replaces the one on screen and in the cache.
+    if (!profileSnapshotSchema.safeParse(data.profile).success) return;
     const clean = { profile: data.profile, learning: data.learning, journal: data.journal };
     setAccount(clean);
     writes.current = writes.current
-      .then(() => AsyncStorage.setItem(KEY, JSON.stringify(clean)))
+      .then(() => AsyncStorage.setItem(KEY, JSON.stringify(forDisk(clean))))
       .catch(() => {});
   };
   useEffect(() => {
@@ -75,7 +83,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const clean = { profile: data.profile, learning: data.learning, journal: data.journal };
     await writes.current;
     await AsyncStorage.removeItem(LOGGED_OUT);
-    await AsyncStorage.setItem(KEY, JSON.stringify(clean));
+    await AsyncStorage.setItem(KEY, JSON.stringify(forDisk(clean)));
     setAccount(clean);
     setExpired(false);
     setLogin(false);

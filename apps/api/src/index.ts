@@ -1,22 +1,28 @@
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { env, storageRoot } from './env.js';
+import {
+  bindsPublicly,
+  env,
+  isProduction,
+  productionProblems,
+  storageRoot,
+  trustProxy,
+} from './env.js';
 import { buildApp } from './app.js';
 import { createDb } from './db/client.js';
 import { generationSettings } from './generation/factory.js';
 import { createMailer } from './account/mail.js';
 import { resolve } from 'node:path';
 
+// A deployment must be safe by configuration, not by luck: refuse to start otherwise.
+const problems = productionProblems(env);
+if (isProduction && problems.length)
+  throw new Error(`Unsafe production configuration:\n- ${problems.join('\n- ')}`);
 const handle = env.DATABASE_URL ? createDb(env.DATABASE_URL) : null;
-if (
-  process.env.NODE_ENV === 'production' &&
-  (!handle || !env.ACCOUNT_SECRET || !env.ACCOUNT_COOKIE_SECURE || env.ACCOUNT_MAIL_MODE !== 'smtp')
-)
-  throw new Error(
-    'Production requires DATABASE_URL, ACCOUNT_SECRET, secure account cookies and SMTP',
-  );
 const adminDist = fileURLToPath(new URL('../../admin/dist/', import.meta.url));
 const app = buildApp({
+  trustProxy,
+  hsts: isProduction,
   account:
     handle && env.ACCOUNT_SECRET
       ? {
@@ -53,6 +59,10 @@ const app = buildApp({
     : undefined,
   adminDist: handle && existsSync(adminDist) ? adminDist : undefined,
 });
+if (bindsPublicly && !isProduction && problems.length)
+  app.log.warn(
+    `HOST=${env.HOST} is reachable from the network but NODE_ENV is not production: ${problems.join('; ')}`,
+  );
 if (handle) app.addHook('onClose', () => handle.close());
 else app.log.warn('DATABASE_URL is not set: admin panel routes are disabled');
 if (!env.ACCOUNT_SECRET)
@@ -65,6 +75,11 @@ try {
   app.log.error(error);
   process.exitCode = 1;
 }
+// An unexpected failure ends the process; the service manager (systemd) starts it again.
+process.on('unhandledRejection', (reason) => {
+  app.log.fatal({ err: reason }, 'Unhandled rejection');
+  process.exit(1);
+});
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.once(signal, () => {
     void app.close();

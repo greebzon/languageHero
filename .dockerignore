@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+.git
+.cache
+.data
+.expo
+**/dist
+test-results
+playwright-report
+content/store
+apps/api/.env
+apps/mobile/.env
+apps/mobile/android
+apps/mobile/ios

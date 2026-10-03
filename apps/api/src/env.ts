@@ -11,6 +11,8 @@ const blank = (value: unknown) => (value === '' ? undefined : value);
 export const env = z
   .object({
     HOST: z.string().default('127.0.0.1'),
+    /* Reverse proxy addresses (comma-separated IPs/CIDRs), e.g. 127.0.0.1; empty = no proxy. */
+    TRUST_PROXY: z.preprocess(blank, z.string().optional()),
     PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     ACCOUNT_SECRET: z.preprocess(blank, z.string().min(32).optional()),
     ACCOUNT_ORIGINS: z.string().default('http://localhost:8081,http://127.0.0.1:8081'),
@@ -59,6 +61,9 @@ export const env = z
     GENERATION_LESSON_SIZE: z.coerce.number().int().min(3).max(30).default(6),
     GENERATION_WORDS_PER_LESSON: z.coerce.number().int().min(1).max(10).default(4),
     GENERATION_COST_LIMIT_USD: z.coerce.number().min(0.1).default(5),
+    /* All generation jobs together per calendar day (UTC): a stolen admin session cannot
+       spend without bound. */
+    GENERATION_DAILY_LIMIT_USD: z.coerce.number().min(0.1).default(20),
     OPENAI_IMAGE_COST_USD: z.coerce.number().min(0).default(0.04),
     OPENAI_TTS_COST_PER_1K_CHARS_USD: z.coerce.number().min(0).default(0.015),
     OPENAI_TEXT_COST_PER_1K_TOKENS_USD: z.coerce.number().min(0).default(0.01),
@@ -67,3 +72,31 @@ export const env = z
   .parse(process.env);
 
 export const storageRoot = resolve(apiRoot, env.ADMIN_STORAGE_ROOT);
+
+/** TRUST_PROXY as Fastify takes it: the proxy addresses (IPs or CIDRs, comma-separated). */
+export const trustProxy: string | undefined = env.TRUST_PROXY;
+
+const LOOPBACK = /^(localhost|127\.|::1$|\[::1\])/;
+/**
+ * What must hold before the API serves the internet. Checked when NODE_ENV=production and
+ * whenever HOST is not a loopback address (a public bind is a deployment, whatever NODE_ENV).
+ */
+export function productionProblems(e: typeof env): string[] {
+  const problems: string[] = [];
+  const origins = e.ACCOUNT_ORIGINS.split(',').map((s) => s.trim());
+  if (!e.DATABASE_URL) problems.push('DATABASE_URL is required');
+  if (e.DATABASE_URL_TEST)
+    problems.push('DATABASE_URL_TEST must not be set (tests drop databases)');
+  if (!e.ACCOUNT_SECRET) problems.push('ACCOUNT_SECRET is required');
+  if (!e.ACCOUNT_COOKIE_SECURE) problems.push('ACCOUNT_COOKIE_SECURE must be true');
+  if (!e.ADMIN_COOKIE_SECURE) problems.push('ADMIN_COOKIE_SECURE must be true');
+  if (e.ACCOUNT_MAIL_MODE !== 'smtp') problems.push('ACCOUNT_MAIL_MODE must be smtp');
+  if (origins.some((o) => !o.startsWith('https://')))
+    problems.push('ACCOUNT_ORIGINS must list https origins only');
+  if (e.ADMIN_ORIGIN && !e.ADMIN_ORIGIN.startsWith('https://'))
+    problems.push('ADMIN_ORIGIN must be https');
+  if (e.GENERATION_PROVIDER === 'fake') problems.push('GENERATION_PROVIDER=fake is for tests');
+  return problems;
+}
+export const isProduction = process.env.NODE_ENV === 'production';
+export const bindsPublicly = !LOOPBACK.test(env.HOST);

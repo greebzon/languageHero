@@ -323,7 +323,7 @@ function TaskRow({
         {task.output?.assetId && !task.output.reusedFrom && (
           <img
             className="thumb"
-            src={`/v1/admin/assets/${task.output.assetId}/file`}
+            src={`/v1/admin/assets/${task.output.assetId}/file?w=320`}
             alt=""
             onError={(e) => (e.currentTarget.style.display = 'none')}
           />

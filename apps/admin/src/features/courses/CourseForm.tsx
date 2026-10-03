@@ -3,7 +3,7 @@ import type { CourseTexts, CourseVisibility } from '@lingvohero/contracts';
 import { ApiError, describeError } from '../../app/api';
 import type { Asset, Course } from '../../app/types';
 import { Field, GeneralErrors, Notice, prefixedId, randomSuffix } from '../../components/ui';
-import { AssetPicker } from '../media/AssetPicker';
+import { AssetPicker, previewUrl } from '../media/AssetPicker';
 import { CoverGenerator } from './CoverGenerator';
 import { useLanguages } from '../languages/LanguagesPage';
 
@@ -220,7 +220,7 @@ export function CourseForm({
         <CourseCard
           title={form.title || 'Название сета'}
           description={form.description}
-          coverUrl={coverAsset?.url ?? null}
+          coverUrl={coverAsset ? previewUrl(coverAsset.url, 640) : null}
           lessonCount={course?.lessonCount ?? 0}
           visibility={form.visibility}
         />

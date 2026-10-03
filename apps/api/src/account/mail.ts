@@ -2,7 +2,15 @@ import nodemailer from 'nodemailer';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 export type AccountMail = { email: string; code: string; challengeId: string; purpose: string };
-export type Mailer = (mail: AccountMail) => Promise<void>;
+/** The previous address learns that the account moved to another one. */
+export type AccountNotice = { kind: 'email-changed'; email: string; newEmail: string };
+export type Mailer = (mail: AccountMail | AccountNotice) => Promise<void>;
+const isNotice = (mail: AccountMail | AccountNotice): mail is AccountNotice => 'kind' in mail;
+/** «a***@example.com»: enough to recognise, not enough to learn the new address. */
+export const maskEmail = (email: string) => {
+  const [name = '', domain = ''] = email.split('@');
+  return `${name.slice(0, 1)}***@${domain}`;
+};
 export function createMailer(config: {
   mode: 'disabled' | 'smtp' | 'file';
   directory: string;
@@ -18,7 +26,8 @@ export function createMailer(config: {
       throw new Error('File mail is forbidden in production');
     return async (mail) => {
       await mkdir(config.directory, { recursive: true, mode: 0o700 });
-      await writeFile(join(config.directory, `${mail.challengeId}.json`), JSON.stringify(mail), {
+      const name = isNotice(mail) ? `notice-${Date.now()}` : mail.challengeId;
+      await writeFile(join(config.directory, `${name}.json`), JSON.stringify(mail), {
         mode: 0o600,
       });
     };
@@ -37,7 +46,17 @@ export function createMailer(config: {
     connectionTimeout: 10000,
     socketTimeout: 15000,
   });
-  return async ({ email, code }) => {
+  return async (mail) => {
+    if (isNotice(mail)) {
+      await transport.sendMail({
+        from: config.from,
+        to: mail.email,
+        subject: 'ЛингвоГерой — почта аккаунта изменена',
+        text: `Аккаунт ЛингвоГероя, привязанный к этому адресу, теперь использует почту ${maskEmail(mail.newEmail)}.\n\nЕсли это сделал ты или твои родители, ничего делать не нужно. Если нет — восстанови аккаунт резервным кодом и напиши нам.`,
+      });
+      return;
+    }
+    const { email, code } = mail;
     await transport.sendMail({
       from: config.from,
       to: email,

@@ -90,3 +90,43 @@ test('login is rate limited per client', async (t) => {
   }
   assert.equal(last, 429);
 });
+
+test('password change: checks the current password, signs out the other sessions', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const { app, headers, login } = ctx;
+  const other = await login();
+  const change = (payload: Record<string, unknown>) =>
+    app.inject({ method: 'POST', url: '/v1/admin/auth/password', headers, payload });
+  const wrong = await change({ currentPassword: 'nope', newPassword: 'new secret pass' });
+  assert.equal(wrong.statusCode, 400);
+  assert.equal(wrong.json().code, 'invalid_password');
+  assert.ok(wrong.json().fieldErrors.currentPassword);
+  assert.equal(
+    (await change({ currentPassword: 'correct horse battery', newPassword: 'short' })).statusCode,
+    400,
+  );
+  const done = await change({
+    currentPassword: 'correct horse battery',
+    newPassword: 'new secret pass',
+  });
+  assert.equal(done.statusCode, 200, done.body);
+  // This session stays, the other one is signed out; only the new password works.
+  assert.equal((await app.inject({ url: '/v1/admin/auth/me', headers })).statusCode, 200);
+  assert.equal(
+    (await app.inject({ url: '/v1/admin/auth/me', headers: { cookie: other.cookie } })).statusCode,
+    401,
+  );
+  assert.equal((await login()).response.statusCode, 401);
+  assert.equal(
+    (await login({ login: 'admin', password: 'new secret pass' })).response.statusCode,
+    200,
+  );
+  const anonymous = await app.inject({
+    method: 'POST',
+    url: '/v1/admin/auth/password',
+    headers: sameOrigin,
+    payload: { currentPassword: 'x', newPassword: 'whatever123' },
+  });
+  assert.equal(anonymous.statusCode, 401);
+});

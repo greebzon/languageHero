@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { courseCards } from '@lingvohero/learning-core';
@@ -24,7 +24,11 @@ export function LanguagePicker({
   onPicked: (code: string) => void;
 }) {
   const { t, tn, locale } = useT();
-  const { catalog, fullCatalog, state, language, languages, chooseLanguage } = useDemo();
+  const { catalog, fullCatalog, state, language, languages, chooseLanguage, refresh } = useDemo();
+  // A language published a minute ago must be here: fetch the catalog when the picker opens.
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState(false);
   const mine = mode === 'first' ? [] : languages;

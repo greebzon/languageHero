@@ -9,7 +9,7 @@ import {
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
-import { and, eq, gt, lt, sql } from 'drizzle-orm';
+import { and, eq, gt, isNull, lt, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import {
   attemptSchema,
@@ -58,6 +58,7 @@ import {
 import { readCatalog, readLesson } from '../content.js';
 import type { Mailer } from './mail.js';
 import { loadJournal } from './treasury.js';
+import { clientKey } from '../net.js';
 import { availableMascots, progression } from './progression.js';
 
 export type AccountOptions = {
@@ -74,7 +75,16 @@ export type AccountOptions = {
 };
 const COOKIE = 'lh_learner';
 const sha = (s: string) => createHash('sha256').update(s).digest('hex');
-const proofSchema = z.object({ challengeId: z.string().uuid(), code: z.string().regex(/^\d{5}$/) });
+const proofSchema = z.object({ challengeId: z.string().uuid(), code: z.string().regex(/^\d{6}$/) });
+/* Wrong codes per email per day, over all its challenges: guessing is capped per child, not
+   only per request (a new challenge gives no fresh budget). */
+const DAILY_CODE_FAILURES = 15;
+/* Codes mailed to one address per day (on top of 8 an hour): nobody floods a mailbox. */
+const DAILY_CODE_MAILS = 20;
+/* The learner's time zone moves «сегодня» for quests; a big jump is allowed once a day
+   (travel), small ones (daylight saving) any time. */
+const TZ_FREE_SHIFT = 60;
+const TZ_CHANGE_INTERVAL = 20 * 3600_000;
 /* Every error the learner API answers with: a stable `code` the app translates into the
    child's interface language, and the Russian text older app versions show as is. */
 const FAULTS = {
@@ -83,6 +93,7 @@ const FAULTS = {
   session_expired: 'Нужно снова подтвердить почту. Результаты сохранены на устройстве.',
   code_invalid: 'Код неверный, истёк или уже использован. Запроси новый код.',
   code_throttled: 'Код уже отправлен. Подожди минуту перед повторным запросом.',
+  code_locked: 'Слишком много неверных кодов. Попробуй завтра.',
   mail_failed: 'Не удалось отправить письмо. Попробуй позже.',
   recovery_failed: 'Не удалось восстановить аккаунт. Проверь резервный код.',
   language_unknown: 'Выбери доступный язык.',
@@ -137,7 +148,12 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     clearInterval(cleanupTimer);
   });
   await app.register(cookie);
-  await app.register(rateLimit, { global: true, max: 120, timeWindow: '1 minute' });
+  await app.register(rateLimit, {
+    global: true,
+    max: 120,
+    timeWindow: '1 minute',
+    keyGenerator: (req) => clientKey(req.ip),
+  });
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof Fault) return reply.code(error.status).send(faultBody(error.code));
     if (error instanceof z.ZodError) return reply.code(400).send(faultBody('invalid_input'));
@@ -234,6 +250,40 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       });
     return { ...(await snapshot(user)), ...(req.headers.origin ? {} : { token }), recoveryCode };
   }
+  /* Published lesson versions never change: a replay reads and validates each file once. */
+  const lessonCache = new Map<string, Promise<Awaited<ReturnType<typeof readLesson>>>>();
+  function cachedLesson(id: string, version: number) {
+    const key = `${id}@${version}`;
+    let hit = lessonCache.get(key);
+    if (!hit) {
+      if (lessonCache.size >= 500) lessonCache.delete(lessonCache.keys().next().value!);
+      hit = readLesson(o.contentRoot, id, version);
+      hit.catch(() => lessonCache.delete(key));
+      lessonCache.set(key, hit);
+    }
+    return hit;
+  }
+  /** The time zone a request may set: small shifts always, a big jump once a day. */
+  function tzChange(current: User, next: number | undefined) {
+    if (next === undefined || next === current.tzOffset) return { tzOffset: current.tzOffset };
+    const small = Math.abs(next - current.tzOffset) <= TZ_FREE_SHIFT;
+    const rested =
+      !current.tzChangedAt || Date.now() - current.tzChangedAt.getTime() > TZ_CHANGE_INTERVAL;
+    return small || rested
+      ? { tzOffset: next, tzChangedAt: small ? current.tzChangedAt : now() }
+      : { tzOffset: current.tzOffset };
+  }
+  /* The old address hears about a new one: a stolen backup code or session cannot move the
+     account away silently. A failure is logged, never blocks the change. */
+  async function notifyEmailChanged(req: FastifyRequest, previous: string, next: string) {
+    if (previous === next) return;
+    try {
+      await o.mailer({ kind: 'email-changed', email: previous, newEmail: next });
+    } catch (error) {
+      const err = error as { code?: string; responseCode?: number };
+      req.log.warn({ code: err.code, responseCode: err.responseCode }, 'Notice mail failed');
+    }
+  }
   async function consume(proof: z.infer<typeof proofSchema>, purpose: string, userId?: string) {
     const result = await db.transaction(async (tx) => {
       const [row] = await tx
@@ -250,6 +300,16 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         row.attempts >= 5
       )
         return null;
+      const [{ failures }] = await tx
+        .select({ failures: sql<number>`coalesce(sum(${challenges.attempts}), 0)::int` })
+        .from(challenges)
+        .where(
+          and(
+            eq(challenges.email, row.email),
+            gt(challenges.createdAt, new Date(Date.now() - 86400000)),
+          ),
+        );
+      if (failures >= DAILY_CODE_FAILURES) return 'locked' as const;
       const expected = digest(`${row.id}:${proof.code}`);
       if (!timingSafeEqual(Buffer.from(expected), Buffer.from(row.codeHash))) {
         await tx
@@ -261,6 +321,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       await tx.update(challenges).set({ consumedAt: now() }).where(eq(challenges.id, row.id));
       return row;
     });
+    if (result === 'locked') throw new Fault(429, 'code_locked');
     if (!result) throw new Fault(400, 'code_invalid');
     return result;
   }
@@ -280,18 +341,34 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       const email = input.purpose === 'reauth' ? owner!.email : emailSchema.parse(input.email);
       const row = await db.transaction(async (tx) => {
         await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${email}))`);
-        const recent = await tx
+        const today = await tx
           .select()
           .from(challenges)
           .where(
             and(
               eq(challenges.email, email),
-              gt(challenges.createdAt, new Date(Date.now() - 3600000)),
+              gt(challenges.createdAt, new Date(Date.now() - 86400000)),
             ),
           );
-        if (recent.length >= 8 || recent.some((c) => c.createdAt.getTime() > Date.now() - 60000))
+        const recent = today.filter((c) => c.createdAt.getTime() > Date.now() - 3600000);
+        if (
+          today.length >= DAILY_CODE_MAILS ||
+          recent.length >= 8 ||
+          recent.some((c) => c.createdAt.getTime() > Date.now() - 60000)
+        )
           throw new Fault(429, 'code_throttled');
-        const code = String(randomInt(10000, 100000));
+        // Only the newest code of a purpose works: an old one cannot be guessed in parallel.
+        await tx
+          .update(challenges)
+          .set({ consumedAt: now() })
+          .where(
+            and(
+              eq(challenges.email, email),
+              eq(challenges.purpose, input.purpose),
+              isNull(challenges.consumedAt),
+            ),
+          );
+        const code = String(randomInt(100000, 1000000));
         const id = randomUUID();
         await tx.insert(challenges).values({
           id,
@@ -306,7 +383,9 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       try {
         await o.mailer({ email, code: row.code, challengeId: row.id, purpose: input.purpose });
       } catch (error) {
-        req.log.error({ err: error }, 'Account mail failed');
+        // The SMTP error text may contain the child's address: log only its codes.
+        const err = error as { code?: string; responseCode?: number };
+        req.log.error({ code: err.code, responseCode: err.responseCode }, 'Account mail failed');
         await db.delete(challenges).where(eq(challenges.id, row.id));
         throw new Fault(503, 'mail_failed');
       }
@@ -359,9 +438,10 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
           .returning();
         await tx.delete(challenges).where(eq(challenges.email, user.email));
         await tx.delete(sessions).where(eq(sessions.userId, user.id));
-        return updated;
+        return { updated, previous: user.email };
       });
-      return issue(user, req, reply, input.deviceName, fresh);
+      await notifyEmailChanged(req, user.previous, user.updated!.email);
+      return issue(user.updated!, req, reply, input.deviceName, fresh);
     },
   );
   app.get('/me', async (req) => snapshot((await auth(req)).user));
@@ -467,6 +547,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       await tx.delete(challenges).where(eq(challenges.email, user.email));
       return u;
     });
+    await notifyEmailChanged(req, user.email, updated!.email);
     return issue(updated, req, reply, 'После смены почты');
   });
   app.post('/delete', async (req, reply) => {
@@ -487,7 +568,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       .onConflictDoNothing();
   }
   async function replay(input: z.infer<typeof attemptSchema>, state: LearningState) {
-    const lesson = await readLesson(o.contentRoot, input.lessonId, input.version);
+    const lesson = await cachedLesson(input.lessonId, input.version);
     return { lesson, state: replayLesson(input, state, lesson) };
   }
   function replayLesson(
@@ -511,118 +592,122 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     }
     return value;
   }
-  app.post('/sync', { bodyLimit: 2 * 1024 * 1024 }, async (req) => {
-    const { user } = await auth(req);
-    if (!user.onboarded) throw new Fault(403, 'profile_required');
-    const input = syncInputSchema.parse(req.body);
-    const catalog = await readCatalog(o.contentRoot);
-    return db.transaction(async (tx) => {
-      const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for('update');
-      if (!current) throw new Fault(401, 'sign_in');
-      // Access follows the sets this child sees in the interface language of this device (only
-      // an explicit choice via PATCH /me is saved: another device may use its own language).
-      const locale: Locale = input.locale ?? current.uiLocale ?? 'ru';
-      const visible = visibleCatalog(catalog, locale);
-      let state = current.learning;
-      const accepted: string[] = [];
-      const rejected: { id: string; code: FaultCode; message: string }[] = [];
-      function assertAccessible(lessonId: string, version: number) {
-        if (
-          state.progress[lessonId] ||
-          (state.session?.lesson.id === lessonId && state.session.lesson.version === version)
-        )
-          return;
-        const course = visible.courses.find((c) => c.lessons.some((l) => l.id === lessonId));
-        const card =
-          course &&
-          courseCards(visible, state, course.language).find((c) => c.course.id === course.id);
-        const index = course?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
-        if (
-          !card?.unlocked ||
-          !course ||
-          course.lessons.slice(0, index).some((l) => !state.progress[l.id])
-        )
-          throw new Fault(422, 'lesson_locked');
-      }
-      for (const attempt of input.attempts) {
-        const hash = sha(JSON.stringify(attempt));
-        const [existing] = await tx.select().from(attempts).where(eq(attempts.id, attempt.id));
-        if (existing) {
-          if (existing.userId !== user.id || existing.payloadHash !== hash)
-            throw new Fault(409, 'attempt_duplicate');
-          accepted.push(attempt.id);
-          continue;
+  app.post(
+    '/sync',
+    { bodyLimit: 2 * 1024 * 1024, config: { rateLimit: { max: 20, timeWindow: '1 minute' } } },
+    async (req) => {
+      const { user } = await auth(req);
+      if (!user.onboarded) throw new Fault(403, 'profile_required');
+      const input = syncInputSchema.parse(req.body);
+      const catalog = await readCatalog(o.contentRoot);
+      return db.transaction(async (tx) => {
+        const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for('update');
+        if (!current) throw new Fault(401, 'sign_in');
+        // Access follows the sets this child sees in the interface language of this device (only
+        // an explicit choice via PATCH /me is saved: another device may use its own language).
+        const locale: Locale = input.locale ?? current.uiLocale ?? 'ru';
+        const visible = visibleCatalog(catalog, locale);
+        let state = current.learning;
+        const accepted: string[] = [];
+        const rejected: { id: string; code: FaultCode; message: string }[] = [];
+        function assertAccessible(lessonId: string, version: number) {
+          if (
+            state.progress[lessonId] ||
+            (state.session?.lesson.id === lessonId && state.session.lesson.version === version)
+          )
+            return;
+          const course = visible.courses.find((c) => c.lessons.some((l) => l.id === lessonId));
+          const card =
+            course &&
+            courseCards(visible, state, course.language).find((c) => c.course.id === course.id);
+          const index = course?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
+          if (
+            !card?.unlocked ||
+            !course ||
+            course.lessons.slice(0, index).some((l) => !state.progress[l.id])
+          )
+            throw new Fault(422, 'lesson_locked');
         }
-        try {
-          assertAccessible(attempt.lessonId, attempt.version);
-          const { state: result, lesson } = await replay(attempt, state);
-          if (!result.session?.finished) throw new Fault(422, 'lesson_unfinished');
-          const stars = result.progress[attempt.lessonId].bestStars;
-          await tx.insert(attempts).values({
-            id: attempt.id,
-            userId: user.id,
-            lessonId: attempt.lessonId,
-            version: attempt.version,
-            stars,
-            words: lesson.words.length,
-            payloadHash: hash,
-            createdAt: now(),
-          });
-          await applyReward(tx, user.id, attempt.lessonId, 'verified');
-          state = reconcileCourseAccess(visible, { ...result, session: state.session });
-          accepted.push(attempt.id);
-        } catch (error) {
-          if (error instanceof Fault || (error as NodeJS.ErrnoException).code === 'ENOENT')
-            rejected.push({
+        for (const attempt of input.attempts) {
+          const hash = sha(JSON.stringify(attempt));
+          const [existing] = await tx.select().from(attempts).where(eq(attempts.id, attempt.id));
+          if (existing) {
+            if (existing.userId !== user.id || existing.payloadHash !== hash)
+              throw new Fault(409, 'attempt_duplicate');
+            accepted.push(attempt.id);
+            continue;
+          }
+          try {
+            assertAccessible(attempt.lessonId, attempt.version);
+            const { state: result, lesson } = await replay(attempt, state);
+            if (!result.session?.finished) throw new Fault(422, 'lesson_unfinished');
+            const stars = result.progress[attempt.lessonId].bestStars;
+            await tx.insert(attempts).values({
               id: attempt.id,
-              ...faultBody(error instanceof Fault ? error.code : 'lesson_version_missing'),
+              userId: user.id,
+              lessonId: attempt.lessonId,
+              version: attempt.version,
+              stars,
+              words: lesson.words.length,
+              payloadHash: hash,
+              createdAt: now(),
             });
-          else throw error;
-        }
-      }
-      const key = `${user.id}:${input.deviceId}`;
-      const [device] = await tx.select().from(devices).where(eq(devices.key, key));
-      if (!device || input.sequence > device.sequence) {
-        let session: LearningState['session'] = null;
-        if (input.session && !input.session.finished) {
-          const incoming = input.session;
-          if (incoming.attemptId && incoming.events) {
-            assertAccessible(incoming.lesson.id, incoming.lesson.version);
-            const { state: restored } = await replay(
-              {
-                id: incoming.attemptId,
-                lessonId: incoming.lesson.id,
-                version: incoming.lesson.version,
-                events: incoming.events,
-              },
-              state,
-            );
-            if (restored.session?.finished) throw new Fault(422, 'session_finished');
-            const withDraft = learn(restored, { type: 'draft', answer: incoming.draft });
-            session = withDraft.session;
+            await applyReward(tx, user.id, attempt.lessonId, 'verified');
+            state = reconcileCourseAccess(visible, { ...result, session: state.session });
+            accepted.push(attempt.id);
+          } catch (error) {
+            if (error instanceof Fault || (error as NodeJS.ErrnoException).code === 'ENOENT')
+              rejected.push({
+                id: attempt.id,
+                ...faultBody(error instanceof Fault ? error.code : 'lesson_version_missing'),
+              });
+            else throw error;
           }
         }
-        state = { ...state, soundEnabled: input.soundEnabled, session };
-        await tx
-          .insert(devices)
-          .values({ key, userId: user.id, sequence: input.sequence })
-          .onConflictDoUpdate({
-            target: devices.key,
-            set: { sequence: input.sequence, updatedAt: now() },
-          });
-      }
-      const [updated] = await tx
-        .update(users)
-        .set({
-          learning: reconcileCourseAccess(visible, state),
-          tzOffset: input.tzOffset ?? current.tzOffset,
-          updatedAt: now(),
-        })
-        .where(eq(users.id, user.id))
-        .returning();
-      return { ...(await snapshot(updated, tx)), accepted, rejected };
-    });
-  });
+        const key = `${user.id}:${input.deviceId}`;
+        const [device] = await tx.select().from(devices).where(eq(devices.key, key));
+        if (!device || input.sequence > device.sequence) {
+          let session: LearningState['session'] = null;
+          if (input.session && !input.session.finished) {
+            const incoming = input.session;
+            if (incoming.attemptId && incoming.events) {
+              assertAccessible(incoming.lesson.id, incoming.lesson.version);
+              const { state: restored } = await replay(
+                {
+                  id: incoming.attemptId,
+                  lessonId: incoming.lesson.id,
+                  version: incoming.lesson.version,
+                  events: incoming.events,
+                },
+                state,
+              );
+              if (restored.session?.finished) throw new Fault(422, 'session_finished');
+              const withDraft = learn(restored, { type: 'draft', answer: incoming.draft });
+              session = withDraft.session;
+            }
+          }
+          state = { ...state, soundEnabled: input.soundEnabled, session };
+          await tx
+            .insert(devices)
+            .values({ key, userId: user.id, sequence: input.sequence })
+            .onConflictDoUpdate({
+              target: devices.key,
+              set: { sequence: input.sequence, updatedAt: now() },
+            });
+        }
+        const [updated] = await tx
+          .update(users)
+          .set({
+            learning: reconcileCourseAccess(visible, state),
+            ...tzChange(current, input.tzOffset),
+            updatedAt: now(),
+          })
+          .where(eq(users.id, user.id))
+          .returning();
+        return { ...(await snapshot(updated, tx)), accepted, rejected };
+      });
+    },
+  );
   /* The published wardrobe (icons ready) is what the app sells; before the panel has any,
      the bundled defaults apply. Boosters and the chest are always there. */
   async function wardrobeItems(tx: Tx) {
@@ -649,16 +734,18 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     return db.transaction(async (tx) => {
       const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for('update');
       if (!current) throw new Fault(401, 'sign_in');
+      const change = tzChange(current, tzOffset);
       const [locked] =
-        tzOffset === undefined || tzOffset === current.tzOffset
+        change.tzOffset === current.tzOffset
           ? [current]
-          : await tx.update(users).set({ tzOffset }).where(eq(users.id, user.id)).returning();
+          : await tx.update(users).set(change).where(eq(users.id, user.id)).returning();
       return fn(tx, locked);
     });
   }
   app.get('/treasury', async (req) => {
-    const { tzOffset } = treasuryQuerySchema.parse(req.query);
-    return withLearner(req, tzOffset, async (tx, user) => ({
+    treasuryQuerySchema.parse(req.query);
+    // A GET never moves the learner's day (a link must not change state): the saved zone.
+    return withLearner(req, undefined, async (tx, user) => ({
       journal: await loadJournal(tx, user, treasury),
     }));
   });
@@ -745,7 +832,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
           bestStars: Math.max(old.bestStars, progress[lesson.id]?.bestStars ?? 0),
           completedVersion: version,
         };
-        await applyReward(tx, user.id, lesson.id, 'legacy-unverified');
+        // Progress only: these results were never verified, so they earn no coins or XP.
       }
       const catalog = await readCatalog(o.contentRoot);
       const [updated] = await tx

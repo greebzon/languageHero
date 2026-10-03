@@ -45,7 +45,7 @@ export async function publicationRoutes(app: FastifyInstance, options: AdminOpti
   });
 
   app.post('/publication-plans', async (request, reply) => {
-    const result = await preparePlan(db, contentRoot, request.admin!.id);
+    const result = await preparePlan(db, options, request.admin!.id);
     if (!result.publication)
       return reply.code(422).send({
         code: 'invalid_release',

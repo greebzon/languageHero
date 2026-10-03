@@ -5,11 +5,12 @@ import {
   timingSafeEqual,
   type ScryptOptions,
 } from 'node:crypto';
-import { and, eq, gt, isNull } from 'drizzle-orm';
+import { and, eq, gt, isNull, ne, sql } from 'drizzle-orm';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { Db } from '../db/client.js';
-import { adminSessions, adminUsers } from '../db/schema.js';
+import { adminSessions, adminUsers, auditEvents } from '../db/schema.js';
 import { AdminError } from './errors.js';
+import { audit } from './audit.js';
 
 const scrypt = (password: string, salt: Buffer, keylen: number, options: ScryptOptions) =>
   new Promise<Buffer>((resolve, reject) =>
@@ -59,17 +60,36 @@ export async function createAdminUser(db: Db, login: string, password: string) {
 
 const tokenHash = (token: string) => createHash('sha256').update(token).digest('hex');
 
+/* A missing account is checked against this hash: one scrypt either way, so the answer time
+   does not tell which logins exist. */
+let dummyHash: Promise<string> | null = null;
+/** Wrong passwords per login in 15 minutes before it is locked for the rest of the window. */
+export const LOGIN_FAILURES_LIMIT = 10;
+
 export async function authenticate(db: Db, login: string, password: string) {
   const user = await db.query.adminUsers.findFirst({
     where: eq(adminUsers.login, normalizeLogin(login)),
   });
-  // Always run the hash so a missing account takes as long as a wrong password.
-  const ok = await verifyPassword(
-    password,
-    user?.passwordHash ?? (await hashPassword('x'.repeat(8))),
-  );
+  dummyHash ??= hashPassword(randomBytes(16).toString('hex'));
+  const ok = await verifyPassword(password, user?.passwordHash ?? (await dummyHash));
   if (!user || !ok || user.disabledAt) return null;
   return { id: user.id, login: user.login } satisfies AdminUser;
+}
+
+/** Recent failed logins for a login name (from the audit log), for the lockout. */
+export async function recentLoginFailures(db: Db, login: string) {
+  const [row] = await db
+    .select({ n: sql<number>`count(*)::int` })
+    .from(auditEvents)
+    .where(
+      and(
+        eq(auditEvents.entityType, 'admin-login'),
+        eq(auditEvents.entityId, normalizeLogin(login)),
+        eq(auditEvents.action, 'login-failed'),
+        gt(auditEvents.createdAt, new Date(Date.now() - 15 * 60_000)),
+      ),
+    );
+  return row?.n ?? 0;
 }
 
 export async function createSession(db: Db, userId: string, ttlHours: number) {
@@ -94,6 +114,46 @@ export async function resolveSession(db: Db, token: string): Promise<AdminUser |
     .limit(1);
   if (!row || row.disabledAt) return null;
   return { id: row.id, login: row.login };
+}
+
+/**
+ * Sets a new password when the current one is right; every other session of the admin is
+ * signed out (the one making the change stays). False when the current password is wrong.
+ */
+export async function changePassword(
+  db: Db,
+  userId: string,
+  current: string,
+  next: string,
+  keepToken: string,
+) {
+  const user = await db.query.adminUsers.findFirst({ where: eq(adminUsers.id, userId) });
+  if (!user || !(await verifyPassword(current, user.passwordHash))) return false;
+  const passwordHash = await hashPassword(next);
+  await db.transaction(async (tx) => {
+    await tx
+      .update(adminUsers)
+      .set({ passwordHash, updatedAt: new Date() })
+      .where(eq(adminUsers.id, userId));
+    await tx
+      .update(adminSessions)
+      .set({ revokedAt: new Date() })
+      .where(
+        and(
+          eq(adminSessions.userId, userId),
+          isNull(adminSessions.revokedAt),
+          ne(adminSessions.tokenHash, tokenHash(keepToken)),
+        ),
+      );
+    await audit(tx, {
+      actorId: userId,
+      entityType: 'catalog',
+      entityId: 'admin-password',
+      action: 'admin-password',
+      payload: { login: user.login },
+    });
+  });
+  return true;
 }
 
 export async function revokeSession(db: Db, token: string) {

@@ -7,8 +7,9 @@ services:
       POSTGRES_PASSWORD: lingvohero
       POSTGRES_DB: lingvohero
     # 5432 on this machine may be taken by another project; the API reads DATABASE_URL anyway.
+    # Loopback only: Docker publishes ports past the firewall, the database must not be public.
     ports:
-      - '5433:5432'
+      - '127.0.0.1:5433:5432'
     volumes:
       - lingvohero-pg:/var/lib/postgresql/data
     healthcheck:

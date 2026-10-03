@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import multipart from '@fastify/multipart';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { and, count, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import type { AdminOptions } from '../plugin.js';
 import { assets } from '../../db/schema.js';
@@ -10,9 +10,12 @@ import { audit } from '../audit.js';
 import { AdminError, parseInput } from '../errors.js';
 import { MEDIA_LIMITS, mediaFilename } from '../media.js';
 import { storeAsset } from '../asset-store.js';
+import { THUMB_WIDTHS, thumbnail } from '../thumbnail.js';
 import { assetDto, assetExt, notFound, paging, uuidParam, type AssetRow } from './shared.js';
 
 const listFilter = z.object({ kind: z.enum(['image', 'audio']).optional() });
+/** `?w=320|640` asks for a narrower preview of a picture; see `thumbnail`. */
+const fileQuery = z.object({ w: z.enum(THUMB_WIDTHS).optional() });
 
 /** Where an asset's bytes live: drafts in the private storage, published ones in the store. */
 export function assetFilePath(
@@ -55,7 +58,11 @@ export async function assetRoutes(app: FastifyInstance, options: AdminOptions) {
   app.get('/assets', async (request) => {
     const filter = parseInput(listFilter, request.query);
     const { limit, offset } = paging(request.query);
-    const where = and(filter.kind ? eq(assets.kind, filter.kind) : undefined);
+    // Delivery copies (`renditions.ts`) are the publisher's business, not library files.
+    const where = and(
+      filter.kind ? eq(assets.kind, filter.kind) : undefined,
+      sql`${assets.provenance}->>'source' <> 'rendition'`,
+    );
     const rows = await db
       .select()
       .from(assets)
@@ -80,7 +87,12 @@ export async function assetRoutes(app: FastifyInstance, options: AdminOptions) {
       where: eq(assets.id, uuidParam(request.params.id)),
     });
     if (!row) notFound('Файл');
-    const bytes = await readFile(assetFilePath(options, row)).catch(() => notFound('Файл'));
+    const { w } = parseInput(fileQuery, request.query);
+    const path = assetFilePath(options, row);
+    const bytes =
+      (w && row.mime === 'image/png'
+        ? await thumbnail(options.storageRoot, row.sha256, path, Number(w))
+        : null) ?? (await readFile(path).catch(() => notFound('Файл')));
     return reply
       .type(row.mime)
       .header('Cache-Control', 'private, max-age=31536000, immutable')

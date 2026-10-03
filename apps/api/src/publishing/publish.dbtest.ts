@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import { open, readFile, readdir, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { eq } from 'drizzle-orm';
+import sharp from 'sharp';
 import { importPublishedContent } from '../admin/import.js';
-import { createTestContext } from '../admin/testing.js';
+import { createTestContext, samplePicture } from '../admin/testing.js';
 import { defaultContentRoot, readCatalog } from '../content.js';
 import { publications } from '../db/schema.js';
 
@@ -41,9 +42,26 @@ test('plan → publish flow: versions, media, stale plans, previews, archive and
     });
     return response.json().asset as { id: string; sha256: string; url: string };
   };
+  // The first release after the import delivers the seed pictures as smaller copies: lessons
+  // with pictures get a new version, their media shrink, the old versions stay addressable.
+  const importedCatalog = await publicCatalog();
+  const shrink = await call('POST', '/publication-plans');
+  assert.equal(shrink.statusCode, 201, shrink.body);
+  assert.ok(shrink.json().diff.lessons.length > 0);
+  for (const l of shrink.json().diff.lessons) assert.equal(l.to, l.from + 1);
+  const shrunk = await call('POST', '/publications', { planId: shrink.json().publication.id });
+  assert.equal(shrunk.statusCode, 200, shrunk.body);
+  const forest = (c: { courses: { id: string; cover: { path: string } }[] }) =>
+    c.courses.find((x) => x.id === 'en-forest')!.cover.path;
+  const before = await app.inject(forest(importedCatalog));
+  const after = await app.inject(forest(await publicCatalog()));
+  assert.notEqual(forest(await publicCatalog()), forest(importedCatalog));
+  assert.ok(after.rawPayload.length < before.rawPayload.length / 3);
+  assert.ok((await sharp(after.rawPayload).metadata()).width! <= 1024);
   const startRevision = (await readCatalog(contentRoot)).revision;
 
-  // A plan with nothing changed still validates and reproduces the published catalog.
+  // A plan with nothing changed still validates and reproduces the published catalog: the
+  // copies made for the last release are reused, so no lesson moves again.
   const noop = await call('POST', '/publication-plans');
   assert.equal(noop.statusCode, 201, noop.body);
   assert.deepEqual(noop.json().diff.lessons, []);
@@ -51,7 +69,7 @@ test('plan → publish flow: versions, media, stale plans, previews, archive and
   assert.equal(noop.json().publication.targetRevision, startRevision + 1);
 
   // New language + set + lesson with a fresh cover and imported audio.
-  const tim = await readFile(new URL('../../../mobile/assets/images/tim.png', import.meta.url));
+  const tim = await samplePicture();
   const cover = await upload('tim.png', tim);
   const wavName = (await readdir(join(defaultContentRoot, 'media'))).find((n) =>
     n.endsWith('.wav'),
@@ -131,7 +149,9 @@ test('plan → publish flow: versions, media, stale plans, previews, archive and
     ['en', 'de'],
   );
   const zoo = catalog.courses.find((c: { id: string }) => c.id === 'de-zoo');
-  assert.equal(zoo.cover.path, `/v1/media/${cover.sha256}.png`);
+  // The app gets a palette copy of the cover; the same file is also the word picture, so both
+  // point at one copy in the larger (cover) size.
+  assert.notEqual(zoo.cover.path, `/v1/media/${cover.sha256}.png`);
   assert.deepEqual(zoo.lessons[0], {
     id: 'de-zoo-01',
     version: 1,
@@ -142,9 +162,11 @@ test('plan → publish flow: versions, media, stale plans, previews, archive and
   const pkg = await app.inject('/v1/lessons/de-zoo-01/versions/1');
   assert.equal(pkg.statusCode, 200);
   assert.equal(pkg.json().language, 'de');
-  const media = await app.inject(`/v1/media/${cover.sha256}.png`);
+  const media = await app.inject(zoo.cover.path);
   assert.equal(media.statusCode, 200);
-  assert.deepEqual(media.rawPayload, tim);
+  assert.ok(media.rawPayload.length < tim.length / 2);
+  assert.equal(pkg.json().media[0].path, zoo.cover.path);
+  assert.equal((await app.inject(`/v1/media/${cover.sha256}.png`)).statusCode, 404);
   assert.equal((await call('GET', `/assets/${cover.id}`)).json().asset.status, 'published');
   const lessonRow = (await call('GET', '/lessons/de-zoo-01')).json().lesson;
   assert.equal(lessonRow.lastPublishedVersion, 1);

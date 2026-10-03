@@ -1,4 +1,4 @@
-import { and, asc, count, eq, inArray, lt, ne, sql } from 'drizzle-orm';
+import { and, asc, count, eq, gte, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
 import type { GenerationInput } from '@lingvohero/contracts';
 import { audit, type AuditInput } from '../admin/audit.js';
 import { AdminError } from '../admin/errors.js';
@@ -12,6 +12,8 @@ import {
   type ModelConfig,
 } from '../db/schema.js';
 import { PROMPT_VERSION } from '../generation/prompts.js';
+import { ProviderError } from '../generation/provider.js';
+import { env } from '../env.js';
 
 export type JobRow = typeof generationJobs.$inferSelect;
 export type TaskRow = typeof generationTasks.$inferSelect;
@@ -96,6 +98,7 @@ export async function createJob(
     });
     if (active)
       throw new AdminError(409, 'job_in_progress', 'У этого сета уже идёт генерация', undefined);
+    await assertDailyBudget(tx);
     const [job] = await tx
       .insert(generationJobs)
       .values({
@@ -157,6 +160,7 @@ export async function createAssetJob(
       ),
     });
     if (active) throw new AdminError(409, 'job_in_progress', 'Генерация уже идёт', undefined);
+    await assertDailyBudget(tx);
     if (!input.tasks.length)
       throw new AdminError(409, 'nothing_to_generate', 'Нечего генерировать', undefined);
     const [job] = await tx
@@ -445,16 +449,63 @@ export async function jobTasks(db: Db, jobId: string) {
     );
 }
 
+/**
+ * Adds a call's cost to its job. Parallel tasks of one job add at the same time, so the row is
+ * locked (a read-then-write would lose some of them and let the job exceed its limit).
+ */
 export async function addUsage(db: Db | Tx, jobId: string, delta: Partial<GenerationUsage>) {
-  const job = await db.query.generationJobs.findFirst({ where: eq(generationJobs.id, jobId) });
-  if (!job) return null;
-  const usage: GenerationUsage = {
-    inputTokens: job.usage.inputTokens + (delta.inputTokens ?? 0),
-    outputTokens: job.usage.outputTokens + (delta.outputTokens ?? 0),
-    images: job.usage.images + (delta.images ?? 0),
-    ttsChars: job.usage.ttsChars + (delta.ttsChars ?? 0),
-    estimatedUsd: Math.round((job.usage.estimatedUsd + (delta.estimatedUsd ?? 0)) * 10000) / 10000,
-  };
-  await db.update(generationJobs).set({ usage }).where(eq(generationJobs.id, jobId));
+  const usage = await db.transaction(async (tx) => {
+    const [job] = await tx
+      .select()
+      .from(generationJobs)
+      .where(eq(generationJobs.id, jobId))
+      .for('update');
+    if (!job) return null;
+    const usage: GenerationUsage = {
+      inputTokens: job.usage.inputTokens + (delta.inputTokens ?? 0),
+      outputTokens: job.usage.outputTokens + (delta.outputTokens ?? 0),
+      images: job.usage.images + (delta.images ?? 0),
+      ttsChars: job.usage.ttsChars + (delta.ttsChars ?? 0),
+      estimatedUsd:
+        Math.round((job.usage.estimatedUsd + (delta.estimatedUsd ?? 0)) * 10000) / 10000,
+    };
+    await tx.update(generationJobs).set({ usage }).where(eq(generationJobs.id, jobId));
+    return usage;
+  });
+  // Checked after the cost is recorded: the call was paid for, the next one is not made.
+  if (usage && (await spentToday(db)) > env.GENERATION_DAILY_LIMIT_USD)
+    throw new ProviderError(
+      `Исчерпан дневной бюджет генерации (${env.GENERATION_DAILY_LIMIT_USD} $)`,
+      'permanent',
+    );
   return usage;
+}
+
+/** Estimated spending of all generation jobs since midnight UTC. */
+export async function spentToday(db: Db | Tx) {
+  const midnight = new Date();
+  midnight.setUTCHours(0, 0, 0, 0);
+  const [row] = await db
+    .select({
+      usd: sql<number>`coalesce(sum((${generationJobs.usage}->>'estimatedUsd')::numeric), 0)::float`,
+    })
+    .from(generationJobs)
+    // Jobs started today, finished today or still running (a long job across midnight counts).
+    .where(
+      or(
+        gte(generationJobs.createdAt, midnight),
+        gte(generationJobs.finishedAt, midnight),
+        isNull(generationJobs.finishedAt),
+      ),
+    );
+  return row?.usd ?? 0;
+}
+async function assertDailyBudget(db: Db | Tx) {
+  if ((await spentToday(db)) >= env.GENERATION_DAILY_LIMIT_USD)
+    throw new AdminError(
+      409,
+      'daily_budget',
+      `Дневной бюджет генерации (${env.GENERATION_DAILY_LIMIT_USD} $) исчерпан. Попробуйте завтра или увеличьте GENERATION_DAILY_LIMIT_USD.`,
+      undefined,
+    );
 }

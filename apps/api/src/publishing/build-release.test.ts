@@ -209,6 +209,16 @@ test('keeps the version of an unchanged lesson and bumps a changed one', () => {
   });
   assert.equal(changed.release!.lessons[0]!.version, 3);
   assert.equal(changed.release!.catalog.courses[0]!.lessons[0]!.title, 'Renamed');
+  // After a restore (or a release published outside the panel) the store may already hold
+  // later versions than the database remembers: a change goes past all of them.
+  const afterRestore = buildRelease({
+    ...base,
+    storedVersions: new Map([['en-a-1', 5]]),
+    lessons: [
+      lesson('en-a-1', 'en-a', { lastPublishedVersion: 2, lastPublishedHash: hash, title: 'X' }),
+    ],
+  });
+  assert.equal(afterRestore.release!.lessons[0]!.version, 6);
 });
 
 test('reports errors per entity: empty set, preview without cover, unsolvable lesson', () => {

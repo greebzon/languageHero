@@ -347,6 +347,10 @@ export function artifactHash(parts: {
   promptVersion: string;
   model: string;
   payload: unknown;
+  /** Set only for the fake provider: its placeholders must never be reused by a real job
+      (a fake run once lent its beeps and checkered squares to real sets). Undefined keeps
+      the real provider's hashes unchanged. */
+  provider?: 'fake';
 }) {
   return sha256(canonicalJson(parts));
 }
@@ -357,6 +361,7 @@ async function mediaPlan(env: Env): Promise<StageResult> {
   const { words } = job.output;
   const model = job.modelConfig;
   const translated = Boolean(job.input.source);
+  const provider = ctx.provider.name === 'fake' ? ('fake' as const) : undefined;
   const hash = (stage: GenerationStage, targetId: string, payload: unknown) =>
     artifactHash({
       stage,
@@ -364,6 +369,7 @@ async function mediaPlan(env: Env): Promise<StageResult> {
       promptVersion: job.promptVersion,
       model: model.image,
       payload,
+      provider,
     });
   const pictures = translated
     ? []
@@ -398,6 +404,7 @@ async function mediaPlan(env: Env): Promise<StageResult> {
         promptVersion: job.promptVersion,
         model: `${model.tts}/${model.voice}`,
         payload: { text: w.speechText, language: env.language.code },
+        provider,
       }),
     })),
     { stage: 'assemble' as const, targetId: 'assemble' },

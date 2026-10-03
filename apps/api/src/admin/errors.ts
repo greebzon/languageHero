@@ -67,7 +67,14 @@ export function adminErrorHandler(
       message: fastifyError.message,
       requestId: request.id,
     });
-  request.log.error(error);
+  // Name, code and stack only: driver messages may carry query parameters (emails, texts).
+  request.log.error({
+    err: {
+      name: (error as Error).name,
+      code: (error as { code?: string }).code,
+      stack: (error as Error).stack?.split('\n').slice(1, 6).join('\n'),
+    },
+  });
   return reply
     .code(500)
     .send({ code: 'internal', message: 'Внутренняя ошибка сервера', requestId: request.id });

@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
+import { invalidateShopCatalog } from '../shop-public.js';
+import { clientKey } from '../net.js';
 import type { Db } from '../db/client.js';
 import type { GenerationSettings } from '../generation/factory.js';
 import { originGuard, requireAdmin, sessionLoader } from './auth.js';
@@ -38,10 +40,14 @@ export async function adminPlugin(app: FastifyInstance, registered: AdminOptions
     reply.code(404).send({ code: 'not_found', message: 'Not found', requestId: request.id }),
   );
   await app.register(cookie);
-  await app.register(rateLimit, { global: false });
+  await app.register(rateLimit, { global: false, keyGenerator: (req) => clientKey(req.ip) });
   app.decorateRequest('admin', null);
   app.addHook('onRequest', originGuard(options.adminOrigin));
   app.addHook('preHandler', sessionLoader(options.db));
+  // Mascots and items published or edited here show up in the app's shop right away.
+  app.addHook('onResponse', async (request) => {
+    if (request.method !== 'GET') invalidateShopCatalog(options.db);
+  });
   await app.register(authRoutes, options);
   await app.register(async (protectedScope) => {
     protectedScope.addHook('preHandler', requireAdmin);

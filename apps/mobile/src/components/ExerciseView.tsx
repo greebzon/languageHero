@@ -71,7 +71,9 @@ export function ExerciseView({
     return (
       <>
         <Label style={s.instructions}>{t('exercise.pairs')}</Label>
-        <View style={[s.pairs, direction]}>
+        {/* The columns follow the interface (hints say «слева / справа»); only the words keep
+            their own writing direction. */}
+        <View style={s.pairs}>
           <View style={s.column}>
             {exercise.wordIds.map((id, index) => (
               <Pressable
@@ -89,7 +91,7 @@ export function ExerciseView({
                   correct && s.correct,
                 ]}
               >
-                <Heading style={s.word}>
+                <Heading style={[s.word, direction]}>
                   {index + 1}. {word(id).text}
                 </Heading>
               </Pressable>

@@ -9,11 +9,14 @@ import { assetFilePath } from './admin/routes/assets.js';
 import { mascotReady } from './admin/routes/wardrobe.js';
 import type { Db } from './db/client.js';
 import { assets, mascots, outfitLayers, shopItems } from './db/schema.js';
+import { DELIVERY, deliveryAssets, type Box } from './admin/renditions.js';
 
-export type ShopPublicOptions = { db: Db; storageRoot: string; contentRoot: string };
+type MediaRoots = { storageRoot: string; contentRoot: string };
+export type ShopPublicOptions = MediaRoots & { db: Db };
 const mediaPath = (sha: string) => `/v1/shop-media/${sha}.png`;
 
-export async function buildShopCatalog(db: Db): Promise<ShopCatalog> {
+/** Pictures go out as their delivery copies (`deliveryAssets`), never the generated originals. */
+export async function buildShopCatalog(db: Db, roots: MediaRoots): Promise<ShopCatalog> {
   const ms = (await db.select().from(mascots).where(eq(mascots.published, 1))).filter(mascotReady);
   const its = (await db.select().from(shopItems).where(eq(shopItems.published, 1))).filter(
     (i) => i.iconAssetId,
@@ -36,16 +39,17 @@ export async function buildShopCatalog(db: Db): Promise<ShopCatalog> {
             ),
           )
       : [];
-  const ids = [
-    ...ms.flatMap((m) => [m.bodyAssetId!, m.portraitAssetId!]),
-    ...its.map((i) => i.iconAssetId!),
-    ...layers.map((l) => l.assetId),
-  ];
-  const sha = new Map(
-    ids.length
-      ? (await db.select().from(assets).where(inArray(assets.id, ids))).map((a) => [a.id, a.sha256])
-      : [],
-  );
+  // Body and layers are drawn over each other, so they share one box.
+  const boxes = new Map<string, Box>([
+    ...ms.flatMap((m) => [
+      [m.bodyAssetId!, DELIVERY.body] as const,
+      [m.portraitAssetId!, DELIVERY.portrait] as const,
+    ]),
+    ...its.map((i) => [i.iconAssetId!, DELIVERY.icon] as const),
+    ...layers.map((l) => [l.assetId, DELIVERY.body] as const),
+  ]);
+  const delivered = await deliveryAssets(db, roots, boxes);
+  const sha = new Map([...delivered].map(([id, row]) => [id, row.sha256]));
   const stamps = [...ms, ...its, ...layers].map((r) => r.updatedAt.getTime());
   const sort = <T extends { position: number; name: string }>(rows: T[]) =>
     [...rows].sort((a, b) => a.position - b.position || a.name.localeCompare(b.name, 'ru'));
@@ -96,14 +100,45 @@ export async function buildShopCatalog(db: Db): Promise<ShopCatalog> {
   });
 }
 
+/* Every app start asks for the catalog: build it at most every 30 s instead of per request.
+   One cache per database (tests run many); admin writes drop it at once. */
+const CATALOG_TTL = 30_000;
+type Cached = { at: number; catalog: Promise<ShopCatalog>; media: Promise<Set<string>> };
+const caches = new WeakMap<Db, Cached>();
+function cachedCatalog({ db, ...roots }: ShopPublicOptions): Cached {
+  const hit = caches.get(db);
+  if (hit && Date.now() - hit.at <= CATALOG_TTL) return hit;
+  const catalog = buildShopCatalog(db, roots);
+  // Only pictures the published catalog points at are served (not drafts or uploads).
+  const media = catalog.then(
+    (c) =>
+      new Set(
+        [
+          ...c.mascots.flatMap((m) => [m.portrait, m.body]),
+          ...c.items.map((i) => i.icon),
+          ...c.layers.map((l) => l.path),
+        ].map((path) => path.slice(path.lastIndexOf('/') + 1, -'.png'.length)),
+      ),
+  );
+  const entry = { at: Date.now(), catalog, media };
+  caches.set(db, entry);
+  catalog.catch(() => caches.delete(db));
+  return entry;
+}
+/** After a change in the panel the next request rebuilds the catalog. */
+export const invalidateShopCatalog = (db: Db) => {
+  caches.delete(db);
+};
+
 export async function shopPublicRoutes(app: FastifyInstance, o: ShopPublicOptions) {
   app.get('/v1/shop', async (_request, reply) => {
     reply.header('Access-Control-Allow-Origin', '*').header('Cache-Control', 'public, max-age=60');
-    return buildShopCatalog(o.db);
+    return cachedCatalog(o).catalog;
   });
   app.get<{ Params: { file: string } }>('/v1/shop-media/:file', async (request, reply) => {
     const match = /^([a-f0-9]{64})\.png$/.exec(request.params.file);
-    const row = match
+    const published = match && (await cachedCatalog(o).media).has(match[1]!);
+    const row = published
       ? await o.db.query.assets.findFirst({ where: eq(assets.sha256, match[1]!) })
       : undefined;
     if (!row || row.kind !== 'image') return reply.code(404).send({ error: 'Not found' });

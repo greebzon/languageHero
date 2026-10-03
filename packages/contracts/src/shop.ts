@@ -122,7 +122,9 @@ export const assetGenerateSchema = z.object({
   idempotencyKey: z.uuid(),
 });
 
-/* Public catalog served to the app. Media paths are relative to the API origin. */
+/* Public catalog served to the app. Media paths are relative to the API origin and always
+   point at the shop media route (a tampered catalog cannot send the app to another host). */
+const shopMediaPath = z.string().regex(/^\/v1\/shop-media\/[a-f0-9]{64}\.png$/);
 export const shopMascotSchema = z.object({
   unlockLevel: z.number().int().min(1).default(1),
   id: slugIdSchema,
@@ -130,8 +132,8 @@ export const shopMascotSchema = z.object({
   withName: z.string(),
   trait: z.string(),
   perk: z.string(),
-  portrait: z.string(),
-  body: z.string(),
+  portrait: shopMediaPath,
+  body: shopMediaPath,
   slots: mascotSlotsSchema,
   /* Complete translations only; older apps ignore the field. */
   texts: z
@@ -148,7 +150,7 @@ export const shopCatalogItemSchema = z.object({
   slot: mascotSlotSchema,
   rarity: shopRaritySchema,
   price: z.number().int().positive(),
-  icon: z.string(),
+  icon: shopMediaPath,
   texts: z
     .partialRecord(overlayLocaleSchema, z.object({ name: z.string(), description: z.string() }))
     .optional(),
@@ -156,7 +158,7 @@ export const shopCatalogItemSchema = z.object({
 export const outfitLayerSchema = z.object({
   mascotId: slugIdSchema,
   itemId: slugIdSchema,
-  path: z.string(),
+  path: shopMediaPath,
   box: slotBoxSchema,
 });
 export const shopCatalogSchema = z.object({

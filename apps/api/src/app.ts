@@ -15,21 +15,61 @@ export type AppOptions = {
   /** Built panel (`apps/admin/dist`) served under `/admin/` on the API's own origin. */
   adminDist?: string;
   account?: Omit<AccountOptions, 'contentRoot'>;
+  /**
+   * Who may set X-Forwarded-For/Proto/Host: the reverse proxy's addresses (comma-separated).
+   * Without it, behind nginx every client shares the proxy's IP (one rate-limit bucket for
+   * the world) and the admin's Origin check sees http instead of https.
+   */
+  trustProxy?: string;
+  /** HTTPS deployments: Strict-Transport-Security on every response. */
+  hsts?: boolean;
 };
+
+/* The panel loads nothing from other origins: scripts, styles and media come from the API. */
+const ADMIN_CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "media-src 'self' blob:",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
 
 export function buildApp({
   contentRoot = defaultContentRoot,
   admin,
   adminDist,
   account,
+  trustProxy,
+  hsts = false,
 }: AppOptions = {}) {
-  const app = Fastify({ logger: { redact: ['req.headers.authorization', 'req.headers.cookie'] } });
+  const app = Fastify({
+    logger: { redact: ['req.headers.authorization', 'req.headers.cookie'] },
+    trustProxy: trustProxy ?? false,
+    // A slow client cannot hold a connection forever (the proxy has its own limits too).
+    requestTimeout: 30_000,
+  });
+  app.addHook('onSend', async (request, reply) => {
+    reply.header('X-Content-Type-Options', 'nosniff');
+    reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+    reply.header('X-Frame-Options', 'DENY');
+    if (hsts) reply.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    if (request.url.startsWith('/admin')) reply.header('Content-Security-Policy', ADMIN_CSP);
+  });
   app.setErrorHandler((error, request, reply) => {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT')
       return reply.code(404).send({ error: 'Content not found' });
     if ((error as FastifyError).validation)
       return reply.code(400).send({ error: 'Invalid request' });
-    request.log.error(error);
+    // Client mistakes (body too large, malformed JSON, rate limit) keep their own status.
+    const status = (error as FastifyError).statusCode;
+    if (status && status >= 400 && status < 500)
+      return reply.code(status).send({ error: 'Invalid request' });
+    request.log.error({ err: { name: (error as Error).name, code: (error as FastifyError).code } });
     return reply.code(503).send({ error: 'Content temporarily unavailable' });
   });
   app.register(publicRoutes, { contentRoot });

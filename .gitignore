@@ -14,6 +14,7 @@ content/store/.catalog.pending.json
 .env
 .env.*
 !.env.example
+!.env.production.example
 android/
 ios/
 *.jks

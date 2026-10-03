@@ -247,7 +247,7 @@ export function AccountSettings() {
                   value={code}
                   onChangeText={setCode}
                   placeholder={t('settings.codePlaceholder')}
-                  maxLength={5}
+                  maxLength={6}
                   keyboardType="number-pad"
                   style={accountStyles.input}
                 />
@@ -284,7 +284,7 @@ export function AccountSettings() {
                       accessibilityLabel={t('settings.newEmailCode')}
                       value={newCode}
                       onChangeText={setNewCode}
-                      maxLength={5}
+                      maxLength={6}
                       keyboardType="number-pad"
                       style={accountStyles.input}
                     />
@@ -293,7 +293,7 @@ export function AccountSettings() {
               )}
               <ToyButton
                 title={t('settings.confirmAction')}
-                disabled={busy || code.length !== 5 || (action === 'email' && newCode.length !== 5)}
+                disabled={busy || code.length !== 6 || (action === 'email' && newCode.length !== 6)}
                 onPress={() => void run(confirm)}
               />
             </>

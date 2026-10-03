@@ -26,6 +26,12 @@ export type BuildInput = {
   lessons: LessonRow[];
   assets: ReadonlyMap<string, AssetRef>;
   revision: number;
+  /**
+   * The highest version of each lesson already in the store. A restored release or one
+   * published outside the panel may hold versions the database does not remember, and a
+   * version once published never changes.
+   */
+  storedVersions?: ReadonlyMap<string, number>;
 };
 export type BuildOutput = {
   release: Release | null;
@@ -169,7 +175,7 @@ export function buildRelease(input: BuildInput): BuildOutput {
       const unchanged = lesson.lastPublishedVersion && lesson.lastPublishedHash === hash;
       const version = unchanged
         ? lesson.lastPublishedVersion!
-        : (lesson.lastPublishedVersion ?? 0) + 1;
+        : Math.max(lesson.lastPublishedVersion ?? 0, input.storedVersions?.get(lesson.id) ?? 0) + 1;
       const pkg: CourseLesson = { ...built.lesson, version };
       packages.push(pkg);
       courseLessonsBuilt.push(pkg);
