@@ -34,6 +34,8 @@ export const exercise = defineTexts({
     caught: 'Все слова пойманы!',
     misses: 'Промахов: {n}',
     bubble: 'Пузырь: {translation}',
+    gap: 'Какое слово пропущено? Выбери его.',
+    gapSentence: 'Фраза: {sentence}',
   },
   en: {
     listen: 'Listen to the word and pick the picture.',
@@ -67,6 +69,8 @@ export const exercise = defineTexts({
     caught: 'You caught every word!',
     misses: 'Misses: {n}',
     bubble: 'Bubble: {translation}',
+    gap: 'Which word is missing? Pick it.',
+    gapSentence: 'Sentence: {sentence}',
   },
   he: {
     listen: 'מקשיבים למילה ובוחרים תמונה.',
@@ -100,5 +104,7 @@ export const exercise = defineTexts({
     caught: 'כל המילים נתפסו!',
     misses: 'החטאות: {n}',
     bubble: 'בועה: {translation}',
+    gap: 'איזו מילה חסרה? בוחרים אותה.',
+    gapSentence: 'משפט: {sentence}',
   },
 });

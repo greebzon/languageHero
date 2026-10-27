@@ -2,6 +2,7 @@ import type { DraftExercise, ExerciseType } from '@lingvohero/contracts';
 import { buildSentence } from './build-sentence.js';
 import { buildWord } from './build-word.js';
 import { catchWord } from './catch-word.js';
+import { fillGap } from './fill-gap.js';
 import { choice } from './choice.js';
 import { listenAndSelect } from './listen-and-select.js';
 import { matchPairs } from './match-pairs.js';
@@ -17,6 +18,7 @@ export const GENERATION_MECHANICS: { [K in ExerciseType]: GenerationMechanic<K> 
   'build-sentence': buildSentence,
   memory,
   'catch-word': catchWord,
+  'fill-gap': fillGap,
 };
 /** The requested mechanics a word lesson may use. */
 export const wordLessonMix = <T extends ExerciseType>(mix: readonly T[]) =>
@@ -27,6 +29,10 @@ export const generationMechanic = (type: ExerciseType) =>
 
 export function needsLetters(exercise: DraftExercise): boolean {
   return generationMechanic(exercise.type).needsLetters?.(exercise) ?? false;
+}
+/** Translated clone: the source sentence to say again (empty when the exercise has none). */
+export function sentenceOf(exercise: DraftExercise): string {
+  return generationMechanic(exercise.type).sentenceOf?.(exercise) ?? '';
 }
 export function retranslate(
   exercise: DraftExercise,

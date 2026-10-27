@@ -50,6 +50,9 @@ export async function solve(page: Page, exercise: CourseExercise, lesson: Course
         await tap(`card-${id}-text`);
       }
       break;
+    case 'fill-gap':
+      await tap(`gap-option-${exercise.answerId}`);
+      break;
     case 'catch-word':
       // The bubbles keep floating, so they are never «stable» for Playwright.
       for (const round of exercise.rounds)

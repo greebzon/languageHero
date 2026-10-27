@@ -36,6 +36,8 @@ export type GenerationMechanic<K extends ExerciseType> = {
   build(item: ExerciseDto, ctx: BuildContext): DraftExerciseOf<K> | string;
   /** Translated clone: whether the model should suggest distractor letters for it. */
   needsLetters?(exercise: DraftExerciseOf<K>): boolean;
+  /** Translated clone: the sentence the model must say again in the new language (with ___). */
+  sentenceOf?(exercise: DraftExerciseOf<K>): string;
   /** Translated clone: rebuild what depends on the new spelling (prompt and hint are done). */
   retranslate?(
     exercise: DraftExerciseOf<K>,
@@ -43,5 +45,9 @@ export type GenerationMechanic<K extends ExerciseType> = {
     ctx: RetranslateContext,
   ): DraftExerciseOf<K>;
   /** The fake provider's answer for exercise `i` about `word` (the type is added by the caller). */
-  fake(i: number, word: string, others: string[]): Omit<ExerciseDto, 'type'>;
+  fake(
+    i: number,
+    word: string,
+    others: string[],
+  ): Omit<ExerciseDto, 'type' | 'sentence'> & { sentence?: string };
 };

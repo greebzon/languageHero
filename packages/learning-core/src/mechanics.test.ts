@@ -9,6 +9,7 @@ import {
   courseLessonSchema,
   exerciseCountsOf,
   exerciseWords,
+  filledGap,
   mapExerciseWords,
   releaseSchema,
   visibleCatalog,
@@ -437,4 +438,39 @@ test('memory ends when every pair is found; catch-the-word replays taps and coun
     ]),
     false,
   );
+});
+
+test('fill the gap: one right word in a sentence, options of lesson words', () => {
+  const gap: CourseExercise = {
+    id: 'gap',
+    type: 'fill-gap',
+    prompt: 'Вставь слово',
+    hint: 'Кто живёт в лесу?',
+    before: 'I see a',
+    after: 'in the forest',
+    options: ['fox', 'owl', 'bear', 'rabbit'].map((w) => ({ id: w, text: w, wordId: w })),
+    answerId: 'fox',
+  };
+  const pkg = courseLessonSchema.parse(lesson([gap]));
+  const ex = pkg.exercises[0]!;
+  assert.equal(assess(ex, { choiceId: 'fox' }, pkg), 'correct');
+  assert.equal(assess(ex, { choiceId: 'owl' }, pkg), 'wrong');
+  assert.equal(assess(ex, { choiceId: 'cat' }, pkg), 'invalid');
+  assert.deepEqual(exerciseWords(ex), ['fox']);
+  assert.equal(filledGap(gap, 'fox'), 'I see a fox in the forest');
+  // A 6-year-old sees three of the four words, the right one among them.
+  const eased = currentExercise(
+    learn(newLearningState(), { type: 'start', lesson: pkg, difficulty: { ageBand: '6-7' } })
+      .session!,
+  );
+  assert.ok(eased.type === 'fill-gap' && eased.options.length === 3);
+  assert.ok(eased.type === 'fill-gap' && eased.options.some((o) => o.id === 'fox'));
+  // Broken data: no sentence, a missing answer, two options that read the same.
+  assert.equal(parses([{ ...gap, before: '', after: ' ' } as CourseExercise]), false);
+  assert.equal(parses([{ ...gap, answerId: 'cat' } as CourseExercise]), false);
+  assert.equal(
+    parses([{ ...gap, options: [...gap.options, { id: 'fox2', text: 'Fox' }] } as CourseExercise]),
+    false,
+  );
+  assert.equal(parses([{ ...gap, audioId: 'fox-image' } as CourseExercise]), false);
 });

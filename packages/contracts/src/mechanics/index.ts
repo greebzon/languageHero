@@ -3,6 +3,7 @@ import type { Catalog } from '../course';
 import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
 import { catchWord } from './catch-word';
+import { fillGap } from './fill-gap';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
 import { matchPairs } from './match-pairs';
@@ -22,6 +23,7 @@ export const courseExerciseSchema = z.discriminatedUnion('type', [
   buildSentence.exercise,
   memory.exercise,
   catchWord.exercise,
+  fillGap.exercise,
 ]);
 export const draftExerciseSchema = z.discriminatedUnion('type', [
   listenAndSelect.draft,
@@ -31,6 +33,7 @@ export const draftExerciseSchema = z.discriminatedUnion('type', [
   buildSentence.draft,
   memory.draft,
   catchWord.draft,
+  fillGap.draft,
 ]);
 /* Answers carry no tag: the exercise they answer tells the mechanic, and mechanics may share a
    shape (`choice` reuses `{choiceId}`), so saved sessions stay valid. */
@@ -63,6 +66,7 @@ const MECHANICS: { [K in ExerciseType]: Module<K> } = {
   'build-sentence': buildSentence,
   memory,
   'catch-word': catchWord,
+  'fill-gap': fillGap,
 };
 export const MECHANIC_TYPES = Object.keys(MECHANICS) as ExerciseType[];
 export const exerciseTypeSchema = z.enum(MECHANIC_TYPES as [ExerciseType, ...ExerciseType[]]);
@@ -112,5 +116,6 @@ export * from './choice';
 export { sentenceKey, tilesForm } from './build-sentence';
 export { memoryCard, memoryCards } from './memory';
 export { CATCH_MISSES, catchProgress } from './catch-word';
+export { filledGap } from './fill-gap';
 export { AGE_BANDS, ageBandSchema, type AgeBand } from './shared';
 export type { Fail, LessonRefs } from './shared';

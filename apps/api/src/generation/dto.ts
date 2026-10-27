@@ -49,6 +49,8 @@ export const lessonDtoSchema = z.object({
       distractorLetters: z.string(),
       /* A mechanic's variant (the preset of a `choice`), "" when it has none. */
       variant: z.string(),
+      /* fill-gap: the sentence with ___ for the word, "" for every other type. */
+      sentence: z.string(),
     }),
   ),
 });
@@ -256,7 +258,13 @@ export const courseTranslationDtoSchema = z.object({
 });
 export const lessonTranslationDtoSchema = z.object({
   exercises: z.array(
-    z.object({ prompt: z.string(), hint: z.string(), distractorLetters: z.string() }),
+    z.object({
+      prompt: z.string(),
+      hint: z.string(),
+      distractorLetters: z.string(),
+      /* The exercise's sentence in the new language with ___, "" when it has none. */
+      sentence: z.string(),
+    }),
   ),
 });
 export type CourseTranslationDto = z.infer<typeof courseTranslationDtoSchema>;

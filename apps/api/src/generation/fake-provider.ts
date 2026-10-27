@@ -220,6 +220,7 @@ function lessonFor(payload: LessonPayload) {
     const word = keys[i % keys.length]!;
     return {
       type,
+      sentence: '',
       ...GENERATION_MECHANICS[type].fake(
         i,
         word,
@@ -255,6 +256,7 @@ function lessonTranslationFor(payload: LessonTranslationPayload) {
       prompt: e.prompt,
       hint: e.hint,
       distractorLetters: e.letters ? 'qz' : '',
+      sentence: e.sentence,
     })),
   };
 }

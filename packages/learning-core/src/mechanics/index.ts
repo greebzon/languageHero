@@ -9,6 +9,7 @@ import { limitsFor, seeded } from './adapt';
 import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
 import { catchWord } from './catch-word';
+import { fillGap } from './fill-gap';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
 import { matchPairs } from './match-pairs';
@@ -24,6 +25,7 @@ const RULES: { [K in ExerciseType]: Rules<K> } = {
   'build-sentence': buildSentence,
   memory,
   'catch-word': catchWord,
+  'fill-gap': fillGap,
 };
 export function assessExercise(
   exercise: CourseExercise,

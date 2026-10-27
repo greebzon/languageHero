@@ -266,6 +266,8 @@ test('an AI-generated draft set (fake provider) can be reviewed, published and p
     for (const exercise of exercises) {
       if (exercise.type === 'build-sentence' && exercise === exercises[0])
         await page.screenshot({ path: 'test-results/sentence-lesson.png', fullPage: true });
+      if (exercise.type === 'fill-gap')
+        await page.screenshot({ path: 'test-results/fill-gap.png', fullPage: true });
       await solve(page, exercise, lesson);
     }
     await expect(page.getByText(`${lesson.title.toUpperCase()} — ПРОЙДЕНО`)).toBeVisible();

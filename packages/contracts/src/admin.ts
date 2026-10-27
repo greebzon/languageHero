@@ -182,7 +182,7 @@ export const generationInputSchema = z.object({
   mix: z
     .array(exerciseTypeSchema)
     .min(1)
-    .default([...BASE_MECHANICS, 'choice', 'memory', 'catch-word', 'build-sentence']),
+    .default([...BASE_MECHANICS, 'choice', 'memory', 'catch-word', 'fill-gap', 'build-sentence']),
   style: z.string().trim().max(300).nullable().default(null),
   voice: z.string().trim().max(40).nullable().default(null),
   /** Set by the server for a translated clone: the set whose lessons are translated. */

@@ -41,7 +41,7 @@ import {
   toJsonSchema,
 } from '../generation/dto.js';
 import type { CostRates } from '../generation/estimate.js';
-import { needsLetters, wordLessonMix } from '../generation/mechanics/index.js';
+import { needsLetters, sentenceOf, wordLessonMix } from '../generation/mechanics/index.js';
 import { lessonMechanics } from '../generation/rhythm.js';
 import {
   SENTENCES_PER_BAND,
@@ -267,9 +267,9 @@ async function plan(env: Env): Promise<StageResult> {
   );
   const { words, keyMap } = material(() => buildVocabulary(data, payload.wordCount));
   const plans: GenerationLessonPlan[] = material(() =>
-    buildLessonPlans(data, words, distribution, course.id, keyMap).map((plan, index) => ({
+    buildLessonPlans(data, words, distribution, course.id, keyMap).map((plan, index, all) => ({
       ...plan,
-      mechanics: lessonMechanics(job.input.mix, index),
+      mechanics: lessonMechanics(job.input.mix, index, all.length),
     })),
   );
   // «Собери фразу»: the set ends with sentences made of its words.
@@ -911,6 +911,7 @@ async function translateText(env: Env): Promise<StageResult> {
       hint: e.hint,
       words: exerciseWords(e),
       letters: needsLetters(e),
+      sentence: sentenceOf(e),
     })),
   };
   const { data, requestId } = await structured(

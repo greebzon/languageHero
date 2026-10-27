@@ -2,7 +2,7 @@ import type { GenerationInput, GenerationWord, Locale } from '@lingvohero/contra
 import { GENERATION_MECHANICS } from './mechanics/index.js';
 
 /** Bump when a prompt changes: artifacts are keyed by it, so old outputs are never reused. */
-export const PROMPT_VERSION = 'v4';
+export const PROMPT_VERSION = 'v5';
 
 /* Children of any gender read these texts: Russian past-tense verbs and short adjectives mark
    gender («ты собрал», «ты готов»), so the model is told to avoid them. */
@@ -72,6 +72,7 @@ export function lessonPrompt(payload: LessonPayload) {
     `Produce exactly ${payload.exerciseCount} exercises using only these mechanics: ${payload.mix.map((m) => GENERATION_MECHANICS[m].label).join('; ')}. Use every allowed mechanic at least once when the count allows, alternate them, and practise every word of the lesson at least once.`,
     `Field rules per type:`,
     ...payload.mix.map((m) => `- ${m}: ${GENERATION_MECHANICS[m].rules}`),
+    `sentence = "" for every type except fill-gap.`,
     `prompt: what the child must do (Russian, max 120 chars, no answer inside). hint: a friendly clue from Тим the fox (Russian, max 200 chars) that does not spell out the word.`,
     payload.feedback
       ? `The previous attempt was rejected: ${payload.feedback}. Fix exactly that.`
@@ -160,7 +161,15 @@ export type LessonTranslationPayload = {
   lessonTitle: string;
   words: { key: string; sourceText: string; text: string; translation: string }[];
   /** `letters`: the exercise is rebuilt from letters, so it needs distractor letters. */
-  exercises: { type: string; prompt: string; hint: string; words: string[]; letters: boolean }[];
+  exercises: {
+    type: string;
+    prompt: string;
+    hint: string;
+    words: string[];
+    letters: boolean;
+    /** The sentence (with ___) to say again in the new language, "" when none. */
+    sentence: string;
+  }[];
 };
 
 export function lessonTranslationPrompt(payload: LessonTranslationPayload) {
@@ -171,12 +180,12 @@ export function lessonTranslationPrompt(payload: LessonTranslationPayload) {
   const exercises = payload.exercises
     .map(
       (e, i) =>
-        `${i + 1}. [${e.type}; words: ${e.words.join(', ')}${e.letters ? '; needs letters' : ''}] prompt: ${e.prompt} | hint: ${e.hint}`,
+        `${i + 1}. [${e.type}; words: ${e.words.join(', ')}${e.letters ? '; needs letters' : ''}] prompt: ${e.prompt} | hint: ${e.hint}${e.sentence ? ` | sentence: ${e.sentence}` : ''}`,
     )
     .join('\n');
   const user = [
     `Lesson "${payload.lessonTitle}". Words:\n${words}`,
-    `Return exactly ${payload.exercises.length} exercises in the same order. For each: prompt and hint rewritten in Russian with any ${payload.sourceLanguageTitle} word or letter replaced by the ${payload.languageTitle} one (a hint must not spell out the answer); distractorLetters — for an exercise marked "needs letters" 1–2 lowercase ${payload.languageTitle} letters that are not in the word, otherwise an empty string.\n${exercises}`,
+    `Return exactly ${payload.exercises.length} exercises in the same order. For each: prompt and hint rewritten in Russian with any ${payload.sourceLanguageTitle} word or letter replaced by the ${payload.languageTitle} one (a hint must not spell out the answer); distractorLetters — for an exercise marked "needs letters" 1–2 lowercase ${payload.languageTitle} letters that are not in the word, otherwise an empty string; sentence — for an exercise with a sentence, the same short sentence in ${payload.languageTitle} with ___ where the word goes, otherwise an empty string.\n${exercises}`,
   ].join('\n');
   return { system, user };
 }

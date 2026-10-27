@@ -3,21 +3,28 @@ import { GENERATION_MECHANICS, shuffle, wordLessonMix } from './mechanics/index.
 
 /*
  * Variety inside a set. Each word lesson gets its own mechanics (a window over the requested
- * ones, moved on by two from lesson to lesson), so neighbouring lessons feel different while
- * the set as a whole uses every mechanic. Inside a lesson the order follows a rhythm: never the
- * same task twice in a row, harder tasks in the middle, an easy one at the end.
+ * ones, moved on from lesson to lesson just enough for the set to reach them all), so
+ * neighbouring lessons feel different while the set as a whole uses every mechanic. Inside a
+ * lesson the order follows a rhythm: never the same task twice in a row, harder tasks in the
+ * middle, an easy one at the end.
  */
 export const MECHANICS_PER_LESSON = 4;
 
-/** The mechanics of word lesson `index` (all of them when there are few). */
+/** The mechanics of word lesson `index` of `lessons` (all of them when there are few). */
 export function lessonMechanics(
   mix: readonly ExerciseType[],
   index: number,
+  lessons: number,
   perLesson = MECHANICS_PER_LESSON,
 ): ExerciseType[] {
   const words = wordLessonMix(mix);
   if (words.length <= perLesson) return words;
-  const start = (index * 2) % words.length;
+  // The smallest step that still lets the last lesson reach the last mechanic.
+  const step =
+    lessons > 1
+      ? Math.min(perLesson, Math.max(1, Math.ceil((words.length - perLesson) / (lessons - 1))))
+      : perLesson;
+  const start = (index * step) % words.length;
   return Array.from({ length: perLesson }, (_, i) => words[(start + i) % words.length]!);
 }
 

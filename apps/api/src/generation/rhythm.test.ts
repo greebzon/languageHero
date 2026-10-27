@@ -11,15 +11,18 @@ const MIX: ExerciseType[] = [
   'choice',
   'memory',
   'catch-word',
+  'fill-gap',
   'build-sentence',
 ];
 
 test('each lesson of a set gets its own mechanics, the set uses them all', () => {
-  const lessons = [0, 1, 2].map((i) => lessonMechanics(MIX, i));
-  assert.ok(lessons.every((l) => l.length === 4 && !l.includes('build-sentence')));
-  assert.notDeepEqual(lessons[0], lessons[1]);
-  assert.equal(new Set(lessons.flat()).size, 6, 'every word mechanic somewhere in the set');
-  assert.deepEqual(lessonMechanics(['listen-and-select', 'choice'], 3), [
+  for (const count of [2, 3, 5]) {
+    const lessons = Array.from({ length: count }, (_, i) => lessonMechanics(MIX, i, count));
+    assert.ok(lessons.every((l) => l.length === 4 && !l.includes('build-sentence')));
+    assert.notDeepEqual(lessons[0], lessons[1]);
+    assert.equal(new Set(lessons.flat()).size, 7, `every word mechanic in a set of ${count}`);
+  }
+  assert.deepEqual(lessonMechanics(['listen-and-select', 'choice'], 3, 4), [
     'listen-and-select',
     'choice',
   ]);
