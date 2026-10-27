@@ -272,6 +272,21 @@ export const difficultySchema = z.object({
   seed: z.string().min(1).max(100),
 });
 export type Difficulty = z.infer<typeof difficultySchema>;
+/* «Повторение»: a lesson the app assembles from words of lessons the child completed
+   (learning-core `composeReview`). It is not in the catalog; the words it was made of and the
+   seed travel with the session and the attempt, so the server assembles the same lesson. */
+export const REVIEW_LESSON_ID = 'review';
+export const reviewWordSchema = z.object({
+  lessonId: id,
+  version: z.number().int().positive(),
+  wordId: id,
+});
+export const reviewSchema = z.object({
+  seed: z.string().min(1).max(100),
+  words: z.array(reviewWordSchema).min(3).max(8),
+});
+export type ReviewWord = z.infer<typeof reviewWordSchema>;
+export type Review = z.infer<typeof reviewSchema>;
 export const learningStateSchema = z.object({
   version: z.literal(2),
   soundEnabled: z.boolean(),
@@ -289,6 +304,8 @@ export const learningStateSchema = z.object({
       attemptId: z.string().uuid().optional(),
       /** Absent: the exercises as published (old sessions, the panel's default preview). */
       difficulty: difficultySchema.optional(),
+      /** Present for a review: no progress entry, no XP or coins, stars still count. */
+      review: reviewSchema.optional(),
       events: z
         .array(
           z.discriminatedUnion('type', [

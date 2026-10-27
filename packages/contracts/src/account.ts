@@ -3,6 +3,7 @@ import {
   answerSchema,
   difficultySchema,
   learningStateSchema,
+  reviewSchema,
   localeSchema,
   type Locale,
 } from './course';
@@ -44,6 +45,8 @@ export const attemptSchema = z.object({
   version: z.number().int().positive(),
   /** The age group the device played it for (absent: as published). */
   difficulty: difficultySchema.optional(),
+  /** A review: the words and seed it was assembled from (`lessonId` is `review`). */
+  review: reviewSchema.optional(),
   events: z
     .array(
       z.discriminatedUnion('type', [

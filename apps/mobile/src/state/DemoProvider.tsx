@@ -22,8 +22,12 @@ import {
   reconcileCourseAccess,
   migrateDemo,
   newLearningState,
+  pickReviewWords,
   restoreLearningState,
+  reviewPool,
+  REVIEW_MIN_WORDS,
   coinBalance,
+  composeReview,
   difficultyFor,
   emptyJournal,
   recordLesson,
@@ -80,6 +84,10 @@ type ContextValue = {
   refreshing: boolean;
   catalogStatus: 'saved' | 'live' | 'unavailable';
   startLesson: (id: string) => Promise<boolean>;
+  /** «Повторение» from the finished lessons of the current language (resumes one in progress). */
+  startReview: () => Promise<boolean>;
+  /** Enough finished lessons in the current language for a review. */
+  canReview: boolean;
   loadingLesson: boolean;
   /** The last lesson could not be loaded (screens show `app.errors.lesson`). */
   lessonError: boolean;
@@ -160,12 +168,14 @@ export function DemoProvider({ children }: { children: ReactNode }) {
                 lessonId: s.lesson.id,
                 version: s.lesson.version,
                 ...(s.difficulty ? { difficulty: s.difficulty } : {}),
+                ...(s.review ? { review: s.review } : {}),
                 events: s.events,
               },
             ];
           journal = recordLesson(journal, {
-            firstTime: !current.state.progress[s.lesson.id],
-            words: s.lesson.words.length,
+            // A review teaches no new words: they count once, with their own lessons.
+            firstTime: !s.review && !current.state.progress[s.lesson.id],
+            words: s.review ? 0 : s.lesson.words.length,
             perfect: s.mistakes === 0,
             stars: starsFor(s.mistakes),
             at: new Date(),
@@ -592,6 +602,56 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       setLoadingLesson(false);
     }
   }
+  /* The lessons of the current language the child finished, newest last. */
+  const finishedRefs = visible.courses
+    .filter((c) => c.language === language)
+    .flatMap((c) => c.lessons)
+    .filter((l) => state.progress[l.id]);
+  async function startReview() {
+    if (startBusy.current) return false;
+    startBusy.current = true;
+    setLoadingLesson(true);
+    setLessonError(false);
+    try {
+      const resumable = resumableSession(state, catalog);
+      if (resumable) {
+        await prepareLesson(resumable.lesson);
+        return true;
+      }
+      const sources: CourseLesson[] = [];
+      for (const ref of finishedRefs.slice(-12)) {
+        let lesson = packages.current.get(packageKey(ref));
+        if (!lesson) lesson = await fetchLesson(ref, language);
+        packages.current.set(packageKey(lesson), lesson);
+        sources.push(lesson);
+      }
+      setLibrary([...packages.current.values()]);
+      const seed = randomUUID();
+      const words = pickReviewWords(reviewPool(sources), state.progress, seed);
+      if (words.length < REVIEW_MIN_WORDS) throw new Error('Too few words to review');
+      const lesson = composeReview(
+        words.map((w) => ({ lesson: sources.find((l) => l.id === w.lessonId)!, wordId: w.wordId })),
+        seed,
+      );
+      await prepareLesson(lesson);
+      setState((current) =>
+        learn(resumableSession(current, catalog) ? current : { ...current, session: null }, {
+          type: 'start',
+          lesson,
+          attemptId: randomUUID(),
+          difficulty: difficultyFor(auth.account?.profile.birthYear),
+          review: { seed, words },
+        }),
+      );
+      return true;
+    } catch {
+      setLessonError(true);
+      return false;
+    } finally {
+      startBusy.current = false;
+      setLoadingLesson(false);
+    }
+  }
   if (!ready || !assetsReady)
     return (
       <View
@@ -637,6 +697,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         refreshing,
         catalogStatus,
         startLesson,
+        startReview,
+        canReview: finishedRefs.length > 0,
         loadingLesson,
         lessonError,
         library,

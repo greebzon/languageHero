@@ -12,7 +12,7 @@ import { colors, fonts } from '../src/theme';
 
 export default function ResultScreen() {
   const { account } = useAccount();
-  const { state, dispatch, storageError, coins } = useDemo();
+  const { state, dispatch, storageError, coins, startReview } = useDemo();
   const { t } = useT();
   const lesson = useLocalizedLesson(state.session?.lesson);
   if (!state.session?.finished || !lesson) return <Redirect href="/" />;
@@ -20,6 +20,7 @@ export default function ResultScreen() {
   const rewards = learningRewards(state);
   // Replaying starts from the package itself, not its translated view.
   const original = state.session.lesson;
+  const review = !!state.session.review;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={s.scroll}>
@@ -81,8 +82,12 @@ export default function ResultScreen() {
             title={t('result.repeat')}
             tone="light"
             onPress={() => {
-              dispatch({ type: 'start', lesson: original });
-              router.replace('/lesson');
+              // A review is assembled anew each time; a lesson replays its own package.
+              if (review) void startReview().then((ok) => ok && router.replace('/lesson'));
+              else {
+                dispatch({ type: 'start', lesson: original });
+                router.replace('/lesson');
+              }
             }}
             style={{ marginTop: 12 }}
           />

@@ -90,4 +90,5 @@ export function demoRewards(state: DemoState) {
 export { courseCards, reconcileCourseAccess, resumableSession } from './catalog';
 export * from './stats';
 export * from './age';
+export * from './review';
 export { adaptExercise, LIMITS, type Limits } from './mechanics';

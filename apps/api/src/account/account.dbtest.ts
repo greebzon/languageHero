@@ -7,9 +7,11 @@ import {
   type Answer,
   type CourseLesson,
   type Difficulty,
+  type Review,
 } from '@lingvohero/contracts';
 import {
   coinBalance,
+  composeReview,
   currentExercise,
   dayKey,
   learn,
@@ -73,9 +75,15 @@ async function login(ctx: Ctx, email: string) {
   }
   return data;
 }
-function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>) {
+function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>, review?: Review) {
   const id = randomUUID();
-  let state = learn(newLearningState(), { type: 'start', lesson, attemptId: id, difficulty });
+  let state = learn(newLearningState(), {
+    type: 'start',
+    lesson,
+    attemptId: id,
+    difficulty,
+    review,
+  });
   for (let i = 0; i < lesson.exercises.length; i += 1) {
     const ex = currentExercise(state.session!);
     let answer: Answer;
@@ -115,6 +123,7 @@ function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>)
     lessonId: lesson.id,
     version: lesson.version,
     ...(state.session!.difficulty ? { difficulty: state.session!.difficulty } : {}),
+    ...(review ? { review } : {}),
     events: state.session!.events!,
   };
 }
@@ -255,6 +264,61 @@ test('the age is kept as a birth year; attempts are replayed for the age group t
   );
   assert.equal(rejected.statusCode, 200, rejected.body);
   assert.equal(rejected.json().rejected.length, 1);
+});
+test('a review is rebuilt on the server: stars count, no XP or coins, only finished lessons', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const user = await login(ctx, 'review@example.test');
+  const body = { deviceId: randomUUID(), session: null, soundEnabled: true };
+  const first = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 1, attempts: [attempt(seed.lessons[0]!)] },
+    user.token,
+  );
+  assert.equal(first.json().profile.xp, 100);
+  const starsBefore = first.json().journal.stars;
+  const reviewOf = (lesson: CourseLesson, seedText: string): Review => ({
+    seed: seedText,
+    words: lesson.words.map((w) => ({
+      lessonId: lesson.id,
+      version: lesson.version,
+      wordId: w.id,
+    })),
+  });
+  const review = reviewOf(seed.lessons[0]!, 'server-seed');
+  const lesson = composeReview(
+    review.words.map((w) => ({ lesson: seed.lessons[0]!, wordId: w.wordId })),
+    review.seed,
+  );
+  const played = attempt(lesson, undefined, review);
+  assert.equal(played.lessonId, 'review');
+  const done = await call(ctx, '/sync', { ...body, sequence: 2, attempts: [played] }, user.token);
+  assert.equal(done.statusCode, 200, done.body);
+  assert.deepEqual(done.json().accepted, [played.id]);
+  assert.equal(done.json().profile.xp, 100, 'no XP for a review');
+  assert.equal(done.json().journal.stars, starsBefore + 3, 'a review earns its stars');
+  assert.equal(done.json().learning.progress.review, undefined);
+  // Words of a lesson the child has not finished cannot make a review.
+  const other = reviewOf(seed.lessons[2]!, 'other');
+  const forged = attempt(
+    composeReview(
+      other.words.map((w) => ({ lesson: seed.lessons[2]!, wordId: w.wordId })),
+      other.seed,
+    ),
+    undefined,
+    { ...other, words: other.words.map((w) => ({ ...w, lessonId: seed.lessons[2]!.id })) },
+  );
+  const rejected = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 3, attempts: [forged] },
+    user.token,
+  );
+  assert.deepEqual(
+    rejected.json().rejected.map((r: { code: string }) => r.code),
+    ['review_invalid'],
+  );
 });
 test('treasury: quests count verified lessons, claims and purchases are recorded once on the server', async (t) => {
   const ctx = await createTestContext(t);

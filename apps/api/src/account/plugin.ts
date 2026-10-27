@@ -27,11 +27,13 @@ import {
   type Locale,
   visibleCatalog,
   BASE_MECHANICS,
+  REVIEW_LESSON_ID,
 } from '@lingvohero/contracts';
 import {
   buyItem,
   claimQuest,
   cleanOutfit,
+  composeReview,
   courseCards,
   dayKey,
   learn,
@@ -112,6 +114,7 @@ const FAULTS = {
   quest_incomplete: 'Квест ещё не выполнен.',
   mascot_locked: 'Этот друг пока закрыт. Продолжай заниматься и повышай уровень.',
   age_invalid: 'Такой возраст выбрать нельзя.',
+  review_invalid: 'Это повторение собрано из слов, которых нет в пройденных уроках.',
   mascot_unknown: 'Этот друг сейчас недоступен.',
   outfit_invalid: 'Надеть можно только свои вещи, каждую на своё место.',
   item_unknown: 'Такого товара нет.',
@@ -584,8 +587,32 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     return row?.stars ?? 0;
   }
   async function replay(input: z.infer<typeof attemptSchema>, state: LearningState) {
-    const lesson = await cachedLesson(input.lessonId, input.version);
+    const lesson = input.review
+      ? await reviewLesson(input, state)
+      : await cachedLesson(input.lessonId, input.version);
     return { lesson, state: replayLesson(input, state, lesson) };
+  }
+  /* A review is assembled from words of lessons the child has completed; the same words and
+     seed give the same lesson the device played (learning-core `composeReview`). */
+  async function reviewLesson(input: z.infer<typeof attemptSchema>, state: LearningState) {
+    const review = input.review!;
+    if (input.lessonId !== REVIEW_LESSON_ID || input.version !== 1)
+      throw new Fault(422, 'review_invalid');
+    const entries = [];
+    for (const word of review.words) {
+      if (!state.progress[word.lessonId]) throw new Fault(422, 'review_invalid');
+      entries.push({
+        lesson: await cachedLesson(word.lessonId, word.version),
+        wordId: word.wordId,
+      });
+    }
+    if (new Set(entries.map((e) => e.lesson.language)).size !== 1)
+      throw new Fault(422, 'review_invalid');
+    try {
+      return composeReview(entries, review.seed);
+    } catch {
+      throw new Fault(422, 'review_invalid');
+    }
   }
   function replayLesson(
     input: z.infer<typeof attemptSchema>,
@@ -596,7 +623,13 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     // answer, so it is not checked against the profile; every answer still is.
     let value = learn(
       { ...state, session: null },
-      { type: 'start', lesson, attemptId: input.id, difficulty: input.difficulty },
+      {
+        type: 'start',
+        lesson,
+        attemptId: input.id,
+        difficulty: input.difficulty,
+        review: input.review,
+      },
     );
     for (const event of input.events) {
       if (value.session?.finished) throw new Fault(422, 'attempt_extra_answers');
@@ -662,7 +695,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
             continue;
           }
           try {
-            assertAccessible(attempt.lessonId, attempt.version);
+            if (!attempt.review) assertAccessible(attempt.lessonId, attempt.version);
             const { state: result, lesson } = await replay(attempt, state);
             if (!result.session?.finished) throw new Fault(422, 'lesson_unfinished');
             // This run's stars, not the lesson's best: a repeat earns them again.
@@ -673,11 +706,13 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
               lessonId: attempt.lessonId,
               version: attempt.version,
               stars: runStars,
-              words: lesson.words.length,
+              // A review teaches no new words (they count once, with their own lessons).
+              words: attempt.review ? 0 : lesson.words.length,
               payloadHash: hash,
               createdAt: now(),
             });
-            await applyReward(tx, user.id, attempt.lessonId, 'verified');
+            // XP and coins come once per lesson of the map; a review earns stars only.
+            if (!attempt.review) await applyReward(tx, user.id, attempt.lessonId, 'verified');
             stars += runStars;
             state = reconcileCourseAccess(visible, { ...result, session: state.session }, stars);
             accepted.push(attempt.id);
@@ -697,13 +732,14 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
           if (input.session && !input.session.finished) {
             const incoming = input.session;
             if (incoming.attemptId && incoming.events) {
-              assertAccessible(incoming.lesson.id, incoming.lesson.version);
+              if (!incoming.review) assertAccessible(incoming.lesson.id, incoming.lesson.version);
               const { state: restored } = await replay(
                 {
                   id: incoming.attemptId,
                   lessonId: incoming.lesson.id,
                   version: incoming.lesson.version,
                   difficulty: incoming.difficulty,
+                  review: incoming.review,
                   events: incoming.events,
                 },
                 state,

@@ -7,6 +7,11 @@ export const home = defineTexts({
     finishStarted:
       'Сначала закончим начатый урок. Кнопка «Продолжить урок» вернёт тебя на сохранённое место.',
     hello: 'Привет, {name}!',
+    review: {
+      title: 'Повторение',
+      text: 'Слова из пройденных уроков, каждый раз по-новому. Звёзды тоже считаются!',
+      start: 'Повторить слова',
+    },
     whereToday: 'Куда отправимся сегодня?',
     lessonsDone: 'Пройдено уроков:',
     resume: 'Продолжим: {title}',
@@ -51,6 +56,11 @@ export const home = defineTexts({
     finishStarted:
       'Let’s finish the lesson you started first. The «Continue lesson» button takes you back to where you stopped.',
     hello: 'Hi, {name}!',
+    review: {
+      title: 'Review',
+      text: 'Words from your finished lessons, new every time. Stars count too!',
+      start: 'Review the words',
+    },
     whereToday: 'Where shall we go today?',
     lessonsDone: 'Lessons done:',
     resume: 'Let’s continue: {title}',
@@ -89,6 +99,11 @@ export const home = defineTexts({
     brandSub: 'מפת העולמות',
     finishStarted: 'קודם נסיים את השיעור שהתחלנו. הכפתור «להמשיך שיעור» יחזיר לאותו מקום.',
     hello: 'שלום, {name}!',
+    review: {
+      title: 'חזרה',
+      text: 'מילים מהשיעורים שהושלמו, בכל פעם אחרת. גם כאן מקבלים כוכבים!',
+      start: 'חוזרים על המילים',
+    },
     whereToday: 'לאן נצא היום?',
     lessonsDone: 'שיעורים שהושלמו:',
     resume: 'ממשיכים: {title}',

@@ -6,6 +6,7 @@ import {
   type CourseLesson,
   type Difficulty,
   type LearningState,
+  type Review,
 } from '@lingvohero/contracts';
 import { adaptExercise, assessExercise, type Assessment } from './mechanics';
 import { starsFor } from './scoring';
@@ -48,6 +49,8 @@ export type LearningAction =
       attemptId?: string;
       /** Without a seed the attempt id (or the lesson id) becomes the seed. */
       difficulty?: Pick<Difficulty, 'ageBand'> & { seed?: string };
+      /** A review (`composeReview`): what it was assembled from. */
+      review?: Review;
     }
   | { type: 'draft'; answer: Answer | null }
   | { type: 'answer' }
@@ -70,6 +73,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
               },
             }
           : {}),
+        ...(action.review ? { review: action.review } : {}),
         events: [],
         lesson: action.lesson,
         queue: playableIndices(action.lesson, action.difficulty),
@@ -119,16 +123,19 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
     };
   return {
     ...state,
-    progress: {
-      ...state.progress,
-      [session.lesson.id]: {
-        bestStars: Math.max(
-          state.progress[session.lesson.id]?.bestStars ?? 0,
-          starsFor(session.mistakes),
-        ),
-        completedVersion: session.lesson.version,
-      },
-    },
+    // A review is not a lesson of the map: it leaves no progress entry (and so no XP or coins).
+    progress: session.review
+      ? state.progress
+      : {
+          ...state.progress,
+          [session.lesson.id]: {
+            bestStars: Math.max(
+              state.progress[session.lesson.id]?.bestStars ?? 0,
+              starsFor(session.mistakes),
+            ),
+            completedVersion: session.lesson.version,
+          },
+        },
     session: { ...session, finished: true, events: [...(session.events ?? []), { type: 'next' }] },
   };
 }
@@ -156,7 +163,9 @@ export function restoreLearningState(value: unknown): LearningState | null {
       new Set(s.queue.slice(n)).size !== s.queue.length - n ||
       s.exerciseIndex >= s.queue.length ||
       (s.finished &&
-        (!s.correct || s.exerciseIndex !== s.queue.length - 1 || !state.progress[s.lesson.id])) ||
+        (!s.correct ||
+          s.exerciseIndex !== s.queue.length - 1 ||
+          (!s.review && !state.progress[s.lesson.id]))) ||
       (s.correct && (!s.draft || assess(currentExercise(s), s.draft, s.lesson) !== 'correct'))
     )
       return null;
