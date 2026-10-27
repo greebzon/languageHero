@@ -1,9 +1,11 @@
 import type { DraftExercise, ExerciseType } from '@lingvohero/contracts';
 import { buildSentence } from './build-sentence.js';
 import { buildWord } from './build-word.js';
+import { catchWord } from './catch-word.js';
 import { choice } from './choice.js';
 import { listenAndSelect } from './listen-and-select.js';
 import { matchPairs } from './match-pairs.js';
+import { memory } from './memory.js';
 import type { GenerationMechanic, RetranslateContext, TranslationItem } from './types.js';
 
 /* Generation side of each mechanic (contracts/src/mechanics holds the data side). */
@@ -13,6 +15,8 @@ export const GENERATION_MECHANICS: { [K in ExerciseType]: GenerationMechanic<K> 
   'build-word': buildWord,
   choice,
   'build-sentence': buildSentence,
+  memory,
+  'catch-word': catchWord,
 };
 /** The requested mechanics a word lesson may use. */
 export const wordLessonMix = <T extends ExerciseType>(mix: readonly T[]) =>

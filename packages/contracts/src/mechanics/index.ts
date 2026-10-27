@@ -2,9 +2,11 @@ import { z } from 'zod';
 import type { Catalog } from '../course';
 import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
+import { catchWord } from './catch-word';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
 import { matchPairs } from './match-pairs';
+import { memory } from './memory';
 import type { Fail, LessonRefs } from './shared';
 
 /* The registry of exercise mechanics. A mechanic is described once per layer: here (data
@@ -18,6 +20,8 @@ export const courseExerciseSchema = z.discriminatedUnion('type', [
   buildWord.exercise,
   choice.exercise,
   buildSentence.exercise,
+  memory.exercise,
+  catchWord.exercise,
 ]);
 export const draftExerciseSchema = z.discriminatedUnion('type', [
   listenAndSelect.draft,
@@ -25,10 +29,17 @@ export const draftExerciseSchema = z.discriminatedUnion('type', [
   buildWord.draft,
   choice.draft,
   buildSentence.draft,
+  memory.draft,
+  catchWord.draft,
 ]);
 /* Answers carry no tag: the exercise they answer tells the mechanic, and mechanics may share a
    shape (`choice` reuses `{choiceId}`), so saved sessions stay valid. */
-export const answerSchema = z.union([listenAndSelect.answer, matchPairs.answer, buildWord.answer]);
+export const answerSchema = z.union([
+  listenAndSelect.answer,
+  matchPairs.answer,
+  buildWord.answer,
+  catchWord.answer,
+]);
 export type CourseExercise = z.infer<typeof courseExerciseSchema>;
 export type DraftExercise = z.infer<typeof draftExerciseSchema>;
 export type Answer = z.infer<typeof answerSchema>;
@@ -50,6 +61,8 @@ const MECHANICS: { [K in ExerciseType]: Module<K> } = {
   'build-word': buildWord,
   choice,
   'build-sentence': buildSentence,
+  memory,
+  'catch-word': catchWord,
 };
 export const MECHANIC_TYPES = Object.keys(MECHANICS) as ExerciseType[];
 export const exerciseTypeSchema = z.enum(MECHANIC_TYPES as [ExerciseType, ...ExerciseType[]]);
@@ -97,5 +110,7 @@ export function catalogForMechanics(catalog: Catalog, supported: readonly string
 
 export * from './choice';
 export { sentenceKey, tilesForm } from './build-sentence';
+export { memoryCard, memoryCards } from './memory';
+export { CATCH_MISSES, catchProgress } from './catch-word';
 export { AGE_BANDS, ageBandSchema, type AgeBand } from './shared';
 export type { Fail, LessonRefs } from './shared';

@@ -21,6 +21,18 @@ export const buildSentence: Rules<'build-sentence'> = {
       ? 'correct'
       : 'wrong';
   },
+  solve(exercise) {
+    const left = [...exercise.tokens];
+    return {
+      tileIds: exercise.answer.map(
+        (word) =>
+          left.splice(
+            left.findIndex((t) => sentenceKey(t.text) === sentenceKey(word)),
+            1,
+          )[0]!.id,
+      ),
+    };
+  },
   adapt(exercise, { limits, rand }) {
     // The tiles of the sentence stay (every right order still fits them); of the extra
     // words only `extraTiles` remain.

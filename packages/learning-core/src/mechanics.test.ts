@@ -17,6 +17,7 @@ import {
   type CourseLesson,
 } from '@lingvohero/contracts';
 import { birthYearFor, difficultyFor } from './age';
+import { solveExercise } from './mechanics';
 import {
   assess,
   currentExercise,
@@ -244,34 +245,7 @@ test('the age group follows the birth year', () => {
   assert.deepEqual(difficultyFor(2010, now), { ageBand: '8-9' });
 });
 
-function answerTo(ex: CourseExercise, pkg: CourseLesson): Answer {
-  if (ex.type === 'listen-and-select') return { choiceId: ex.wordId };
-  if (ex.type === 'match-pairs')
-    return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
-  if (ex.type === 'choice') return { choiceId: ex.answerId };
-  if (ex.type === 'build-sentence') {
-    const left = [...ex.tokens];
-    return {
-      tileIds: ex.answer.map(
-        (w) =>
-          left.splice(
-            left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
-            1,
-          )[0]!.id,
-      ),
-    };
-  }
-  const available = [...ex.tiles];
-  return {
-    tileIds: Array.from(pkg.words.find((w) => w.id === ex.wordId)!.spelling).map(
-      (letter) =>
-        available.splice(
-          available.findIndex((t) => t.letter === letter),
-          1,
-        )[0]!.id,
-    ),
-  };
-}
+const answerTo = (ex: CourseExercise, pkg: CourseLesson): Answer => solveExercise(ex, pkg);
 
 const sentences = (): CourseLesson => {
   const audio = seedLesson.media.find((m) => m.kind === 'audio')!;
@@ -373,3 +347,68 @@ test('a sentence lesson: one task per age group, words compared by text, any rig
 });
 
 const parsesLesson = (lesson: CourseLesson) => courseLessonSchema.safeParse(lesson).success;
+
+test('memory ends when every pair is found; catch-the-word replays taps and counts misses', () => {
+  const pkg = courseLessonSchema.parse(
+    lesson([
+      {
+        id: 'memory',
+        type: 'memory',
+        prompt: 'Мемори',
+        hint: 'Запоминай',
+        wordIds: ['fox', 'bear', 'owl', 'rabbit'],
+        order: [
+          'owl-text',
+          'fox-image',
+          'bear-text',
+          'rabbit-image',
+          'fox-text',
+          'owl-image',
+          'rabbit-text',
+          'bear-image',
+        ],
+      },
+      {
+        id: 'catch',
+        type: 'catch-word',
+        prompt: 'Поймай',
+        hint: 'Слушай',
+        rounds: [
+          { wordId: 'fox', choices: ['owl', 'fox', 'bear'] },
+          { wordId: 'bear', choices: ['bear', 'rabbit'] },
+        ],
+      },
+    ]),
+  );
+  const [game, arcade] = pkg.exercises;
+  assert.ok(game?.type === 'memory' && arcade?.type === 'catch-word');
+  assert.equal(assess(game!, { pairs: { fox: 'fox', bear: 'bear' } }, pkg), 'invalid');
+  assert.equal(assess(game!, solveExercise(game!, pkg), pkg), 'correct');
+  assert.equal(assess(arcade!, { taps: ['fox', 'bear'] }, pkg), 'correct');
+  assert.equal(assess(arcade!, { taps: ['owl', 'fox', 'bear'] }, pkg), 'correct', 'one miss');
+  assert.equal(assess(arcade!, { taps: ['owl', 'fox', 'rabbit', 'bear'] }, pkg), 'wrong');
+  assert.equal(assess(arcade!, { taps: ['fox'] }, pkg), 'invalid', 'a round left');
+  assert.equal(
+    assess(arcade!, { taps: ['fox', 'owl', 'bear'] }, pkg),
+    'invalid',
+    'owl is not in round 2',
+  );
+  assert.equal(assess(arcade!, { taps: ['fox', 'bear', 'bear'] }, pkg), 'invalid', 'after the end');
+  // A 6-year-old gets three pairs (six cards) and three bubbles at most.
+  const state = learn(newLearningState(), {
+    type: 'start',
+    lesson: pkg,
+    difficulty: { ageBand: '6-7' },
+  });
+  const eased = currentExercise(state.session!);
+  assert.ok(eased.type === 'memory' && eased.wordIds.length === 3 && eased.order.length === 6);
+  assert.ok(courseLessonSchema.safeParse({ ...pkg, exercises: [eased, arcade!] }).success);
+  // Broken data is caught by the schema.
+  assert.equal(parses([{ ...game!, order: game!.order.slice(1) } as CourseExercise]), false);
+  assert.equal(
+    parses([
+      { ...arcade!, rounds: [{ wordId: 'fox', choices: ['owl', 'bear'] }] } as CourseExercise,
+    ]),
+    false,
+  );
+});

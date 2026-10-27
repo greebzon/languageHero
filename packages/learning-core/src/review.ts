@@ -1,5 +1,6 @@
 import {
   REVIEW_LESSON_ID,
+  memoryCards,
   type CourseExercise,
   type CourseLesson,
   type LearningState,
@@ -21,16 +22,24 @@ export const REVIEW_WORDS = 6;
 
 type Locale = 'ru' | 'en' | 'he';
 type Kind =
-  'listen' | 'find-picture' | 'pairs' | 'is-it' | 'spell' | 'name-picture' | 'first-sound';
+  | 'listen'
+  | 'find-picture'
+  | 'pairs'
+  | 'memory'
+  | 'is-it'
+  | 'spell'
+  | 'name-picture'
+  | 'catch'
+  | 'first-sound';
 /** The order of tasks: never the same mechanic twice in a row. */
 const PLAN: Kind[] = [
   'listen',
   'find-picture',
-  'pairs',
+  'memory',
   'is-it',
   'spell',
   'name-picture',
-  'listen',
+  'catch',
   'first-sound',
 ];
 
@@ -54,6 +63,8 @@ const TEXTS: Record<
       listen: ['Найди картинку по звуку', 'Послушай ещё раз и вспомни картинку'],
       'find-picture': ['Найди картинку', 'Вспомни, как выглядит это слово'],
       pairs: ['Соедини слова и картинки', 'Соедини каждое слово с его картинкой'],
+      memory: ['Мемори!', 'Запоминай, где лежит каждая карточка'],
+      catch: ['Поймай слово!', 'Слушай внимательно и лопай нужный пузырь'],
       'is-it': ['Это правильное слово?', 'Посмотри внимательно на картинку'],
       spell: ['Собери слово', 'Начни с первой буквы'],
       'name-picture': ['Как это называется?', 'Прочитай слова по очереди'],
@@ -69,6 +80,8 @@ const TEXTS: Record<
       listen: ['Find the picture you hear', 'Listen again and remember the picture'],
       'find-picture': ['Find the picture', 'Remember what this word looks like'],
       pairs: ['Match the words and pictures', 'Match each word with its picture'],
+      memory: ['Memory!', 'Remember where each card lies'],
+      catch: ['Catch the word!', 'Listen closely and pop the right bubble'],
       'is-it': ['Is this the right word?', 'Look closely at the picture'],
       spell: ['Build the word', 'Start with the first letter'],
       'name-picture': ['What is it called?', 'Read the words one by one'],
@@ -84,6 +97,8 @@ const TEXTS: Record<
       listen: ['מוצאים את התמונה של המילה ששומעים', 'מקשיבים שוב ונזכרים בתמונה'],
       'find-picture': ['מוצאים את התמונה', 'נזכרים איך המילה נראית'],
       pairs: ['מחברים מילים ותמונות', 'מחברים כל מילה לתמונה שלה'],
+      memory: ['משחק זיכרון!', 'זוכרים איפה כל קלף'],
+      catch: ['תופסים מילה!', 'מקשיבים היטב ומפוצצים את הבועה הנכונה'],
       'is-it': ['זו המילה הנכונה?', 'מסתכלים היטב על התמונה'],
       spell: ['מרכיבים את המילה', 'מתחילים מהאות הראשונה'],
       'name-picture': ['איך קוראים לזה?', 'קוראים את המילים אחת אחרי השנייה'],
@@ -189,6 +204,19 @@ export function composeReview(
         const pair = [w, ...others(w, 2)];
         return { ...base, type: 'match-pairs', wordIds: pair, imageOrder: shuffled(pair) };
       }
+      if (kind === 'memory') {
+        const wordIds = [w, ...others(w, 2)];
+        return { ...base, type: 'memory', wordIds, order: shuffled(memoryCards(wordIds)) };
+      }
+      if (kind === 'catch')
+        return {
+          ...base,
+          type: 'catch-word',
+          rounds: shuffled([w, ...others(w, 2)]).map((target) => ({
+            wordId: target,
+            choices: shuffled([target, ...others(target, 2)]),
+          })),
+        };
       if (kind === 'is-it') {
         const yes = rand() < 0.5;
         const claim = yes ? w : others(w, 1)[0]!;

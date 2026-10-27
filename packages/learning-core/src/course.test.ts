@@ -16,35 +16,11 @@ import {
   newLearningState,
   restoreLearningState,
 } from './course';
+import { solveExercise } from './mechanics';
 import data from '../../../content/seed.json';
 
 const { lessons } = releaseSchema.parse(data);
-function answerFor(ex: CourseExercise, lesson: CourseLesson): Answer {
-  if (ex.type === 'listen-and-select') return { choiceId: ex.wordId };
-  if (ex.type === 'match-pairs')
-    return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
-  if (ex.type === 'choice') return { choiceId: ex.answerId };
-  if (ex.type === 'build-sentence') {
-    const left = [...ex.tokens];
-    return {
-      tileIds: ex.answer.map(
-        (w) =>
-          left.splice(
-            left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
-            1,
-          )[0]!.id,
-      ),
-    };
-  }
-  const letters = Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling);
-  const available = [...ex.tiles];
-  return {
-    tileIds: letters.map((letter) => {
-      const i = available.findIndex((t) => t.letter === letter);
-      return available.splice(i, 1)[0].id;
-    }),
-  };
-}
+const answerFor = (ex: CourseExercise, lesson: CourseLesson): Answer => solveExercise(ex, lesson);
 function finish(state: LearningState) {
   let count = 0;
   while (!state.session!.finished) {

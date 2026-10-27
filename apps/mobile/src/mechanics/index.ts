@@ -1,9 +1,11 @@
 import type { ExerciseType } from '@lingvohero/contracts';
 import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
+import { catchWord } from './catch-word';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
 import { matchPairs } from './match-pairs';
+import { memory } from './memory';
 import type { MobileMechanic } from './types';
 
 /* How the app shows each mechanic (the data side is in contracts/src/mechanics). The app asks
@@ -14,6 +16,8 @@ const MECHANICS: { [K in ExerciseType]: MobileMechanic<K> } = {
   'build-word': buildWord,
   choice,
   'build-sentence': buildSentence,
+  memory,
+  'catch-word': catchWord,
 };
 // One cast: TypeScript cannot correlate an exercise's `type` with the module it selects.
 export const mechanicFor = (type: ExerciseType) =>

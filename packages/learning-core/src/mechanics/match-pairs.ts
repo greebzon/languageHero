@@ -13,6 +13,7 @@ export const matchPairs: Rules<'match-pairs'> = {
       return 'invalid';
     return exercise.wordIds.every((id) => answer.pairs[id] === id) ? 'correct' : 'wrong';
   },
+  solve: (exercise) => ({ pairs: Object.fromEntries(exercise.wordIds.map((id) => [id, id])) }),
   adapt(exercise, { limits, rand }) {
     const wordIds = keep(exercise.wordIds, limits.pairs, () => false, rand);
     return {

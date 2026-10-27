@@ -8,32 +8,56 @@ export const playable = (lesson: CourseLesson, ageBand: AgeBand = '8-9') =>
 
 /** Answers one exercise the way a child would and advances to the next one. */
 export async function solve(page: Page, exercise: CourseExercise, lesson: CourseLesson) {
-  if (exercise.type === 'listen-and-select')
-    await page.getByTestId(`choice-${exercise.wordId}`).click();
-  else if (exercise.type === 'match-pairs') {
-    for (const id of exercise.wordIds) {
-      await page.getByTestId(`pair-word-${id}`).click();
-      await page.getByTestId(`pair-image-${id}`).click();
+  const tap = (testId: string) => page.getByTestId(testId).click();
+  switch (exercise.type) {
+    case 'listen-and-select':
+      await tap(`choice-${exercise.wordId}`);
+      break;
+    case 'match-pairs':
+      for (const id of exercise.wordIds) {
+        await tap(`pair-word-${id}`);
+        await tap(`pair-image-${id}`);
+      }
+      break;
+    case 'choice':
+      await tap(`option-${exercise.answerId}`);
+      break;
+    case 'build-word': {
+      const left = [...exercise.tiles];
+      for (const letter of lesson.words.find((w) => w.id === exercise.wordId)!.spelling) {
+        const tile = left.splice(
+          left.findIndex((t) => t.letter === letter),
+          1,
+        )[0]!;
+        await tap(`letter-${tile.id}`);
+      }
+      break;
     }
-  } else if (exercise.type === 'choice')
-    await page.getByTestId(`option-${exercise.answerId}`).click();
-  else if (exercise.type === 'build-sentence') {
-    const left = [...exercise.tokens];
-    for (const word of exercise.answer) {
-      const tile = left.splice(
-        left.findIndex((t) => t.text.toLowerCase() === word.toLowerCase()),
-        1,
-      )[0]!;
-      await page.getByTestId(`token-${tile.id}`).click();
+    case 'build-sentence': {
+      const left = [...exercise.tokens];
+      for (const word of exercise.answer) {
+        const tile = left.splice(
+          left.findIndex((t) => t.text.toLowerCase() === word.toLowerCase()),
+          1,
+        )[0]!;
+        await tap(`token-${tile.id}`);
+      }
+      break;
     }
-  } else {
-    const available = [...exercise.tiles];
-    for (const letter of lesson.words.find((w) => w.id === exercise.wordId)!.spelling) {
-      const tile = available.splice(
-        available.findIndex((t) => t.letter === letter),
-        1,
-      )[0];
-      await page.getByTestId(`letter-${tile.id}`).click();
+    case 'memory':
+      for (const id of exercise.wordIds) {
+        await tap(`card-${id}-image`);
+        await tap(`card-${id}-text`);
+      }
+      break;
+    case 'catch-word':
+      // The bubbles keep floating, so they are never «stable» for Playwright.
+      for (const round of exercise.rounds)
+        await page.getByTestId(`bubble-${round.wordId}`).click({ force: true });
+      break;
+    default: {
+      const unknown: never = exercise;
+      throw new Error(`No e2e answer for ${JSON.stringify(unknown)}`);
     }
   }
   await page.getByTestId('check-answer').click();

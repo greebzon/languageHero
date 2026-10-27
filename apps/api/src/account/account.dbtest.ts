@@ -17,6 +17,7 @@ import {
   learn,
   newLearningState,
   priceFor,
+  solveExercise,
   shopItem,
   wallClock,
 } from '@lingvohero/learning-core';
@@ -86,34 +87,7 @@ function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>,
   });
   for (let i = 0; i < lesson.exercises.length; i += 1) {
     const ex = currentExercise(state.session!);
-    let answer: Answer;
-    if (ex.type === 'listen-and-select') answer = { choiceId: ex.wordId };
-    else if (ex.type === 'match-pairs')
-      answer = { pairs: Object.fromEntries(ex.wordIds.map((w) => [w, w])) };
-    else if (ex.type === 'choice') answer = { choiceId: ex.answerId };
-    else if (ex.type === 'build-sentence') {
-      const left = [...ex.tokens];
-      answer = {
-        tileIds: ex.answer.map(
-          (w) =>
-            left.splice(
-              left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
-              1,
-            )[0]!.id,
-        ),
-      };
-    } else {
-      const tiles = [...ex.tiles];
-      answer = {
-        tileIds: Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling).map(
-          (letter) =>
-            tiles.splice(
-              tiles.findIndex((t) => t.letter === letter),
-              1,
-            )[0].id,
-        ),
-      };
-    }
+    const answer = solveExercise(ex, lesson);
     state = learn(state, { type: 'draft', answer });
     state = learn(state, { type: 'answer' });
     state = learn(state, { type: 'next' });

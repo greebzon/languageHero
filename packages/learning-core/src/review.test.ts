@@ -9,29 +9,14 @@ import {
   type CourseLesson,
 } from '@lingvohero/contracts';
 import { currentExercise, learn, newLearningState, restoreLearningState } from './course';
+import { solveExercise } from './mechanics';
 import { composeReview, pickReviewWords, reviewPool } from './review';
 import data from '../../../content/seed.json';
 
 const { lessons } = releaseSchema.parse(data);
 const byId = (id: string) => lessons.find((l) => l.id === id)!;
 
-function answerTo(ex: CourseExercise, lesson: CourseLesson): Answer {
-  if (ex.type === 'listen-and-select') return { choiceId: ex.wordId };
-  if (ex.type === 'match-pairs')
-    return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
-  if (ex.type === 'choice') return { choiceId: ex.answerId };
-  if (ex.type === 'build-sentence') throw new Error('no sentences in a review');
-  const left = [...ex.tiles];
-  return {
-    tileIds: Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling).map(
-      (letter) =>
-        left.splice(
-          left.findIndex((t) => t.letter === letter),
-          1,
-        )[0]!.id,
-    ),
-  };
-}
+const answerTo = (ex: CourseExercise, lesson: CourseLesson): Answer => solveExercise(ex, lesson);
 
 const review = (seed: string) => {
   const words = pickReviewWords(reviewPool(lessons), {}, seed);

@@ -7,6 +7,7 @@ export const choice: Rules<'choice'> = {
       return 'invalid';
     return answer.choiceId === exercise.answerId ? 'correct' : 'wrong';
   },
+  solve: (exercise) => ({ choiceId: exercise.answerId }),
   adapt: (exercise, { limits, rand }) => ({
     ...exercise,
     options: keep(exercise.options, limits.options, (o) => o.id === exercise.answerId, rand),

@@ -33,8 +33,18 @@ test('a review is assembled from finished lessons and the server accepts it', as
         (a: { lessonId: string }) => a.lessonId === 'review',
       ),
   );
-  for (const exercise of playable(review as CourseLesson))
+  for (const exercise of playable(review as CourseLesson)) {
+    if (exercise.type === 'memory') {
+      await page.getByTestId(`card-${exercise.wordIds[0]}-image`).click();
+      await page.screenshot({ path: 'test-results/memory.png', fullPage: true });
+      // Turn it back: the helper plays the game from the start.
+      await page.getByTestId(`card-${exercise.wordIds[1]}-text`).click();
+      await page.waitForTimeout(1000);
+    }
+    if (exercise.type === 'catch-word')
+      await page.screenshot({ path: 'test-results/catch-word.png', fullPage: true });
     await solve(page, exercise, review as CourseLesson);
+  }
   await expect(page.getByTestId('back-to-map')).toBeVisible();
   const body = await (await synced).json();
   expect(body.rejected).toEqual([]);

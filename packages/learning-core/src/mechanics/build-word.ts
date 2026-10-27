@@ -19,6 +19,19 @@ export const buildWord: Rules<'build-word'> = {
       ? 'correct'
       : 'wrong';
   },
+  solve(exercise, lesson) {
+    const left = [...exercise.tiles];
+    const spelling = lesson.words.find((w) => w.id === exercise.wordId)!.spelling;
+    return {
+      tileIds: Array.from(spelling.normalize('NFC')).map(
+        (letter) =>
+          left.splice(
+            left.findIndex((t) => t.letter.normalize('NFC') === letter),
+            1,
+          )[0]!.id,
+      ),
+    };
+  },
   adapt(exercise, { limits, lesson, rand }) {
     // The tiles that spell the word stay; of the extra letters only `extraTiles` remain.
     const needed = new Set<string>();
