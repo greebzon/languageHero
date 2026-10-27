@@ -54,6 +54,9 @@ export const syncInputSchema = z.object({
   /* The device's interface locale: the server hides untranslated sets exactly as the app does
      when it checks access. Not saved (the profile's `locale` is the explicit choice). */
   locale: localeSchema.optional(),
+  /* Mechanics the app can show: the server leaves out the same lessons as the catalog it
+     served this app (absent = the first three, `BASE_MECHANICS`). */
+  mechanics: z.array(z.string().max(40)).max(40).optional(),
 });
 /* Activity journal behind «Сокровищница». Built on the server from verified attempts and the
    coin ledger; the client only displays it (and extends it optimistically while offline). */

@@ -1,7 +1,11 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import { courseLessonSchema, type CourseLesson } from '../../packages/contracts/src';
+import {
+  courseLessonSchema,
+  MECHANIC_TYPES,
+  type CourseLesson,
+} from '../../packages/contracts/src';
 import { env } from '../../apps/api/src/env';
 import { solve } from './helpers';
 import { signIn, switchLanguage } from './account-helper';
@@ -102,6 +106,50 @@ test('a set created in the panel appears in the running app and can be played', 
           { id: 't5', letter: 'x' },
         ],
       },
+      // «Выбор»: three variants built from the same two words, no extra media.
+      {
+        id: 'ex-3',
+        type: 'choice',
+        prompt: 'Найди картинку',
+        hint: 'Рыжая',
+        show: [{ view: 'text', wordId: 'fuchs' }],
+        as: 'image',
+        options: [
+          { id: 'eule', wordId: 'eule' },
+          { id: 'fuchs', wordId: 'fuchs' },
+        ],
+        answerId: 'fuchs',
+      },
+      {
+        id: 'ex-4',
+        type: 'choice',
+        prompt: 'Это правда?',
+        hint: 'Посмотри на картинку',
+        show: [
+          { view: 'image', wordId: 'eule' },
+          { view: 'text', wordId: 'fuchs' },
+        ],
+        as: 'yes-no',
+        options: [{ id: 'yes' }, { id: 'no' }],
+        answerId: 'no',
+      },
+      {
+        id: 'ex-5',
+        type: 'choice',
+        prompt: 'С какой буквы начинается слово?',
+        hint: 'Послушай',
+        show: [
+          { view: 'image', wordId: 'fuchs' },
+          { view: 'audio', wordId: 'fuchs' },
+        ],
+        as: 'letter',
+        options: [
+          { id: 'l1', letter: 'e' },
+          { id: 'l2', letter: 'f' },
+          { id: 'l3', letter: 'x' },
+        ],
+        answerId: 'l2',
+      },
     ],
   };
   await call('post', '/courses/de-zoo/lessons', {
@@ -119,7 +167,12 @@ test('a set created in the panel appears in the running app and can be played', 
 
   const published = await call('post', '/publications', { planId: plan.publication.id });
   expect(published.publication.status).toBe('published');
-  const catalog = await (await request.get(`${API}/v1/catalog?schemaVersion=2`)).json();
+  // An app that does not know «Выбор» does not get the lesson (and so not the set).
+  const old = await (await request.get(`${API}/v1/catalog?schemaVersion=2`)).json();
+  expect(old.courses.map((c: { id: string }) => c.id)).not.toContain('de-zoo');
+  const catalog = await (
+    await request.get(`${API}/v1/catalog?schemaVersion=2&mechanics=${MECHANIC_TYPES.join(',')}`)
+  ).json();
   expect(catalog.revision).toBe(before.revision + 1);
   expect(catalog.courses.map((c: { id: string }) => c.id)).toContain('de-zoo');
   expect(JSON.stringify(catalog)).not.toContain('de-secret');
@@ -141,7 +194,11 @@ test('a set created in the panel appears in the running app and can be played', 
   await page.screenshot({ path: 'test-results/admin-published-set.png', fullPage: true });
   await page.getByTestId('start-lesson').click();
   await expect(page.getByText('Кто это?', { exact: true })).toBeVisible();
-  for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
+  for (const exercise of lesson.exercises) {
+    if (exercise.type === 'choice')
+      await page.screenshot({ path: `test-results/choice-${exercise.as}.png`, fullPage: true });
+    await solve(page, exercise, lesson);
+  }
   await expect(page.getByText('ЛИСА И СОВА — ПРОЙДЕНО')).toBeVisible();
   await page.screenshot({ path: 'test-results/admin-lesson-done.png', fullPage: true });
 });

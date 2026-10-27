@@ -1,7 +1,8 @@
 import { z } from 'zod';
+import { answerSchema, courseExerciseSchema, validateExercise } from './mechanics';
+import { id, unique } from './mechanics/shared';
 
-const id = z.string().regex(/^[a-z0-9][a-z0-9-]{0,79}$/);
-const unique = (values: string[]) => new Set(values).size === values.length;
+export * from './mechanics';
 
 /* Languages of the app's interface and of the texts a child reads (prompts, hints, Tim's
    lines, word translations). Lesson packages keep Russian in their base fields; other
@@ -47,30 +48,6 @@ export const wordSchema = z.object({
   imageId: id,
   audioId: id,
 });
-const base = { id, prompt: z.string().min(1).max(200), hint: z.string().min(1).max(300) };
-export const courseExerciseSchema = z.discriminatedUnion('type', [
-  z.object({
-    ...base,
-    type: z.literal('listen-and-select'),
-    wordId: id,
-    choices: z.array(id).min(2).max(6),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('match-pairs'),
-    wordIds: z.array(id).min(2).max(4),
-    imageOrder: z.array(id).min(2).max(4),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('build-word'),
-    wordId: id,
-    tiles: z
-      .array(z.object({ id, letter: z.string().min(1).max(4) }))
-      .min(2)
-      .max(30),
-  }),
-]);
 export const presentationSchema = z.object({
   intro: z.string().min(1).max(300),
   completionTitle: z.string().min(1).max(100),
@@ -117,39 +94,7 @@ export const courseLessonSchema = z
       )
         fail('Missing word media');
     }
-    for (const ex of lesson.exercises) {
-      if (ex.type === 'listen-and-select') {
-        if (
-          !unique(ex.choices) ||
-          !ex.choices.includes(ex.wordId) ||
-          ex.choices.some((w) => !words.has(w))
-        )
-          fail('Invalid listening choices');
-      } else if (ex.type === 'match-pairs') {
-        if (
-          !unique(ex.wordIds) ||
-          !unique(ex.imageOrder) ||
-          ex.wordIds.length !== ex.imageOrder.length ||
-          ex.wordIds.some((w) => !words.has(w) || !ex.imageOrder.includes(w))
-        )
-          fail('Invalid pairs');
-      } else {
-        const word = words.get(ex.wordId);
-        if (!word || !unique(ex.tiles.map((t) => t.id))) {
-          fail('Invalid spelling exercise');
-          continue;
-        }
-        const remaining = ex.tiles.map((t) => t.letter.normalize('NFC'));
-        for (const letter of Array.from(word.spelling.normalize('NFC'))) {
-          const index = remaining.indexOf(letter);
-          if (index < 0) {
-            fail('Tiles cannot form word');
-            break;
-          }
-          remaining.splice(index, 1);
-        }
-      }
-    }
+    for (const ex of lesson.exercises) validateExercise(ex, words, fail);
   });
 const cardTextsSchema = z.object({
   title: z.string().min(1).max(100),
@@ -232,9 +177,9 @@ export const catalogSchema = z
               title: z.string().min(1),
               titles: z.partialRecord(overlayLocaleSchema, z.string().min(1)).optional(),
               exerciseCount: z.number().int().positive(),
-              requiredTypes: z
-                .array(z.enum(['listen-and-select', 'match-pairs', 'build-word']))
-                .min(1),
+              /* Mechanics the lesson uses. Any id, not a closed list: an app filters out
+                 lessons it cannot show (`catalogForMechanics`) instead of failing the catalog. */
+              requiredTypes: z.array(id).min(1),
             }),
           )
           .min(1),
@@ -293,11 +238,6 @@ export const releaseSchema = z
         ctx.addIssue({ code: 'custom', message: `Catalog/package mismatch: ${ref.id}` });
     }
   });
-export const answerSchema = z.union([
-  z.object({ choiceId: id }),
-  z.object({ pairs: z.record(id, id) }),
-  z.object({ tileIds: z.array(id).max(30) }),
-]);
 export const learningStateSchema = z.object({
   version: z.literal(2),
   soundEnabled: z.boolean(),
@@ -333,10 +273,8 @@ export const learningStateSchema = z.object({
     .nullable(),
 });
 export type CourseLesson = z.infer<typeof courseLessonSchema>;
-export type CourseExercise = z.infer<typeof courseExerciseSchema>;
 export type Catalog = z.infer<typeof catalogSchema>;
 export type Release = z.infer<typeof releaseSchema>;
 export type Media = z.infer<typeof mediaSchema>;
 export type Word = z.infer<typeof wordSchema>;
-export type Answer = z.infer<typeof answerSchema>;
 export type LearningState = z.infer<typeof learningStateSchema>;

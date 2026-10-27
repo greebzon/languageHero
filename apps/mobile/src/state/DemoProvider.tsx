@@ -35,6 +35,7 @@ import {
   type ShopItem,
 } from '@lingvohero/learning-core';
 import {
+  MECHANIC_TYPES,
   catalogSchema,
   courseLessonSchema,
   visibleCatalog,
@@ -188,7 +189,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     };
   }, []);
   const [catalog, setCatalog] = useState(seed.catalog);
-  const visible = useMemo(() => visibleCatalog(catalog, locale), [catalog, locale]);
+  // A cached or bundled catalog may still list lessons this app cannot show.
+  const visible = useMemo(() => visibleCatalog(catalog, locale, MECHANIC_TYPES), [catalog, locale]);
   const profile = auth.account!.profile;
   const languages = useMemo(
     () => [...new Set([...(profile.languages ?? []), ...(record.addedLanguages ?? [])])],
@@ -357,6 +359,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         soundEnabled: sent.state.soundEnabled,
         tzOffset: tzOffset(),
         locale: localeRef.current,
+        mechanics: MECHANIC_TYPES,
       });
       if (stopped.current) return false;
       auth.update(result);

@@ -3,6 +3,7 @@ import type {
   CourseTexts,
   CourseVisibility,
   DraftTexts,
+  ExerciseType,
   LanguageTitles,
   LanguageStatus,
   LessonDocument,
@@ -172,7 +173,7 @@ export type GenerationJob = {
     lessonSize: number;
     wordCount: number | null;
     targetWords: string[];
-    mix: ('listen-and-select' | 'match-pairs' | 'build-word')[];
+    mix: ExerciseType[];
     style: string | null;
     voice: string | null;
     source?: { courseId: string };

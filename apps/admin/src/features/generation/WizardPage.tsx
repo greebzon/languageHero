@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiError, api, describeError } from '../../app/api';
 import type { GenerationEstimate, GenerationSettings, GenerationView } from '../../app/types';
 import { Crumbs, Field, GeneralErrors, Notice } from '../../components/ui';
+import { MECHANIC_LIST } from '../../mechanics';
 import { useCourse } from '../courses/CoursePage';
 
 const topicPresets = [
@@ -16,11 +17,6 @@ const topicPresets = [
   'Погода',
   'Игрушки',
 ];
-const mechanics = [
-  { value: 'listen-and-select', label: 'Послушай и выбери' },
-  { value: 'match-pairs', label: 'Найди пары' },
-  { value: 'build-word', label: 'Собери слово' },
-] as const;
 
 export function useGenerationSettings() {
   return useQuery({
@@ -43,7 +39,7 @@ export function WizardPage() {
     lessonSize: 6,
     wordCount: '' as string | number,
     targetWords: '',
-    mix: ['listen-and-select', 'match-pairs', 'build-word'] as string[],
+    mix: MECHANIC_LIST.map((m) => m.type) as string[],
     style: '',
   });
   const [advanced, setAdvanced] = useState(false);
@@ -210,17 +206,17 @@ export function WizardPage() {
             </Field>
             <Field label="Механики" error={errors.mix}>
               <span className="checks">
-                {mechanics.map((m) => (
-                  <label key={m.value}>
+                {MECHANIC_LIST.map((m) => (
+                  <label key={m.type}>
                     <input
                       type="checkbox"
-                      checked={form.mix.includes(m.value)}
+                      checked={form.mix.includes(m.type)}
                       onChange={(e) =>
                         set(
                           'mix',
                           e.target.checked
-                            ? [...form.mix, m.value]
-                            : form.mix.filter((x) => x !== m.value),
+                            ? [...form.mix, m.type]
+                            : form.mix.filter((x) => x !== m.type),
                         )
                       }
                     />

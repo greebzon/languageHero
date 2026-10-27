@@ -1,5 +1,5 @@
 import { courseCards, resumableSession } from '@lingvohero/learning-core';
-import { localizeLesson } from '@lingvohero/contracts';
+import { localizeLesson, type ExerciseType } from '@lingvohero/contracts';
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -155,7 +155,8 @@ export default function MapScreen() {
                         {tn('course.exercises', lesson.exerciseCount)} ·{' '}
                         {t(
                           lesson.requiredTypes.length === 1
-                            ? `common.mechanics.${lesson.requiredTypes[0]!}`
+                            ? // Lessons with mechanics this app lacks are not in its catalog.
+                              `common.mechanics.${lesson.requiredTypes[0] as ExerciseType}`
                             : 'common.mechanics.mixed',
                         )}
                       </Label>

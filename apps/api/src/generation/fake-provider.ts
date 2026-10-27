@@ -1,4 +1,5 @@
 import { fakePng, fakeWav } from './fake-media.js';
+import { GENERATION_MECHANICS } from './mechanics/index.js';
 import type {
   CourseTextsPayload,
   WardrobeTextsPayload,
@@ -213,35 +214,13 @@ function lessonFor(payload: LessonPayload) {
   const exercises = Array.from({ length: payload.exerciseCount }, (_, i) => {
     const type = payload.mix[i % payload.mix.length]!;
     const word = keys[i % keys.length]!;
-    const others = keys.filter((k) => k !== word);
-    if (type === 'match-pairs')
-      return {
-        type,
-        prompt: `Найди пары ${i + 1}`,
-        hint: 'Соедини слово с картинкой',
-        wordKey: '',
-        choiceKeys: [],
-        pairKeys: [word, ...others].slice(0, 2 + (i % 3)),
-        distractorLetters: '',
-      };
-    if (type === 'listen-and-select')
-      return {
-        type,
-        prompt: `Послушай и выбери ${i + 1}`,
-        hint: `Это слово начинается на «${word[0]}»`,
-        wordKey: word,
-        choiceKeys: [word, ...others].slice(0, 2 + (i % 3)),
-        pairKeys: [],
-        distractorLetters: '',
-      };
     return {
       type,
-      prompt: `Собери слово ${i + 1}`,
-      hint: 'Начни с первой буквы',
-      wordKey: word,
-      choiceKeys: [],
-      pairKeys: [],
-      distractorLetters: 'qz',
+      ...GENERATION_MECHANICS[type].fake(
+        i,
+        word,
+        keys.filter((k) => k !== word),
+      ),
     };
   });
   return { exercises };
@@ -271,7 +250,7 @@ function lessonTranslationFor(payload: LessonTranslationPayload) {
     exercises: payload.exercises.map((e) => ({
       prompt: e.prompt,
       hint: e.hint,
-      distractorLetters: e.type === 'build-word' ? 'qz' : '',
+      distractorLetters: e.letters ? 'qz' : '',
     })),
   };
 }

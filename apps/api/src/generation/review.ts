@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { GenerationInput, GenerationOutput } from '@lingvohero/contracts';
+import { exerciseWords, type GenerationInput, type GenerationOutput } from '@lingvohero/contracts';
 import { toCourseLesson, type AssetRef } from '../publishing/convert.js';
 
 export type ReviewProblem = { lessonId: string | null; message: string };
@@ -69,15 +69,15 @@ export function reviewMaterial(
         message: `Не использованы механики: ${missing.join(', ')}`,
       });
     for (const exercise of lesson.document.exercises) {
-      const key = `${exercise.type}:${exercise.prompt.toLowerCase()}:${'wordId' in exercise ? exercise.wordId : exercise.wordIds.join('+')}`;
+      const words = exerciseWords(exercise);
+      const key = `${exercise.type}:${exercise.prompt.toLowerCase()}:${words.join('+')}`;
       if (!translated && seen.has(key))
         problems.push({
           lessonId: lesson.lessonId,
           message: `Задание «${exercise.prompt}» повторяет другой урок`,
         });
       seen.add(key);
-      if ('wordId' in exercise) usedWords.add(exercise.wordId);
-      else for (const id of exercise.wordIds) usedWords.add(id);
+      for (const id of words) usedWords.add(id);
     }
   }
   const unused = output.words.filter((w) => !usedWords.has(w.key));

@@ -6,44 +6,14 @@ import {
   type CourseLesson,
   type LearningState,
 } from '@lingvohero/contracts';
+import { assessExercise, type Assessment } from './mechanics';
 import { starsFor } from './scoring';
 
 export function newLearningState(): LearningState {
   return { version: 2, soundEnabled: true, progress: {}, session: null };
 }
-export function assess(
-  exercise: CourseExercise,
-  answer: Answer,
-  lesson: CourseLesson,
-): 'correct' | 'wrong' | 'invalid' {
-  if (exercise.type === 'listen-and-select') {
-    if (!('choiceId' in answer) || !exercise.choices.includes(answer.choiceId)) return 'invalid';
-    return answer.choiceId === exercise.wordId ? 'correct' : 'wrong';
-  }
-  if (exercise.type === 'match-pairs') {
-    if (
-      !('pairs' in answer) ||
-      Object.keys(answer.pairs).length !== exercise.wordIds.length ||
-      exercise.wordIds.some((id) => !exercise.imageOrder.includes(answer.pairs[id])) ||
-      new Set(Object.values(answer.pairs)).size !== exercise.wordIds.length
-    )
-      return 'invalid';
-    return exercise.wordIds.every((id) => answer.pairs[id] === id) ? 'correct' : 'wrong';
-  }
-  if (
-    !('tileIds' in answer) ||
-    answer.tileIds.length === 0 ||
-    new Set(answer.tileIds).size !== answer.tileIds.length ||
-    answer.tileIds.some((id) => !exercise.tiles.some((t) => t.id === id))
-  )
-    return 'invalid';
-  const text = answer.tileIds
-    .map((id) => exercise.tiles.find((t) => t.id === id)!.letter)
-    .join('')
-    .normalize('NFC');
-  return text === lesson.words.find((w) => w.id === exercise.wordId)!.spelling.normalize('NFC')
-    ? 'correct'
-    : 'wrong';
+export function assess(exercise: CourseExercise, answer: Answer, lesson: CourseLesson): Assessment {
+  return assessExercise(exercise, answer, lesson);
 }
 export type LearningAction =
   | { type: 'start'; lesson: CourseLesson; attemptId?: string }

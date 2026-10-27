@@ -1,6 +1,13 @@
 /* Showing content in the child's interface locale. Pure: the app and the server use the same
    rules, so both agree on which sets exist (hidden sets do not count for unlocking). */
-import { BASE_LOCALE, lessonLocales, type Catalog, type CourseLesson, type Locale } from './course';
+import {
+  BASE_LOCALE,
+  catalogForMechanics,
+  lessonLocales,
+  type Catalog,
+  type CourseLesson,
+  type Locale,
+} from './course';
 
 /** The lesson with the locale's texts in its base fields; untouched for the base locale. */
 export function localizeLesson(lesson: CourseLesson, locale: Locale): CourseLesson {
@@ -36,9 +43,14 @@ export function languageTitle(language: Catalog['languages'][number], locale: Lo
  * The catalog a child with this interface locale sees: sets translated to it (catalogs from
  * before translations had no `locales` and count as Russian only), previews with its texts,
  * every title in the locale. Lesson refs keep their base titles: they are checked against
- * the packages.
+ * the packages. With `mechanics`, lessons the client cannot show are left out as well.
  */
-export function visibleCatalog(catalog: Catalog, locale: Locale): Catalog {
+export function visibleCatalog(
+  full: Catalog,
+  locale: Locale,
+  mechanics?: readonly string[],
+): Catalog {
+  const catalog = mechanics ? catalogForMechanics(full, mechanics) : full;
   if (locale === BASE_LOCALE) return catalog;
   return {
     ...catalog,

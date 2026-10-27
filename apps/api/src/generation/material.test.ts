@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generationInputSchema, type GenerationOutput } from '@lingvohero/contracts';
+import {
+  choicePresetOf,
+  generationInputSchema,
+  type GenerationOutput,
+} from '@lingvohero/contracts';
 import { inspectMedia } from '../admin/media.js';
 import { distribute, wordCountFor } from './distribute.js';
 import {
@@ -122,6 +126,48 @@ test('fake provider material maps into valid lessons that pass review', async ()
   assert.equal(total, 14);
   const tiles = lessons[0]!.document!.exercises.find((e) => e.type === 'build-word');
   assert.ok(tiles && tiles.type === 'build-word' && tiles.tiles.length >= 4);
+
+  // «Выбор»: every variant the model may pick becomes a valid, solvable exercise.
+  const choiceLesson = { ...structuredClone(lessons[0]!), exerciseCount: 5 };
+  const choicePayload = {
+    language: 'en',
+    languageTitle: 'English',
+    topic: input.topic,
+    lesson: choiceLesson,
+    words,
+    exerciseCount: 5,
+    mix: ['choice' as const],
+    feedback: null,
+  };
+  const choiceResult = await provider.generateText({
+    context: { ...context, stage: 'text', targetId: 'choice' },
+    model: 'fake',
+    schemaName: 'lesson_exercises',
+    schema: toJsonSchema(lessonDtoSchema),
+    ...lessonPrompt(choicePayload),
+    payload: choicePayload,
+  });
+  assert.ok(choiceResult.ok);
+  const choices = buildExercises(
+    lessonDtoSchema.parse(choiceResult.data),
+    choiceLesson,
+    words,
+    keyMap,
+    ['choice'],
+  );
+  choiceLesson.document = buildDocument(choiceLesson, words, choices);
+  assert.deepEqual(
+    choices.map((e) => e.type === 'choice' && choicePresetOf(e)),
+    ['find-picture', 'name-picture', 'translate', 'is-it', 'first-sound'],
+  );
+  assert.deepEqual(
+    reviewMaterial(
+      { words, lessons: [choiceLesson], distribution: [5] },
+      { ...input, mix: ['choice'], totalExercises: 5 },
+      'en',
+    ).filter((p) => p.lessonId),
+    [],
+  );
 
   // Review catches broken material: wrong total and an unsolvable word.
   const broken = structuredClone(output);

@@ -10,7 +10,9 @@ export async function solve(page: Page, exercise: CourseExercise, lesson: Course
       await page.getByTestId(`pair-word-${id}`).click();
       await page.getByTestId(`pair-image-${id}`).click();
     }
-  } else {
+  } else if (exercise.type === 'choice')
+    await page.getByTestId(`option-${exercise.answerId}`).click();
+  else {
     const available = [...exercise.tiles];
     for (const letter of lesson.words.find((w) => w.id === exercise.wordId)!.spelling) {
       const tile = available.splice(

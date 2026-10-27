@@ -23,6 +23,7 @@ function answerFor(ex: CourseExercise, lesson: CourseLesson): Answer {
   if (ex.type === 'listen-and-select') return { choiceId: ex.wordId };
   if (ex.type === 'match-pairs')
     return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
+  if (ex.type === 'choice') return { choiceId: ex.answerId };
   const letters = Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling);
   const available = [...ex.tiles];
   return {

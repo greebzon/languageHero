@@ -75,6 +75,7 @@ function attempt(lesson: CourseLesson) {
     if (ex.type === 'listen-and-select') answer = { choiceId: ex.wordId };
     else if (ex.type === 'match-pairs')
       answer = { pairs: Object.fromEntries(ex.wordIds.map((w) => [w, w])) };
+    else if (ex.type === 'choice') answer = { choiceId: ex.answerId };
     else {
       const tiles = [...ex.tiles];
       answer = {

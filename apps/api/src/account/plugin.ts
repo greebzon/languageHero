@@ -26,6 +26,7 @@ import {
   type LearningState,
   type Locale,
   visibleCatalog,
+  BASE_MECHANICS,
 } from '@lingvohero/contracts';
 import {
   buyItem,
@@ -615,7 +616,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         // Access follows the sets this child sees in the interface language of this device (only
         // an explicit choice via PATCH /me is saved: another device may use its own language).
         const locale: Locale = input.locale ?? current.uiLocale ?? 'ru';
-        const visible = visibleCatalog(catalog, locale);
+        const visible = visibleCatalog(catalog, locale, input.mechanics ?? BASE_MECHANICS);
         let state = current.learning;
         let stars = await starTotal(tx, user.id);
         const accepted: string[] = [];

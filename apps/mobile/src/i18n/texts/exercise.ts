@@ -1,6 +1,6 @@
 import { defineTexts } from '../define';
 
-/* The three exercise mechanics (the words themselves come from the lesson, untranslated). */
+/* Exercise mechanics (the words themselves come from the lesson, untranslated). */
 export const exercise = defineTexts({
   ru: {
     listen: 'Послушай слово и выбери картинку.',
@@ -14,6 +14,13 @@ export const exercise = defineTexts({
     removeLetter: 'Убрать букву {letter}, позиция {position}',
     letter: 'Буква {letter}',
     restart: 'Начать слово заново',
+    choosePicture: 'Выбери картинку.',
+    chooseWord: 'Выбери слово.',
+    chooseLetter: 'Выбери букву.',
+    chooseYesNo: 'Ответь: да или нет?',
+    optionPicture: 'Картинка {number}',
+    yes: 'Да',
+    no: 'Нет',
   },
   en: {
     listen: 'Listen to the word and pick the picture.',
@@ -27,6 +34,13 @@ export const exercise = defineTexts({
     removeLetter: 'Remove letter {letter}, position {position}',
     letter: 'Letter {letter}',
     restart: 'Start the word again',
+    choosePicture: 'Pick the picture.',
+    chooseWord: 'Pick the word.',
+    chooseLetter: 'Pick the letter.',
+    chooseYesNo: 'Answer: yes or no?',
+    optionPicture: 'Picture {number}',
+    yes: 'Yes',
+    no: 'No',
   },
   he: {
     listen: 'מקשיבים למילה ובוחרים תמונה.',
@@ -40,5 +54,12 @@ export const exercise = defineTexts({
     removeLetter: 'להסיר את האות {letter}, מקום {position}',
     letter: 'האות {letter}',
     restart: 'להתחיל את המילה מחדש',
+    choosePicture: 'בוחרים תמונה.',
+    chooseWord: 'בוחרים מילה.',
+    chooseLetter: 'בוחרים אות.',
+    chooseYesNo: 'עונים: כן או לא?',
+    optionPicture: 'תמונה {number}',
+    yes: 'כן',
+    no: 'לא',
   },
 });

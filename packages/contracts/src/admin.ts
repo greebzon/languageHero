@@ -1,12 +1,19 @@
 import { z } from 'zod';
-import { localeSchema, overlayLocaleSchema, presentationSchema } from './course';
+import {
+  BASE_MECHANICS,
+  type DraftExercise,
+  draftExerciseSchema,
+  exerciseTypeSchema,
+  localeSchema,
+  overlayLocaleSchema,
+  presentationSchema,
+} from './course';
 
 // Editorial (draft) shapes for the admin panel. They are deliberately lenient: an admin must be
 // able to save a half-finished lesson. The strict `courseLessonSchema` is applied when a draft is
 // converted into a publishable package (validate, preview, publication plan).
 export const idSchema = z.string().regex(/^[a-z0-9][a-z0-9-]{0,79}$/);
 const unique = (values: string[]) => new Set(values).size === values.length;
-export const exerciseTypeSchema = z.enum(['listen-and-select', 'match-pairs', 'build-word']);
 export const draftMediaSchema = z.object({
   id: idSchema,
   kind: z.enum(['image', 'audio']),
@@ -28,27 +35,6 @@ export const draftWordSchema = z.object({
   imageId: z.string().max(80),
   audioId: z.string().max(80),
 });
-const base = { id: idSchema, prompt: z.string().max(200), hint: z.string().max(300) };
-export const draftExerciseSchema = z.discriminatedUnion('type', [
-  z.object({
-    ...base,
-    type: z.literal('listen-and-select'),
-    wordId: z.string().max(80),
-    choices: z.array(z.string().max(80)).max(6),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('match-pairs'),
-    wordIds: z.array(z.string().max(80)).max(4),
-    imageOrder: z.array(z.string().max(80)).max(4),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('build-word'),
-    wordId: z.string().max(80),
-    tiles: z.array(z.object({ id: idSchema, letter: z.string().max(4) })).max(30),
-  }),
-]);
 export const lessonDocumentSchema = z
   .object({
     words: z.array(draftWordSchema).max(40),
@@ -175,7 +161,6 @@ export const passwordChangeSchema = z.object({
 export type LessonDocument = z.infer<typeof lessonDocumentSchema>;
 export type DraftMedia = z.infer<typeof draftMediaSchema>;
 export type DraftWord = z.infer<typeof draftWordSchema>;
-export type DraftExercise = z.infer<typeof draftExerciseSchema>;
 export type LessonPresentation = z.infer<typeof presentationSchema>;
 export type LanguageStatus = z.infer<typeof languageStatusSchema>;
 export type CourseVisibility = z.infer<typeof courseVisibilitySchema>;
@@ -197,7 +182,7 @@ export const generationInputSchema = z.object({
   mix: z
     .array(exerciseTypeSchema)
     .min(1)
-    .default(['listen-and-select', 'match-pairs', 'build-word']),
+    .default([...BASE_MECHANICS, 'choice']),
   style: z.string().trim().max(300).nullable().default(null),
   voice: z.string().trim().max(40).nullable().default(null),
   /** Set by the server for a translated clone: the set whose lessons are translated. */

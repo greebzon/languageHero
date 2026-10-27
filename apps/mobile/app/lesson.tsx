@@ -16,14 +16,15 @@ import { assess } from '@lingvohero/learning-core';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
+import { mechanicFor } from '../src/mechanics';
 import { NetworkNotice } from '../src/components/NetworkNotice';
 import { fraction, useT } from '../src/i18n';
-import { useLocalizedLesson, wordDirection } from '../src/i18n/content';
-import { colors, fonts } from '../src/theme';
+import { useLocalizedLesson } from '../src/i18n/content';
+import { colors } from '../src/theme';
 
 export default function LessonScreen() {
   const { account } = useAccount();
-  const { state, dispatch, fullCatalog } = useDemo();
+  const { state, dispatch } = useDemo();
   const { t, isRTL } = useT();
   const localized = useLocalizedLesson(state.session?.lesson);
   const [wrong, setWrong] = useState(false);
@@ -52,13 +53,8 @@ export default function LessonScreen() {
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
   const review = session.exerciseIndex >= lesson.exercises.length;
-  // «Собери слово»: the hint also shows how the word is written, letter by letter.
-  const spelling =
-    exercise.type === 'build-word'
-      ? Array.from(
-          (lesson.words.find((w) => w.id === exercise.wordId)?.spelling ?? '').normalize('NFC'),
-        )
-      : [];
+  // Some mechanics add their own help under the hint (build-word: the spelling).
+  const { Hint } = mechanicFor(exercise.type);
   return (
     <SafeAreaView style={s.safe} edges={['top', 'bottom', 'left', 'right']}>
       <View style={s.container}>
@@ -124,28 +120,7 @@ export default function LessonScreen() {
           {hint && (
             <View accessibilityLiveRegion="polite" style={s.hint}>
               <Label style={s.hintText}>{exercise.hint}</Label>
-              {spelling.length > 0 && (
-                <View
-                  style={s.spelling}
-                  accessible
-                  accessibilityLabel={t('lesson.spelledA11y', { letters: spelling.join(' ') })}
-                >
-                  <Label style={s.spellingCaption}>{t('lesson.spelled')}</Label>
-                  <View
-                    style={[
-                      s.spellingRow,
-                      { direction: wordDirection(fullCatalog, lesson.language) },
-                    ]}
-                    testID="hint-spelling"
-                  >
-                    {spelling.map((letter, i) => (
-                      <Label key={i} style={s.spellingLetter}>
-                        {letter}
-                      </Label>
-                    ))}
-                  </View>
-                </View>
-              )}
+              {Hint && <Hint lesson={lesson} exercise={exercise} />}
             </View>
           )}
         </ScrollView>
@@ -241,23 +216,6 @@ const s = StyleSheet.create({
   },
   hint: { backgroundColor: colors.cream, padding: 15, borderRadius: 14, gap: 10 },
   hintText: { textAlign: 'center', fontSize: 13 },
-  spelling: { alignItems: 'center', gap: 6 },
-  spellingCaption: { fontSize: 11, color: colors.muted },
-  spellingRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6 },
-  spellingLetter: {
-    minWidth: 30,
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.line,
-    textAlign: 'center',
-    fontFamily: fonts.heading,
-    fontSize: 20,
-    lineHeight: 26,
-    color: colors.greenInk,
-  },
   dock: { padding: 16, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: '#FFFFFF' },
   feedback: { flexDirection: 'row', gap: 10, alignItems: 'center', marginBottom: 13 },
   feedbackTitle: { fontSize: 17, lineHeight: 24 },

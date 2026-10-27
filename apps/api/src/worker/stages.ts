@@ -1,5 +1,5 @@
 import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
-import { OVERLAY_LOCALES } from '@lingvohero/contracts';
+import { OVERLAY_LOCALES, exerciseWords, mapExerciseWords } from '@lingvohero/contracts';
 import type {
   DraftExercise,
   GenerationLessonPlan,
@@ -36,6 +36,7 @@ import {
   toJsonSchema,
 } from '../generation/dto.js';
 import type { CostRates } from '../generation/estimate.js';
+import { needsLetters } from '../generation/mechanics/index.js';
 import {
   coverPrompt,
   imagePrompt,
@@ -711,13 +712,7 @@ async function translatePlan(env: Env, sourceCourseId: string): Promise<StageRes
       });
     }
     const id = (w: string) => remap.get(w) ?? w;
-    const sourceExercises: DraftExercise[] = doc.exercises.map((e) =>
-      e.type === 'match-pairs'
-        ? { ...e, wordIds: e.wordIds.map(id), imageOrder: e.imageOrder.map(id) }
-        : e.type === 'listen-and-select'
-          ? { ...e, wordId: id(e.wordId), choices: e.choices.map(id) }
-          : { ...e, wordId: id(e.wordId) },
-    );
+    const sourceExercises: DraftExercise[] = doc.exercises.map((e) => mapExerciseWords(e, id));
     plans.push({
       lessonId: `${course.id}-${String(index + 1).padStart(2, '0')}`,
       title: lesson.title,
@@ -820,7 +815,8 @@ async function translateText(env: Env): Promise<StageResult> {
       type: e.type,
       prompt: e.prompt,
       hint: e.hint,
-      words: e.type === 'match-pairs' ? e.wordIds : [e.wordId],
+      words: exerciseWords(e),
+      letters: needsLetters(e),
     })),
   };
   const { data, requestId } = await structured(

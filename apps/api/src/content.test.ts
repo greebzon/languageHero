@@ -111,3 +111,83 @@ test('live publication adds languages/lessons and keeps old versions addressable
     404,
   );
 });
+
+test('the catalog leaves out lessons with mechanics the app did not list', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'lingvo-content-'));
+  const app = buildApp({ contentRoot: root });
+  t.after(async () => {
+    await app.close();
+    if (dirname(resolve(root)) !== resolve(tmpdir())) throw new Error('Unexpected test directory');
+    await rm(root, { recursive: true, force: true });
+  });
+  await cp(join(defaultContentRoot, 'media'), join(root, 'media'), { recursive: true });
+  const release = releaseSchema.parse(seed);
+  const lesson = {
+    ...structuredClone(release.lessons[0]!),
+    id: 'en-choice-01',
+    version: 1,
+    title: 'Выбор',
+    texts: undefined,
+    exercises: [
+      {
+        id: 'find',
+        type: 'choice' as const,
+        prompt: 'Найди картинку',
+        hint: 'Это лиса',
+        show: [{ view: 'text' as const, wordId: 'fox' }],
+        as: 'image' as const,
+        options: ['fox', 'owl'].map((w) => ({ id: w, wordId: w })),
+        answerId: 'fox',
+      },
+    ],
+  };
+  await publishRelease(
+    releaseSchema.parse({
+      catalog: {
+        ...release.catalog,
+        courses: [
+          ...release.catalog.courses,
+          {
+            id: 'en-choice',
+            language: 'en',
+            title: 'Выбор',
+            lessons: [
+              {
+                id: lesson.id,
+                version: 1,
+                title: lesson.title,
+                exerciseCount: 1,
+                requiredTypes: ['choice'],
+              },
+            ],
+          },
+        ],
+      },
+      lessons: [...release.lessons, lesson],
+    }),
+    root,
+  );
+  const old = await app.inject('/v1/catalog?schemaVersion=2');
+  assert.deepEqual(
+    old.json().courses.map((c: { id: string }) => c.id),
+    ['en-forest'],
+  );
+  const all = await app.inject(
+    '/v1/catalog?schemaVersion=2&mechanics=listen-and-select,match-pairs,build-word,choice',
+  );
+  assert.deepEqual(
+    all.json().courses.map((c: { id: string }) => c.id),
+    ['en-forest', 'en-choice'],
+  );
+  assert.notEqual(old.headers.etag, all.headers.etag);
+  // A cached catalog of one app does not answer another app's request.
+  const cached = await app.inject({
+    url: '/v1/catalog?schemaVersion=2&mechanics=choice',
+    headers: { 'if-none-match': old.headers.etag! },
+  });
+  assert.equal(cached.statusCode, 200);
+  assert.deepEqual(
+    cached.json().courses.map((c: { id: string }) => c.id),
+    ['en-choice'],
+  );
+});
