@@ -796,3 +796,22 @@ test('stars: every completion counts, repeats too, and the total opens a set by 
   // The repeat paid no second reward: XP counts each lesson once.
   assert.equal(again.json().profile.xp, 200);
 });
+
+test('age: the birth year the age question sends comes back with every profile', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const p = await proof(ctx, 'young@example.test');
+  const fresh = (await call(ctx, '/auth/verify', { ...p, deviceName: 'Test phone' })).json();
+  assert.equal(fresh.profile.birthYear, null);
+  const token = fresh.token as string;
+  const patch = (body: Record<string, unknown>) => call(ctx, '/me', body, token, 'PATCH');
+  assert.equal((await patch({ birthYear: 2020 })).json().profile.birthYear, 2020);
+  // Other profile changes keep it.
+  assert.equal((await patch({ name: 'Ева', avatar: 'fox' })).json().profile.birthYear, 2020);
+  assert.equal((await call(ctx, '/me', undefined, token, 'GET')).json().profile.birthYear, 2020);
+  for (const birthYear of [1890, 2020.5, '2020']) {
+    const bad = await patch({ birthYear });
+    assert.equal(bad.statusCode, 400);
+    assert.equal(bad.json().code, 'invalid_input');
+  }
+});

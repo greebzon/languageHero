@@ -23,6 +23,12 @@ const forDisk = (snapshot: AccountSnapshot) => ({
   ...snapshot,
   profile: { ...snapshot.profile, email: '' },
 });
+/* A server from before the age question sends no `birthYear`: null, so the app asks it. */
+const withAge = (data: AccountSnapshot, birthYear: number | null) => ({
+  profile: { ...data.profile, birthYear },
+  learning: data.learning,
+  journal: data.journal,
+});
 export function AccountProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<AccountSnapshot | null>(null);
   const [ready, setReady] = useState(false);
@@ -32,8 +38,9 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const writes = useRef(Promise.resolve());
   const update = (data: AccountSnapshot) => {
     // Only a well-formed profile replaces the one on screen and in the cache.
-    if (!profileSnapshotSchema.safeParse(data.profile).success) return;
-    const clean = { profile: data.profile, learning: data.learning, journal: data.journal };
+    const profile = profileSnapshotSchema.safeParse(data.profile);
+    if (!profile.success) return;
+    const clean = withAge(data, profile.data.birthYear);
     setAccount(clean);
     writes.current = writes.current
       .then(() => AsyncStorage.setItem(KEY, JSON.stringify(forDisk(clean))))
@@ -52,11 +59,13 @@ export function AccountProvider({ children }: { children: ReactNode }) {
             if (profile.success && learningStateSchema.safeParse(saved.learning).success)
               setAccount({
                 ...saved,
-                // Caches from older versions lack the language list and the interface language.
+                // Caches from older versions lack the language list, the interface language
+                // and the age.
                 profile: {
                   ...saved.profile,
                   languages: profile.data.languages,
                   locale: profile.data.locale,
+                  birthYear: profile.data.birthYear,
                 },
                 journal: journalSchema.safeParse(saved.journal).success
                   ? saved.journal
@@ -80,7 +89,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   }, []);
   const accept = async (data: AccountSnapshot & { token?: string; recoveryCode?: string }) => {
     if (Platform.OS !== 'web') await saveCredential(data.token ?? null);
-    const clean = { profile: data.profile, learning: data.learning, journal: data.journal };
+    const clean = withAge(data, data.profile.birthYear ?? null);
     await writes.current;
     await AsyncStorage.removeItem(LOGGED_OUT);
     await AsyncStorage.setItem(KEY, JSON.stringify(forDisk(clean)));

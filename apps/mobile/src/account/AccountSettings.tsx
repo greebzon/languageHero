@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { Modal, TextInput, View, StyleSheet } from 'react-native';
 import { LOCALES, type AccountSnapshot } from '@lingvohero/contracts';
-import { birthYearFor } from '@lingvohero/learning-core';
 import { useAccount } from './context';
 import { accountRequest } from './api';
 import { accountStyles } from './AccountWelcome';
-import { AgePicker, ageChoice } from './AgePicker';
 import { useDemo } from '../state/DemoProvider';
 import { Heading, Label, ToyButton } from '../components/ui';
 import { router } from 'expo-router';
 import { LOCALE_NAMES, restartForDirection, useLocale, useT } from '../i18n';
-import { colors, fonts } from '../theme';
+import { fonts } from '../theme';
 
 type Device = { id: string; deviceName: string; current: boolean; createdAt: string };
 type Action = 'email' | 'recovery' | 'delete' | 'revoke' | 'logout' | null;
@@ -121,24 +119,6 @@ export function AccountSettings() {
         onChangeText={setName}
         maxLength={30}
         style={accountStyles.input}
-      />
-      <Label>{t('settings.ageTitle')}</Label>
-      <Label style={{ color: colors.muted }}>{t('settings.ageHint')}</Label>
-      <AgePicker
-        value={ageChoice(profile.birthYear)}
-        disabled={busy}
-        onSelect={(age) =>
-          void run(async () => {
-            auth.update(
-              await accountRequest<AccountSnapshot>(
-                '/me',
-                { birthYear: birthYearFor(age) },
-                'PATCH',
-              ),
-            );
-            setNotice(t('settings.ageSaved'));
-          })
-        }
       />
       <Label>{t('settings.companion')}</Label>
       <ToyButton title={t('friends.title')} tone="light" onPress={() => router.push('/friends')} />

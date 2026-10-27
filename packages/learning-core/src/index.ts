@@ -4,6 +4,7 @@ export * from './levels';
 export * from './journal';
 export * from './shop';
 export * from './outfit';
+export * from './spelling';
 import { starsFor } from './scoring';
 export { starsFor } from './scoring';
 

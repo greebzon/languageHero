@@ -53,11 +53,15 @@ Env: `apps/mobile/.env` → `EXPO_PUBLIC_API_URL`. By default the app uses `loca
 
 ## Account concept
 
-One account belongs to one child with their own email address. The child gives an age at sign-up (6/7/8/9+, stored as `birth_year`, editable in the profile); 6–7-year-olds get eased exercises (see Architecture, mechanics). `difficultyFor(birthYear, state.recent)` also follows results: `LearningState.recent` (stars of the last 5 runs, written by `learn()`) — three flawless runs lift a 6–7-year-old to the 8–9 tasks, three one-star runs ease an older child. Parents do not participate in the app. Family accounts, multiple child profiles per account and parental controls are outside the product scope. A profile is the child's own account data. Settings, progress and inventory belong to that account.
+One account belongs to one child with their own email address. The child gives an age (see «Age and spelling help» below); up to 7 years exercises are eased (see Architecture, mechanics). `difficultyFor(birthYear, state.recent)` also follows results: `LearningState.recent` (stars of the last 5 runs, written by `learn()`) — three flawless runs lift a 6–7-year-old to the 8–9 tasks, three one-star runs ease an older child. Parents do not participate in the app. Family accounts, multiple child profiles per account and parental controls are outside the product scope. A profile is the child's own account data. Settings, progress and inventory belong to that account.
 
 ## Levels and mascot gallery
 
 Implemented in `learning-core/src/levels.ts`, `api/src/account/progression.ts` and `mobile/app/friends.tsx`. The first lesson gives 100 XP; cumulative level thresholds are 0, 100, 300, 600, 1000, then +500. No repeat XP or extra level coins. Tim is always open; default unlocks are rabbit 3, bear 5, owl 8. The admin edits `unlockLevel`; server-owned `learner_mascots` grants persist and `PATCH /account/me` checks avatar access. Migration 0009 preserves existing selected mascots and old levels; `ACCOUNT_LEVEL_STEP` is now only the legacy migration setting. UI strings must cover ru/en/he. See [rules](docs/LEVELS_AND_MASCOTS.md).
+
+## Age and spelling help
+
+`learner_accounts.birth_year` (migration `0013`) comes from «Сколько тебе лет?». `LaunchGate` asks it before the language picker, also once for older accounts, and the profile can change it. The age buttons are 4–12 (`components/AgePicker.tsx`; `AgeSetting` in the profile). The same birth year sets the difficulty group (`difficultyFor`, learning-core `age.ts`). `learning-core/src/spelling.ts` derives `spellingHelp`: up to age 6 it gives `model` (by age only, whatever the difficulty group), where the build-word view (`mobile/src/mechanics/build-word.tsx`, `ModelWord`) shows the word as faded letters in slots, offers only the word's own tiles (`spellingTiles`) and refuses a tile that does not match the next slot. The answer stays the same `tileIds`, so `assess` and the server replay are unchanged. The e2e `signIn(page, email, age = 8)` answers the question. See [roadmap 8.2](docs/ROADMAP.md).
 
 ## Architecture
 

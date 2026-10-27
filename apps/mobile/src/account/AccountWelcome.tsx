@@ -12,12 +12,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type Ionicons from '@expo/vector-icons/Ionicons';
 import type { AccountProfile, AccountSnapshot } from '@lingvohero/contracts';
-import { birthYearFor } from '@lingvohero/learning-core';
 import { Heading, Icon, Label, ToyButton } from '../components/ui';
 import { MascotFace, MascotPicker } from '../components/MascotPicker';
 import { useT } from '../i18n';
 import { colors, fonts } from '../theme';
-import { AgePicker, ageChoice } from './AgePicker';
 import { accountRequest } from './api';
 import { useAccount } from './context';
 
@@ -79,8 +77,7 @@ export function AccountWelcome({
   const [backup, setBackup] = useState('');
   const [name, setName] = useState(account?.profile.name ?? '');
   const [avatar, setAvatar] = useState<AccountProfile['avatar']>(account?.profile.avatar ?? 'fox');
-  const [age, setAge] = useState<number | null>(ageChoice(account?.profile.birthYear));
-  const [step, setStep] = useState<'name' | 'age' | 'mascot'>('name');
+  const [step, setStep] = useState<'name' | 'mascot'>('name');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [sentAt, setSentAt] = useState(0);
@@ -159,24 +156,7 @@ export function AccountWelcome({
                   title={t('common.next')}
                   icon="arrow-forward"
                   disabled={!name.trim()}
-                  onPress={() => setStep('age')}
-                />
-              </View>
-            ) : step === 'age' ? (
-              <View style={s.card}>
-                <Label style={s.cardTitle}>{t('welcome.ageTitle')}</Label>
-                <Label style={s.hint}>{t('welcome.ageHint')}</Label>
-                <AgePicker value={age} onSelect={setAge} />
-                <ToyButton
-                  title={t('common.next')}
-                  icon="arrow-forward"
-                  disabled={age === null}
                   onPress={() => setStep('mascot')}
-                />
-                <LinkButton
-                  title={t('common.back')}
-                  icon="arrow-back"
-                  onPress={() => setStep('name')}
                 />
               </View>
             ) : (
@@ -192,11 +172,7 @@ export function AccountWelcome({
                     onPress: () =>
                       void run(async () => {
                         update(
-                          await accountRequest<AccountSnapshot>(
-                            '/me',
-                            { name, avatar, ...(age ? { birthYear: birthYearFor(age) } : {}) },
-                            'PATCH',
-                          ),
+                          await accountRequest<AccountSnapshot>('/me', { name, avatar }, 'PATCH'),
                         );
                       }),
                   }}
@@ -204,7 +180,7 @@ export function AccountWelcome({
                 <LinkButton
                   title={t('common.back')}
                   icon="arrow-back"
-                  onPress={() => setStep('age')}
+                  onPress={() => setStep('name')}
                 />
               </>
             )

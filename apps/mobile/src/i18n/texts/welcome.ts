@@ -15,10 +15,6 @@ export const welcome = defineTexts({
     nameTitle: 'Как тебя называть в игре?',
     nameLabel: 'Игровое имя',
     namePlaceholder: 'Твоё имя',
-    ageTitle: 'Сколько тебе лет?',
-    ageHint: 'Тим подберёт задания по силам.',
-    ageLabel: 'Мне {age}',
-    ageOlder: 'Мне 9 или больше',
     recoverTitle: 'Восстановление',
     loginTitle: 'Вход по коду',
     recoverHint:
@@ -43,6 +39,16 @@ export const welcome = defineTexts({
     noAccess: 'Нет доступа к почте?',
     backToSaved: 'Вернуться к сохранённым урокам',
     footer: 'Без пароля: код из письма действует 10 минут',
+    age: {
+      title: 'Сколько тебе лет?',
+      hint: 'Тим подберёт задания тебе по силам',
+      years: {
+        one: '{n} год',
+        few: '{n} года',
+        many: '{n} лет',
+        other: '{n} года',
+      },
+    },
     picker: {
       active: 'Активен ✨',
       selected: 'Выбран ✨',
@@ -69,10 +75,6 @@ export const welcome = defineTexts({
     nameTitle: 'What should we call you in the game?',
     nameLabel: 'Game name',
     namePlaceholder: 'Your name',
-    ageTitle: 'How old are you?',
-    ageHint: 'Tim will pick tasks that fit you.',
-    ageLabel: 'I am {age}',
-    ageOlder: 'I am 9 or older',
     recoverTitle: 'Account recovery',
     loginTitle: 'Sign in with a code',
     recoverHint:
@@ -92,6 +94,11 @@ export const welcome = defineTexts({
     noAccess: 'Can’t open your email?',
     backToSaved: 'Back to saved lessons',
     footer: 'No password: the code from the email works for 10 minutes',
+    age: {
+      title: 'How old are you?',
+      hint: 'Tim will pick tasks that are just right for you',
+      years: { one: '{n} year old', other: '{n} years old' },
+    },
     picker: {
       active: 'Active ✨',
       selected: 'Chosen ✨',
@@ -118,10 +125,6 @@ export const welcome = defineTexts({
     nameTitle: 'איך לקרוא לך במשחק?',
     nameLabel: 'שם במשחק',
     namePlaceholder: 'השם שלך',
-    ageTitle: 'בן או בת כמה?',
-    ageHint: 'טים יבחר משימות שמתאימות לגיל.',
-    ageLabel: 'גיל {age}',
-    ageOlder: 'גיל 9 ומעלה',
     recoverTitle: 'שחזור חשבון',
     loginTitle: 'כניסה עם קוד',
     recoverHint: 'כותבים אימייל חדש שיש אליו גישה ואת קוד הגיבוי. המכשירים הישנים ינותקו מהחשבון.',
@@ -143,6 +146,11 @@ export const welcome = defineTexts({
     noAccess: 'אין גישה לאימייל?',
     backToSaved: 'חזרה לשיעורים השמורים',
     footer: 'בלי סיסמה: הקוד מהמייל תקף 10 דקות',
+    age: {
+      title: 'מה הגיל שלך?',
+      hint: 'טים יבחר משימות שמתאימות בדיוק לך',
+      years: { one: 'שנה אחת', two: 'שנתיים', other: '{n} שנים' },
+    },
     picker: {
       active: 'פעיל ✨',
       selected: 'נבחר ✨',

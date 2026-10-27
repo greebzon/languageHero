@@ -13,7 +13,8 @@
     },
     "android": {
       "package": "com.lingvohero.app",
-      "allowBackup": false
+      "allowBackup": false,
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",

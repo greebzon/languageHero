@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import type { AgeBand, CourseExercise, CourseLesson } from '../../packages/contracts/src';
-import { playableIndices } from '../../packages/learning-core/src/course';
+import { currentExercise, playableIndices } from '../../packages/learning-core/src/course';
 
 /** The exercises a child of this age group plays, in order (some are for one group only). */
 export const playable = (lesson: CourseLesson, ageBand: AgeBand = '8-9') =>
@@ -66,4 +66,23 @@ export async function solve(page: Page, exercise: CourseExercise, lesson: Course
   await page.getByTestId('check-answer').click();
   await expect(page.getByText('Здорово! Получилось!')).toBeVisible();
   await page.getByTestId('next-question').click();
+}
+
+/**
+ * Solves the exercise the app shows now, as eased for the child's age group: read from the
+ * saved session once it has caught up with the question on screen.
+ */
+export async function solveCurrent(page: Page) {
+  const [n] = (await page.getByTestId('question-counter').innerText()).split('/').map(Number);
+  let session: Parameters<typeof currentExercise>[0] | undefined;
+  await expect
+    .poll(async () => {
+      session = await page.evaluate(() => {
+        const key = Object.keys(localStorage).find((k) => k.startsWith('lingvohero.learning.v3:'))!;
+        return JSON.parse(localStorage.getItem(key)!).state.session;
+      });
+      return session && !session.correct && session.exerciseIndex === n! - 1;
+    })
+    .toBe(true);
+  await solve(page, currentExercise(session!), session!.lesson);
 }

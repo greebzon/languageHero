@@ -3,12 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 
-/** Signs a fresh learner in; a new account answers onboarding with the name, `age` and Tim. */
-export async function signIn(
-  page: Page,
-  email = `learner-${randomUUID()}@example.test`,
-  age: 6 | 7 | 8 | 9 = 9,
-) {
+/** A fresh learner goes through the whole onboarding; 8 years old gets the plain «Собери слово». */
+export async function signIn(page: Page, email = `learner-${randomUUID()}@example.test`, age = 8) {
   await page.addLocatorHandler(page.getByTestId('level-continue'), async (button) => {
     await button.click();
   });
@@ -36,14 +32,14 @@ export async function signIn(
     await page.getByRole('button', { name: 'Код сохранён' }).click();
     await page.getByLabel('Игровое имя').fill('Лёва');
     await page.getByRole('button', { name: 'Дальше', exact: true }).click();
-    await expect(page.getByText('Сколько тебе лет?', { exact: true })).toBeVisible();
-    await page.getByTestId(`age-${age}`).click();
-    await page.screenshot({ path: 'test-results/onboarding-age.png', fullPage: true });
-    await page.getByRole('button', { name: 'Дальше', exact: true }).click();
     await expect(page.getByRole('radio', { name: 'Совёнок Умка', exact: true })).toBeDisabled();
     await page.getByRole('radio', { name: 'Лисёнок Тим', exact: true }).click();
     await page.screenshot({ path: 'test-results/onboarding-mascot.png', fullPage: true });
     await page.getByRole('button', { name: 'Выбрать этого героя', exact: true }).click();
+    // The age picks how much help «Собери слово» gives.
+    await expect(page.getByText('Сколько тебе лет?', { exact: true })).toBeVisible();
+    await page.screenshot({ path: 'test-results/onboarding-age.png', fullPage: true });
+    await page.getByTestId(`age-${age}`).click();
     // The learning language is picked after the sign-up, on its own screen.
     await expect(page.getByText('Какой язык будем учить?', { exact: true })).toBeVisible();
     await page.screenshot({ path: 'test-results/onboarding-language.png', fullPage: true });
