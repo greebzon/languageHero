@@ -54,6 +54,7 @@ export function ToyButton({
   disabled = false,
   testID,
   style,
+  accessibilityLabel,
 }: {
   title: string;
   onPress: () => void;
@@ -62,6 +63,8 @@ export function ToyButton({
   disabled?: boolean;
   testID?: string;
   style?: StyleProp<ViewStyle>;
+  /** When the title alone says too little to a screen reader («9+»). */
+  accessibilityLabel?: string;
 }) {
   const background =
     tone === 'amber' ? colors.amber : tone === 'light' ? colors.paper : colors.green;
@@ -72,7 +75,7 @@ export function ToyButton({
     <Pressable
       testID={testID}
       accessibilityRole="button"
-      accessibilityLabel={title}
+      accessibilityLabel={accessibilityLabel ?? title}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}

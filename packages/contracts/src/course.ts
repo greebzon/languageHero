@@ -1,7 +1,9 @@
 import { z } from 'zod';
+import { answerSchema, courseExerciseSchema, validateExercise } from './mechanics';
+import { AGE_BANDS, ageBandSchema } from './mechanics/shared';
+import { id, unique } from './mechanics/shared';
 
-const id = z.string().regex(/^[a-z0-9][a-z0-9-]{0,79}$/);
-const unique = (values: string[]) => new Set(values).size === values.length;
+export * from './mechanics';
 
 /* Languages of the app's interface and of the texts a child reads (prompts, hints, Tim's
    lines, word translations). Lesson packages keep Russian in their base fields; other
@@ -47,30 +49,6 @@ export const wordSchema = z.object({
   imageId: id,
   audioId: id,
 });
-const base = { id, prompt: z.string().min(1).max(200), hint: z.string().min(1).max(300) };
-export const courseExerciseSchema = z.discriminatedUnion('type', [
-  z.object({
-    ...base,
-    type: z.literal('listen-and-select'),
-    wordId: id,
-    choices: z.array(id).min(2).max(6),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('match-pairs'),
-    wordIds: z.array(id).min(2).max(4),
-    imageOrder: z.array(id).min(2).max(4),
-  }),
-  z.object({
-    ...base,
-    type: z.literal('build-word'),
-    wordId: id,
-    tiles: z
-      .array(z.object({ id, letter: z.string().min(1).max(4) }))
-      .min(2)
-      .max(30),
-  }),
-]);
 export const presentationSchema = z.object({
   intro: z.string().min(1).max(300),
   completionTitle: z.string().min(1).max(100),
@@ -117,40 +95,25 @@ export const courseLessonSchema = z
       )
         fail('Missing word media');
     }
-    for (const ex of lesson.exercises) {
-      if (ex.type === 'listen-and-select') {
-        if (
-          !unique(ex.choices) ||
-          !ex.choices.includes(ex.wordId) ||
-          ex.choices.some((w) => !words.has(w))
-        )
-          fail('Invalid listening choices');
-      } else if (ex.type === 'match-pairs') {
-        if (
-          !unique(ex.wordIds) ||
-          !unique(ex.imageOrder) ||
-          ex.wordIds.length !== ex.imageOrder.length ||
-          ex.wordIds.some((w) => !words.has(w) || !ex.imageOrder.includes(w))
-        )
-          fail('Invalid pairs');
-      } else {
-        const word = words.get(ex.wordId);
-        if (!word || !unique(ex.tiles.map((t) => t.id))) {
-          fail('Invalid spelling exercise');
-          continue;
-        }
-        const remaining = ex.tiles.map((t) => t.letter.normalize('NFC'));
-        for (const letter of Array.from(word.spelling.normalize('NFC'))) {
-          const index = remaining.indexOf(letter);
-          if (index < 0) {
-            fail('Tiles cannot form word');
-            break;
-          }
-          remaining.splice(index, 1);
-        }
-      }
-    }
+    const media = new Map(lesson.media.map((m) => [m.id, m.kind]));
+    for (const ex of lesson.exercises) validateExercise(ex, { words, media }, fail);
+    // Every age group must have something to play.
+    for (const band of AGE_BANDS)
+      if (!lesson.exercises.some((e) => !e.ageBands || e.ageBands.includes(band)))
+        fail(`No exercises for age ${band}`);
   });
+/** Exercises per age group, or undefined when no exercise is limited to an age group. */
+export function exerciseCountsOf(lesson: {
+  exercises: { ageBands?: readonly string[] }[];
+}): Partial<Record<(typeof AGE_BANDS)[number], number>> | undefined {
+  if (!lesson.exercises.some((e) => e.ageBands)) return undefined;
+  return Object.fromEntries(
+    AGE_BANDS.map((band) => [
+      band,
+      lesson.exercises.filter((e) => !e.ageBands || e.ageBands.includes(band)).length,
+    ]),
+  );
+}
 const cardTextsSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().min(1).max(200).optional(),
@@ -232,9 +195,14 @@ export const catalogSchema = z
               title: z.string().min(1),
               titles: z.partialRecord(overlayLocaleSchema, z.string().min(1)).optional(),
               exerciseCount: z.number().int().positive(),
-              requiredTypes: z
-                .array(z.enum(['listen-and-select', 'match-pairs', 'build-word']))
-                .min(1),
+              /* Exercises each age group plays, when some are for one group only
+                 (`exerciseCountsOf`); absent when every child plays all of them. */
+              exerciseCounts: z
+                .partialRecord(ageBandSchema, z.number().int().positive())
+                .optional(),
+              /* Mechanics the lesson uses. Any id, not a closed list: an app filters out
+                 lessons it cannot show (`catalogForMechanics`) instead of failing the catalog. */
+              requiredTypes: z.array(id).min(1),
             }),
           )
           .min(1),
@@ -287,21 +255,58 @@ export const releaseSchema = z
         lesson.language !== ref.language ||
         lesson.title !== ref.title ||
         lesson.exercises.length !== ref.exerciseCount ||
+        AGE_BANDS.some((band) => exerciseCountsOf(lesson)?.[band] !== ref.exerciseCounts?.[band]) ||
         JSON.stringify([...new Set(lesson.exercises.map((e) => e.type))].sort()) !==
           JSON.stringify([...ref.requiredTypes].sort())
       )
         ctx.addIssue({ code: 'custom', message: `Catalog/package mismatch: ${ref.id}` });
     }
   });
-export const answerSchema = z.union([
-  z.object({ choiceId: id }),
-  z.object({ pairs: z.record(id, id) }),
-  z.object({ tileIds: z.array(id).max(30) }),
-]);
+/* Age group of the child, from the age the child gave. Lessons are the same for everyone; a
+   mechanic's `adapt` (learning-core) eases an exercise for the younger group while it is
+   played. The group and the seed that picks which options stay are kept in the session (and
+   sent with the attempt), so a resumed session and the server's replay show the same
+   exercise even when the attempt id changes. */
+export const difficultySchema = z.object({
+  ageBand: ageBandSchema,
+  seed: z.string().min(1).max(100),
+});
+export type Difficulty = z.infer<typeof difficultySchema>;
+/* «Повторение»: a lesson the app assembles from words of lessons the child completed
+   (learning-core `composeReview`). It is not in the catalog; the words it was made of and the
+   seed travel with the session and the attempt, so the server assembles the same lesson. */
+export const REVIEW_LESSON_ID = 'review';
+export const reviewWordSchema = z.object({
+  lessonId: id,
+  version: z.number().int().positive(),
+  wordId: id,
+});
+export const reviewSchema = z.object({
+  seed: z.string().min(1).max(100),
+  words: z.array(reviewWordSchema).min(3).max(8),
+});
+/* «Испытание сета» (boss): assembled on the device from every lesson of a finished set
+   (learning-core `composeBoss`), three hearts; the first win of a set earns a chest and its
+   crown. Like a review, it travels as what it was assembled from. */
+export const BOSS_LESSON_ID = 'boss';
+export const BOSS_HEARTS = 3;
+export const bossSchema = z.object({
+  courseId: id,
+  seed: z.string().min(1).max(100),
+  lessons: z
+    .array(z.object({ lessonId: id, version: z.number().int().positive() }))
+    .min(1)
+    .max(30),
+});
+export type Boss = z.infer<typeof bossSchema>;
+export type ReviewWord = z.infer<typeof reviewWordSchema>;
+export type Review = z.infer<typeof reviewSchema>;
 export const learningStateSchema = z.object({
   version: z.literal(2),
   soundEnabled: z.boolean(),
   unlockedCourseIds: z.array(id).optional(),
+  /** Stars of the last runs, newest last (at most 5): difficulty follows how they went. */
+  recent: z.array(z.number().int().min(1).max(3)).max(5).optional(),
   completedCourseIds: z.array(id).optional(),
   progress: z.record(
     id,
@@ -313,6 +318,13 @@ export const learningStateSchema = z.object({
   session: z
     .object({
       attemptId: z.string().uuid().optional(),
+      /** Absent: the exercises as published (old sessions, the panel's default preview). */
+      difficulty: difficultySchema.optional(),
+      /** Present for a review: no progress entry, no XP or coins, stars still count. */
+      review: reviewSchema.optional(),
+      /** Present for a set's challenge; `lost` once its hearts ran out. */
+      boss: bossSchema.optional(),
+      lost: z.boolean().optional(),
       events: z
         .array(
           z.discriminatedUnion('type', [
@@ -333,10 +345,8 @@ export const learningStateSchema = z.object({
     .nullable(),
 });
 export type CourseLesson = z.infer<typeof courseLessonSchema>;
-export type CourseExercise = z.infer<typeof courseExerciseSchema>;
 export type Catalog = z.infer<typeof catalogSchema>;
 export type Release = z.infer<typeof releaseSchema>;
 export type Media = z.infer<typeof mediaSchema>;
 export type Word = z.infer<typeof wordSchema>;
-export type Answer = z.infer<typeof answerSchema>;
 export type LearningState = z.infer<typeof learningStateSchema>;

@@ -98,8 +98,14 @@ test('a job runs through every stage and leaves a publishable draft set', async 
     ['plan', 'text', 'review', 'media-plan', 'cover', 'image', 'audio', 'assemble'],
   );
   const rows = await db.select().from(lessons).where(eq(lessons.courseId, 'en-zoo'));
-  assert.deepEqual(rows.map((r) => r.id).sort(), ['en-zoo-01', 'en-zoo-02']);
-  assert.ok(rows.every((r) => r.document.exercises.length === 6));
+  assert.deepEqual(rows.map((r) => r.id).sort(), ['en-zoo-01', 'en-zoo-02', 'en-zoo-03']);
+  const byId = Object.fromEntries(rows.map((r) => [r.id, r.document]));
+  assert.ok(byId['en-zoo-01']!.exercises.length === 6 && byId['en-zoo-02']!.exercises.length === 6);
+  // The set ends with sentences from its words: 4 for each age group, each recorded.
+  const sentenceLesson = byId['en-zoo-03']!;
+  assert.equal(sentenceLesson.exercises.length, 8);
+  assert.ok(sentenceLesson.exercises.every((e) => e.type === 'build-sentence' && e.ageBands));
+  assert.equal(sentenceLesson.media.filter((m) => m.id.startsWith('sentence-')).length, 8);
   assert.ok(rows.every((r) => r.document.media.every((m) => m.assetId)));
   const generated = await db.select().from(assets).where(eq(assets.generationTaskId, tasks[0]!.id));
   assert.equal(generated.length, 0); // plan task produced no media
@@ -108,7 +114,7 @@ test('a job runs through every stage and leaves a publishable draft set', async 
   });
   assert.equal(
     all.filter((a) => a.provenance.source === 'generated').length,
-    17,
+    25, // cover + 8 pictures + 8 word recordings + 8 sentence recordings
     JSON.stringify(all.map((a) => [a.kind, a.width, a.altText, a.provenance.source])),
   );
   const course = (await db.query.courses.findFirst({
@@ -134,7 +140,7 @@ test('a job runs through every stage and leaves a publishable draft set', async 
   const second = await start(db, 'en-zoo', { totalExercises: 12, targetWords: ['apple', 'ball'] });
   const secondDone = await drain(ctx, second.job.id);
   assert.equal(secondDone.status, 'awaiting-review', secondDone.error ?? '');
-  assert.equal(secondDone.output!.conflicts!.length, 2);
+  assert.equal(secondDone.output!.conflicts!.length, 3);
   assert.ok(secondDone.warnings.some((w) => /изменён вручную/.test(w)));
   const diagnostics = JSON.stringify({
     calls: provider.calls,
@@ -202,7 +208,8 @@ test('transient failures back off and recover; permanent ones fail the job until
     await retryTask(db, b.job.id, task.id, null);
   const recovered = await drain(ctx, b.job.id);
   assert.equal(recovered.status, 'awaiting-review', recovered.error ?? '');
-  assert.equal((await db.select().from(lessons).where(eq(lessons.courseId, 'en-b'))).length, 1);
+  // One word lesson and the sentence lesson.
+  assert.equal((await db.select().from(lessons).where(eq(lessons.courseId, 'en-b'))).length, 2);
 });
 
 test('cancel, expired leases and the cost limit', async (t) => {

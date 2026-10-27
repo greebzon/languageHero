@@ -13,7 +13,8 @@ import { ApiError, api, describeError, type FieldErrors } from '../../app/api';
 import type { BuildIssue, BuildWarning, Lesson } from '../../app/types';
 import { Crumbs, Field, GeneralErrors, Notice, slugify } from '../../components/ui';
 import { AssetPicker } from '../media/AssetPicker';
-import { ExerciseForm, newExercise } from './ExerciseForm';
+import { mechanicFor, MECHANIC_LIST } from '../../mechanics';
+import { ExerciseForm } from './ExerciseForm';
 import { TranslationsEditor } from './TranslationsEditor';
 
 type Editor = {
@@ -531,23 +532,21 @@ export function LessonPage() {
         <div className="page-head">
           <h2>Задания ({doc.exercises.length})</h2>
           <span className="row">
-            {(['listen-and-select', 'match-pairs', 'build-word'] as const).map((type) => (
+            {MECHANIC_LIST.map(({ type, label }) => (
               <button
                 key={type}
                 className="btn light sm"
                 type="button"
                 onClick={() =>
                   updateDoc({
-                    exercises: [...doc.exercises, newExercise(type, nextId('ex', doc.exercises))],
+                    exercises: [
+                      ...doc.exercises,
+                      mechanicFor(type).create(nextId('ex', doc.exercises)),
+                    ],
                   })
                 }
               >
-                +{' '}
-                {type === 'listen-and-select'
-                  ? 'Послушай и выбери'
-                  : type === 'match-pairs'
-                    ? 'Найди пары'
-                    : 'Собери слово'}
+                + {label}
               </button>
             ))}
           </span>
@@ -560,6 +559,7 @@ export function LessonPage() {
             index={index}
             total={doc.exercises.length}
             words={doc.words}
+            media={doc.media}
             errors={(path) => err(`exercises.${index}.${path}`)}
             onChange={(next) => setExercise(index, next)}
             onRemove={() => updateDoc({ exercises: doc.exercises.filter((_, i) => i !== index) })}

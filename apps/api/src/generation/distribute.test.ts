@@ -48,7 +48,8 @@ test('word count and cost estimate scale with the request', () => {
   assert.deepEqual(result.distribution, [6, 6, 6, 7]);
   assert.equal(result.words, 16);
   assert.equal(result.images, 17);
-  assert.equal(result.audios, 16);
+  // Words plus the 8 sentences of the closing sentence lesson (in the default mix).
+  assert.equal(result.audios, 24);
   assert.ok(result.estimatedUsd > 0.6 && result.estimatedUsd < 1);
   const explicit = estimate(
     generationInputSchema.parse({ topic: 'Зоопарк', totalExercises: 25, wordCount: 20 }),

@@ -29,6 +29,8 @@ export default function WorldsScreen() {
     refreshing,
     catalogStatus,
     startLesson,
+    startReview,
+    canReview,
     loadingLesson,
     lessonError,
   } = useDemo();
@@ -49,6 +51,13 @@ export default function WorldsScreen() {
       return;
     }
     if (await startLesson(id)) router.push('/lesson');
+  }
+  async function review() {
+    if (resume && !resume.review) {
+      setMessage(t('home.finishStarted'));
+      return;
+    }
+    if (await startReview()) router.push('/lesson');
   }
   return (
     <Screen
@@ -143,6 +152,25 @@ export default function WorldsScreen() {
           )}
         </View>
 
+        {canReview && !elsewhere && (
+          <View style={s.review}>
+            <View style={s.row}>
+              <Icon name="refresh-circle" size={34} color="#6A3FB5" />
+              <View style={s.flex}>
+                <Heading style={s.reviewTitle}>{t('home.review.title')}</Heading>
+                <Label style={s.small}>{t('home.review.text')}</Label>
+              </View>
+            </View>
+            <ToyButton
+              testID="start-review"
+              title={loadingLesson ? t('common.preparingLesson') : t('home.review.start')}
+              tone="light"
+              icon="refresh"
+              disabled={loadingLesson}
+              onPress={() => void review()}
+            />
+          </View>
+        )}
         {lessonError && (
           <Label accessibilityLiveRegion="polite" style={s.error}>
             {t('app.errors.lesson')}
@@ -169,7 +197,11 @@ export default function WorldsScreen() {
           const caption = (
             <View style={[s.coverCopy, course.cover && { backgroundColor: '#235F43' }]}>
               <Label style={s.eyebrow}>{t('common.yourAdventure')}</Label>
-              <Heading style={s.coverTitle}>{course.title}</Heading>
+              <Heading style={s.coverTitle}>
+                {/* The crown of a set whose challenge was won. */}
+                {journal.bosses[course.id] ? '👑 ' : ''}
+                {course.title}
+              </Heading>
               <Label style={s.coverDescription}>
                 {course.description ?? t('home.defaultDescription')}
               </Label>
@@ -411,6 +443,15 @@ const s = StyleSheet.create({
     paddingHorizontal: 12,
   },
   page: { paddingHorizontal: 16, gap: 22, paddingTop: 2 },
+  review: {
+    gap: 12,
+    padding: 16,
+    borderRadius: 24,
+    backgroundColor: '#F3EDFF',
+    borderWidth: 1,
+    borderColor: '#E1D4FA',
+  },
+  reviewTitle: { fontSize: 18, lineHeight: 24 },
   welcome: {
     backgroundColor: '#FFFFFF',
     borderRadius: 28,

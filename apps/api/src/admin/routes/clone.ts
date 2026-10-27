@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { asc, desc, eq, inArray } from 'drizzle-orm';
-import { cloneInputSchema, type GenerationInput } from '@lingvohero/contracts';
+import { cloneInputSchema, isSentenceLesson, type GenerationInput } from '@lingvohero/contracts';
 import type { AdminOptions } from '../plugin.js';
 import { courses, generationJobs, languages, lessons } from '../../db/schema.js';
 import { createJob } from '../../worker/queue.js';
@@ -129,10 +129,12 @@ export async function cloneRoutes(app: FastifyInstance, options: AdminOptions) {
     const types = [
       ...new Set(sourceLessons.flatMap((l) => l.document.exercises.map((e) => e.type))),
     ];
+    // The sentence lesson is written anew, outside the exercise budget of the word lessons.
+    const wordLessons = sourceLessons.filter((l) => !isSentenceLesson(l.document));
     const jobInput: GenerationInput = {
       topic: source.topic ?? source.title,
-      totalExercises: sourceLessons.reduce((sum, l) => sum + l.document.exercises.length, 0),
-      lessonSize: Math.max(...sourceLessons.map((l) => l.document.exercises.length)),
+      totalExercises: wordLessons.reduce((sum, l) => sum + l.document.exercises.length, 0),
+      lessonSize: Math.max(3, ...wordLessons.map((l) => l.document.exercises.length)),
       wordCount: null,
       level: 'beginner',
       ageRange: '6-9',

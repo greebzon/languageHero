@@ -20,6 +20,9 @@ export const lesson = defineTexts({
     pauseTitle: 'Сделаем перерыв?',
     pauseText: 'Твоё место в уроке сохранится. Можно вернуться и продолжить.',
     keepPlaying: 'Продолжить играть',
+    combo: 'Уже {n} подряд — так держать!',
+    hearts: 'Осталось сердечек: {n}',
+    streakA11y: 'Правильных ответов подряд: {n}',
   },
   en: {
     exit: 'Leave the lesson',
@@ -39,6 +42,9 @@ export const lesson = defineTexts({
     pauseTitle: 'Time for a break?',
     pauseText: 'Your place in the lesson will be saved. You can come back and keep going.',
     keepPlaying: 'Keep playing',
+    combo: '{n} in a row — keep it up!',
+    hearts: 'Hearts left: {n}',
+    streakA11y: 'Right answers in a row: {n}',
   },
   he: {
     exit: 'לצאת מהשיעור',
@@ -58,5 +64,8 @@ export const lesson = defineTexts({
     pauseTitle: 'עושים הפסקה?',
     pauseText: 'המקום שלך בשיעור יישמר. אפשר לחזור ולהמשיך.',
     keepPlaying: 'להמשיך לשחק',
+    combo: 'כבר {n} ברצף — ממשיכים ככה!',
+    hearts: 'לבבות שנשארו: {n}',
+    streakA11y: 'תשובות נכונות ברצף: {n}',
   },
 });

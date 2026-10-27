@@ -26,11 +26,17 @@ import {
   type LearningState,
   type Locale,
   visibleCatalog,
+  BASE_MECHANICS,
+  BOSS_LESSON_ID,
+  REVIEW_LESSON_ID,
+  type Catalog,
 } from '@lingvohero/contracts';
 import {
   buyItem,
   claimQuest,
   cleanOutfit,
+  composeBoss,
+  composeReview,
   courseCards,
   dayKey,
   learn,
@@ -88,6 +94,8 @@ const TZ_FREE_SHIFT = 60;
 const TZ_CHANGE_INTERVAL = 20 * 3600_000;
 /* Every error the learner API answers with: a stable `code` the app translates into the
    child's interface language, and the Russian text older app versions show as is. */
+/** Coins for a challenge won when the chest has nothing left to give (every item owned). */
+const BOSS_COINS = 50;
 const FAULTS = {
   origin_forbidden: 'Этот адрес приложения не разрешён.',
   sign_in: 'Войди в аккаунт.',
@@ -110,6 +118,9 @@ const FAULTS = {
   quest_claimed: 'Награда уже получена.',
   quest_incomplete: 'Квест ещё не выполнен.',
   mascot_locked: 'Этот друг пока закрыт. Продолжай заниматься и повышай уровень.',
+  age_invalid: 'Такой возраст выбрать нельзя.',
+  review_invalid: 'Это повторение собрано из слов, которых нет в пройденных уроках.',
+  boss_invalid: 'Испытание открывается, когда пройдены все уроки сета.',
   mascot_unknown: 'Этот друг сейчас недоступен.',
   outfit_invalid: 'Надеть можно только свои вещи, каждую на своё место.',
   item_unknown: 'Такого товара нет.',
@@ -217,6 +228,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         language: user.language,
         languages: user.languages ?? [],
         locale: user.uiLocale ?? null,
+        birthYear: user.birthYear ?? null,
         onboarded: !!user.onboarded,
         legacyImported: !!user.legacyImported,
         ...progress,
@@ -461,6 +473,9 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         throw new Fault(400, 'mascot_unknown');
       if (!progress.unlockedMascotIds.includes(input.avatar)) throw new Fault(403, 'mascot_locked');
     }
+    // An age from 3 to 18 (the app offers 6–9+).
+    const age = input.birthYear === undefined ? null : new Date().getFullYear() - input.birthYear;
+    if (age !== null && (age < 3 || age > 18)) throw new Fault(400, 'age_invalid');
     const catalog = await readCatalog(o.contentRoot);
     const codes = [...(input.language ? [input.language] : []), ...(input.languages ?? [])];
     if (codes.some((code) => !catalog.languages.some((l) => l.code === code)))
@@ -477,6 +492,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.avatar !== undefined ? { avatar: input.avatar } : {}),
         ...(input.locale !== undefined ? { uiLocale: input.locale } : {}),
+        ...(input.birthYear !== undefined ? { birthYear: input.birthYear } : {}),
         language,
         languages,
         // The welcome screen sends the name and the mascot together: that ends the onboarding.
@@ -576,16 +592,113 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       .where(eq(attempts.userId, userId));
     return row?.stars ?? 0;
   }
-  async function replay(input: z.infer<typeof attemptSchema>, state: LearningState) {
-    const lesson = await cachedLesson(input.lessonId, input.version);
+  async function replay(
+    input: z.infer<typeof attemptSchema>,
+    state: LearningState,
+    visible: Catalog,
+  ) {
+    const lesson = input.boss
+      ? await bossLesson(input, state, visible)
+      : input.review
+        ? await reviewLesson(input, state)
+        : await cachedLesson(input.lessonId, input.version);
     return { lesson, state: replayLesson(input, state, lesson) };
+  }
+  /* A set's challenge is assembled from every lesson of the set, once the child finished them
+     all (learning-core `composeBoss`); the same lessons and seed give the same challenge. */
+  async function bossLesson(
+    input: z.infer<typeof attemptSchema>,
+    state: LearningState,
+    visible: Catalog,
+  ) {
+    const boss = input.boss!;
+    const course = visible.courses.find((c) => c.id === boss.courseId);
+    const ids = course?.lessons.map((l) => l.id) ?? [];
+    if (
+      input.lessonId !== BOSS_LESSON_ID ||
+      input.version !== 1 ||
+      !course ||
+      ids.some((id) => !state.progress[id]) ||
+      boss.lessons.length !== ids.length ||
+      boss.lessons.some((l) => !ids.includes(l.lessonId))
+    )
+      throw new Fault(422, 'boss_invalid');
+    const lessons = [];
+    for (const l of boss.lessons) lessons.push(await cachedLesson(l.lessonId, l.version));
+    try {
+      return composeBoss(lessons, boss.seed);
+    } catch {
+      throw new Fault(422, 'boss_invalid');
+    }
+  }
+  /* The first win of a set: a chest (an item the child does not have yet, coins when every
+     item is owned) and the set's crown, once per set. */
+  async function grantBossReward(tx: Tx, user: User, courseId: string) {
+    const key = `boss:${courseId}`;
+    const [done] = await tx
+      .select()
+      .from(coinLedger)
+      .where(and(eq(coinLedger.userId, user.id), eq(coinLedger.key, key)));
+    if (done) return;
+    const journal = await loadJournal(tx, user, treasury);
+    const candidates = (await wardrobeItems(tx)).filter(
+      (i) => i.kind === 'wardrobe' && !journal.inventory.items.includes(i.id),
+    );
+    const item = candidates[Math.floor(Math.random() * candidates.length)];
+    await tx
+      .insert(coinLedger)
+      .values({
+        userId: user.id,
+        key,
+        kind: 'boss',
+        ref: courseId,
+        day: dayKey(wallClock(now(), user.tzOffset)),
+        coins: item ? 0 : BOSS_COINS,
+        itemId: item?.id ?? null,
+        createdAt: now(),
+      })
+      .onConflictDoNothing();
+  }
+  /* A review is assembled from words of lessons the child has completed; the same words and
+     seed give the same lesson the device played (learning-core `composeReview`). */
+  async function reviewLesson(input: z.infer<typeof attemptSchema>, state: LearningState) {
+    const review = input.review!;
+    if (input.lessonId !== REVIEW_LESSON_ID || input.version !== 1)
+      throw new Fault(422, 'review_invalid');
+    const entries = [];
+    for (const word of review.words) {
+      if (!state.progress[word.lessonId]) throw new Fault(422, 'review_invalid');
+      entries.push({
+        lesson: await cachedLesson(word.lessonId, word.version),
+        wordId: word.wordId,
+      });
+    }
+    if (new Set(entries.map((e) => e.lesson.language)).size !== 1)
+      throw new Fault(422, 'review_invalid');
+    try {
+      return composeReview(entries, review.seed);
+    } catch {
+      throw new Fault(422, 'review_invalid');
+    }
   }
   function replayLesson(
     input: z.infer<typeof attemptSchema>,
     state: LearningState,
     lesson: Awaited<ReturnType<typeof readLesson>>,
   ) {
-    let value = learn({ ...state, session: null }, { type: 'start', lesson, attemptId: input.id });
+    // The device's age group decides which options were shown. The age is the child's own
+    // answer, so it is not checked against the profile; every answer still is.
+    let value = learn(
+      { ...state, session: null },
+      {
+        type: 'start',
+        lesson,
+        attemptId: input.id,
+        difficulty: input.difficulty,
+        review: input.review,
+        boss: input.boss,
+      },
+    );
     for (const event of input.events) {
       if (value.session?.finished) throw new Fault(422, 'attempt_extra_answers');
       if (event.type === 'answer') {
@@ -615,7 +728,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         // Access follows the sets this child sees in the interface language of this device (only
         // an explicit choice via PATCH /me is saved: another device may use its own language).
         const locale: Locale = input.locale ?? current.uiLocale ?? 'ru';
-        const visible = visibleCatalog(catalog, locale);
+        const visible = visibleCatalog(catalog, locale, input.mechanics ?? BASE_MECHANICS);
         let state = current.learning;
         let stars = await starTotal(tx, user.id);
         const accepted: string[] = [];
@@ -650,9 +763,16 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
             continue;
           }
           try {
-            assertAccessible(attempt.lessonId, attempt.version);
-            const { state: result, lesson } = await replay(attempt, state);
+            if (!attempt.review && !attempt.boss)
+              assertAccessible(attempt.lessonId, attempt.version);
+            const { state: result, lesson } = await replay(attempt, state, visible);
             if (!result.session?.finished) throw new Fault(422, 'lesson_unfinished');
+            // A challenge lost at its last heart: verified, but no stars, no completion.
+            if (result.session.lost) {
+              state = { ...result, session: state.session };
+              accepted.push(attempt.id);
+              continue;
+            }
             // This run's stars, not the lesson's best: a repeat earns them again.
             const runStars = starsFor(result.session.mistakes);
             await tx.insert(attempts).values({
@@ -661,11 +781,15 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
               lessonId: attempt.lessonId,
               version: attempt.version,
               stars: runStars,
-              words: lesson.words.length,
+              // A review or a challenge teaches no new words (they count with their lessons).
+              words: attempt.review || attempt.boss ? 0 : lesson.words.length,
               payloadHash: hash,
               createdAt: now(),
             });
-            await applyReward(tx, user.id, attempt.lessonId, 'verified');
+            // XP and coins come once per lesson of the map; a review earns stars only.
+            if (!attempt.review && !attempt.boss)
+              await applyReward(tx, user.id, attempt.lessonId, 'verified');
+            if (attempt.boss) await grantBossReward(tx, current, attempt.boss.courseId);
             stars += runStars;
             state = reconcileCourseAccess(visible, { ...result, session: state.session }, stars);
             accepted.push(attempt.id);
@@ -685,15 +809,20 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
           if (input.session && !input.session.finished) {
             const incoming = input.session;
             if (incoming.attemptId && incoming.events) {
-              assertAccessible(incoming.lesson.id, incoming.lesson.version);
+              if (!incoming.review && !incoming.boss)
+                assertAccessible(incoming.lesson.id, incoming.lesson.version);
               const { state: restored } = await replay(
                 {
                   id: incoming.attemptId,
                   lessonId: incoming.lesson.id,
                   version: incoming.lesson.version,
+                  difficulty: incoming.difficulty,
+                  review: incoming.review,
+                  boss: incoming.boss,
                   events: incoming.events,
                 },
                 state,
+                visible,
               );
               if (restored.session?.finished) throw new Fault(422, 'session_finished');
               const withDraft = learn(restored, { type: 'draft', answer: incoming.draft });

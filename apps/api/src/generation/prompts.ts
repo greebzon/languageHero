@@ -1,18 +1,13 @@
 import type { GenerationInput, GenerationWord, Locale } from '@lingvohero/contracts';
+import { GENERATION_MECHANICS } from './mechanics/index.js';
 
 /** Bump when a prompt changes: artifacts are keyed by it, so old outputs are never reused. */
-export const PROMPT_VERSION = 'v3';
+export const PROMPT_VERSION = 'v5';
 
 /* Children of any gender read these texts: Russian past-tense verbs and short adjectives mark
    gender («ты собрал», «ты готов»), so the model is told to avoid them. */
 const NEUTRAL_RUSSIAN =
   'Address the child as «ты» in gender-neutral Russian: never use past-tense verbs or short adjectives that mark gender (not «ты собрал», «ты запомнил», «ты узнал», «ты готов»); use present or future tense, «у тебя получилось», «ты умеешь», «готово», «отлично» instead.';
-
-const mixLabels: Record<GenerationInput['mix'][number], string> = {
-  'listen-and-select': 'listen-and-select (hear a word, pick its picture among 2–4 options)',
-  'match-pairs': 'match-pairs (connect 2–4 words with their pictures)',
-  'build-word': 'build-word (spell a word from letter tiles with a few distractor letters)',
-};
 
 export type PlanPayload = {
   language: string;
@@ -74,12 +69,37 @@ export function lessonPrompt(payload: LessonPayload) {
   const user = [
     `Lesson "${payload.lesson.title}" — goal: ${payload.lesson.goal}. Topic: ${payload.topic}.`,
     `Available words (use only these keys):\n${vocabulary}`,
-    `Produce exactly ${payload.exerciseCount} exercises using only these mechanics: ${payload.mix.map((m) => mixLabels[m]).join('; ')}. Use every allowed mechanic at least once when the count allows, alternate them, and practise every word of the lesson at least once.`,
+    `Produce exactly ${payload.exerciseCount} exercises using only these mechanics: ${payload.mix.map((m) => GENERATION_MECHANICS[m].label).join('; ')}. Use every allowed mechanic at least once when the count allows, alternate them, and practise every word of the lesson at least once.`,
     `Field rules per type:`,
-    `- listen-and-select: wordKey = the correct word; choiceKeys = 2–4 distinct keys including wordKey (order is the display order); pairKeys = []; distractorLetters = "".`,
-    `- match-pairs: wordKey = ""; pairKeys = 2–4 distinct keys; choiceKeys = []; distractorLetters = "".`,
-    `- build-word: wordKey = the word to spell; distractorLetters = 1–3 extra lowercase letters not helping to spell it; choiceKeys = []; pairKeys = [].`,
+    ...payload.mix.map((m) => `- ${m}: ${GENERATION_MECHANICS[m].rules}`),
+    `sentence = "" for every type except fill-gap.`,
     `prompt: what the child must do (Russian, max 120 chars, no answer inside). hint: a friendly clue from Тим the fox (Russian, max 200 chars) that does not spell out the word.`,
+    payload.feedback
+      ? `The previous attempt was rejected: ${payload.feedback}. Fix exactly that.`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+  return { system, user };
+}
+
+export type SentencesPayload = {
+  language: string;
+  languageTitle: string;
+  topic: string;
+  words: { key: string; spelling: string; translation: string }[];
+  perBand: number;
+  feedback: string | null;
+};
+
+export function sentencesPrompt(payload: SentencesPayload) {
+  const system = `You write short sentences for a children's ${payload.languageTitle} learning game (Russian-speaking children aged 6–9). The child builds each sentence from word tiles. ${NEUTRAL_RUSSIAN} Answer strictly in the requested JSON schema.`;
+  const words = payload.words.map((w) => `- ${w.spelling} (${w.translation})`).join('\n');
+  const user = [
+    `Topic: "${payload.topic}". The child already knows these ${payload.languageTitle} words; use them exactly in this form:\n${words}`,
+    `First list in helperWords the few other words the sentences need (at most 12 for all sentences together: pronouns, articles, "is", "and", simple verbs such as "see", "like", "have", simple adjectives), in lowercase. Every word of every sentence must be one of the known words or one of the helper words.`,
+    `Then write exactly ${payload.perBand} sentences with ageBand "6-7" (2–4 words, very simple, like "I see a cat") and exactly ${payload.perBand} with ageBand "8-9" (3–6 words, like "The cat is big"). Each uses at least one known word, is natural ${payload.languageTitle}, has no punctuation inside, and no two sentences are the same.`,
+    `For each: text — the sentence in ${payload.languageTitle}; translation — its Russian translation (max 100 chars); hint — a friendly Russian clue from Тим the fox (max 150 chars) that does not give away the word order; extraWords — 1–2 known or helper words that are not in the sentence (they become wrong tiles).`,
     payload.feedback
       ? `The previous attempt was rejected: ${payload.feedback}. Fix exactly that.`
       : '',
@@ -140,7 +160,16 @@ export type LessonTranslationPayload = {
   languageTitle: string;
   lessonTitle: string;
   words: { key: string; sourceText: string; text: string; translation: string }[];
-  exercises: { type: string; prompt: string; hint: string; words: string[] }[];
+  /** `letters`: the exercise is rebuilt from letters, so it needs distractor letters. */
+  exercises: {
+    type: string;
+    prompt: string;
+    hint: string;
+    words: string[];
+    letters: boolean;
+    /** The sentence (with ___) to say again in the new language, "" when none. */
+    sentence: string;
+  }[];
 };
 
 export function lessonTranslationPrompt(payload: LessonTranslationPayload) {
@@ -151,12 +180,12 @@ export function lessonTranslationPrompt(payload: LessonTranslationPayload) {
   const exercises = payload.exercises
     .map(
       (e, i) =>
-        `${i + 1}. [${e.type}; words: ${e.words.join(', ')}] prompt: ${e.prompt} | hint: ${e.hint}`,
+        `${i + 1}. [${e.type}; words: ${e.words.join(', ')}${e.letters ? '; needs letters' : ''}] prompt: ${e.prompt} | hint: ${e.hint}${e.sentence ? ` | sentence: ${e.sentence}` : ''}`,
     )
     .join('\n');
   const user = [
     `Lesson "${payload.lessonTitle}". Words:\n${words}`,
-    `Return exactly ${payload.exercises.length} exercises in the same order. For each: prompt and hint rewritten in Russian with any ${payload.sourceLanguageTitle} word or letter replaced by the ${payload.languageTitle} one (a hint must not spell out the answer); distractorLetters — for build-word 1–2 lowercase ${payload.languageTitle} letters that are not in the word, otherwise an empty string.\n${exercises}`,
+    `Return exactly ${payload.exercises.length} exercises in the same order. For each: prompt and hint rewritten in Russian with any ${payload.sourceLanguageTitle} word or letter replaced by the ${payload.languageTitle} one (a hint must not spell out the answer); distractorLetters — for an exercise marked "needs letters" 1–2 lowercase ${payload.languageTitle} letters that are not in the word, otherwise an empty string; sentence — for an exercise with a sentence, the same short sentence in ${payload.languageTitle} with ___ where the word goes, otherwise an empty string.\n${exercises}`,
   ].join('\n');
   return { system, user };
 }

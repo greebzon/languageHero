@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { learningStateSchema, answerSchema, localeSchema, type Locale } from './course';
+import {
+  answerSchema,
+  difficultySchema,
+  learningStateSchema,
+  reviewSchema,
+  bossSchema,
+  localeSchema,
+  type Locale,
+} from './course';
 import type { Outfit } from './shop';
 
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
@@ -7,7 +15,7 @@ export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 export const avatarSchema = z.string().regex(/^[a-z][a-z0-9-]{0,39}$/);
 export const languageCodeSchema = z.string().regex(/^[a-z0-9-]{1,80}$/);
 /* `PATCH /me`: any subset. The welcome screen sends name + avatar (that completes the
-   onboarding); the language picker sends `language` (the current one, added to `languages`
+   onboarding) with the birth year; the language picker sends `language` (the current one, added to `languages`
    when new); the profile sends `locale` (the interface language). */
 export const profileInputSchema = z
   .object({
@@ -16,6 +24,8 @@ export const profileInputSchema = z
     language: languageCodeSchema.optional(),
     languages: z.array(languageCodeSchema).min(1).max(10).optional(),
     locale: localeSchema.optional(),
+    /* The child picks an age (6, 7, 8, 9+); the year is stored so the age grows by itself. */
+    birthYear: z.number().int().min(1990).max(2100).optional(),
   })
   .refine((p) => Object.values(p).some((v) => v !== undefined), { message: 'Пустой запрос.' });
 /* The profile as the app caches it; `languages`/`locale` are absent in caches from older
@@ -27,12 +37,19 @@ export const profileSnapshotSchema = z.object({
   language: languageCodeSchema,
   languages: z.array(languageCodeSchema).default([]),
   locale: localeSchema.nullable().default(null),
+  birthYear: z.number().int().nullable().default(null),
   onboarded: z.boolean(),
 });
 export const attemptSchema = z.object({
   id: z.string().uuid(),
   lessonId: z.string().regex(/^[a-z0-9-]{1,80}$/),
   version: z.number().int().positive(),
+  /** The age group the device played it for (absent: as published). */
+  difficulty: difficultySchema.optional(),
+  /** A review: the words and seed it was assembled from (`lessonId` is `review`). */
+  review: reviewSchema.optional(),
+  /** A set's challenge: the set, its lessons and the seed (`lessonId` is `boss`). */
+  boss: bossSchema.optional(),
   events: z
     .array(
       z.discriminatedUnion('type', [
@@ -54,6 +71,9 @@ export const syncInputSchema = z.object({
   /* The device's interface locale: the server hides untranslated sets exactly as the app does
      when it checks access. Not saved (the profile's `locale` is the explicit choice). */
   locale: localeSchema.optional(),
+  /* Mechanics the app can show: the server leaves out the same lessons as the catalog it
+     served this app (absent = the first three, `BASE_MECHANICS`). */
+  mechanics: z.array(z.string().max(40)).max(40).optional(),
 });
 /* Activity journal behind «Сокровищница». Built on the server from verified attempts and the
    coin ledger; the client only displays it (and extends it optimistically while offline). */
@@ -69,6 +89,8 @@ export const journalSchema = z.object({
   days: z.record(z.string(), journalDaySchema),
   claimedQuests: z.record(z.string(), z.array(z.string())),
   trophies: z.record(z.string(), z.string()),
+  /** Sets whose challenge was won (set id → day): their crown. */
+  bosses: z.record(z.string(), z.string()).default({}),
   bonusCoins: z.number().int().nonnegative(),
   spentCoins: z.number().int().nonnegative(),
   /** Stars of every verified completion, repeats included: what opens sets. */
@@ -93,6 +115,8 @@ export type AccountProfile = {
   languages: string[];
   /** The interface language the child chose; null = the device language. */
   locale: Locale | null;
+  /** From the age the child gave; null until the child answers. */
+  birthYear: number | null;
   onboarded: boolean;
   legacyImported: boolean;
   unlockedMascotIds: string[];

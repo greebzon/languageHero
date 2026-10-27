@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
-import type { GenerationInput, GenerationOutput } from '@lingvohero/contracts';
+import { exerciseWords, type GenerationInput, type GenerationOutput } from '@lingvohero/contracts';
 import { toCourseLesson, type AssetRef } from '../publishing/convert.js';
+import { wordLessonMix } from './mechanics/index.js';
 
 export type ReviewProblem = { lessonId: string | null; message: string };
 
@@ -22,13 +23,15 @@ export function reviewMaterial(
     placeholders.set(id, { id, sha256: createHash('sha256').update(key).digest('hex'), ext });
     return id;
   };
-  const total = output.lessons.reduce((sum, l) => sum + (l.document?.exercises.length ?? 0), 0);
+  // The closing sentence lesson is outside the requested number of exercises.
+  const wordLessons = output.lessons.filter((l) => l.kind !== 'sentences');
+  const total = wordLessons.reduce((sum, l) => sum + (l.document?.exercises.length ?? 0), 0);
   if (total !== input.totalExercises)
     problems.push({
       lessonId: null,
       message: `Получилось ${total} заданий вместо ${input.totalExercises}`,
     });
-  const requested = new Set(input.mix);
+  const wordMix = wordLessonMix(input.mix);
   const seen = new Set<string>();
   const usedWords = new Set<string>();
   for (const lesson of output.lessons) {
@@ -61,23 +64,30 @@ export function reviewMaterial(
           .map(([k, v]) => `${k === '_' ? '' : k + ': '}${v.join('; ')}`)
           .join(' · '),
       });
+    // Each word lesson has its own mechanics (generation/rhythm.ts); old jobs used all of them.
+    const requested = new Set(lesson.mechanics ?? wordMix);
     const types = new Set(lesson.document.exercises.map((e) => e.type));
     const missing = [...requested].filter((t) => !types.has(t));
-    if (!translated && missing.length && lesson.document.exercises.length >= requested.size)
+    if (
+      !translated &&
+      lesson.kind !== 'sentences' &&
+      missing.length &&
+      lesson.document.exercises.length >= requested.size
+    )
       problems.push({
         lessonId: lesson.lessonId,
         message: `Не использованы механики: ${missing.join(', ')}`,
       });
     for (const exercise of lesson.document.exercises) {
-      const key = `${exercise.type}:${exercise.prompt.toLowerCase()}:${'wordId' in exercise ? exercise.wordId : exercise.wordIds.join('+')}`;
+      const words = exerciseWords(exercise);
+      const key = `${exercise.type}:${exercise.prompt.toLowerCase()}:${words.join('+')}`;
       if (!translated && seen.has(key))
         problems.push({
           lessonId: lesson.lessonId,
           message: `Задание «${exercise.prompt}» повторяет другой урок`,
         });
       seen.add(key);
-      if ('wordId' in exercise) usedWords.add(exercise.wordId);
-      else for (const id of exercise.wordIds) usedWords.add(id);
+      for (const id of words) usedWords.add(id);
     }
   }
   const unused = output.words.filter((w) => !usedWords.has(w.key));

@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import {
   createAudioPlayer,
@@ -10,7 +10,7 @@ import {
 import type { CourseLesson } from '@lingvohero/contracts';
 import { mediaSource, seed } from '../content/client';
 import { useDemo } from '../state/DemoProvider';
-import { useT } from '../i18n';
+import { useT, type TextKey } from '../i18n';
 import { Icon, Label } from './ui';
 import { colors, fonts } from '../theme';
 
@@ -75,10 +75,16 @@ export function AudioControl({
   audioId,
   compact = false,
   lesson = seed.lessons[0],
+  caption = 'audio.question',
+  autoPlay = false,
 }: {
   audioId: string;
   compact?: boolean;
   lesson?: CourseLesson;
+  /** The line above «Нажми и послушай» (default: «Какое слово прозвучало?»). */
+  caption?: TextKey;
+  /** Play once as soon as the sound is ready (when sound is on): tasks a child hears first. */
+  autoPlay?: boolean;
 }) {
   const source = mediaSource(lesson, audioId);
   if (compact)
@@ -89,9 +95,19 @@ export function AudioControl({
         word={lesson.words.find((w) => w.audioId === audioId)?.text ?? ''}
       />
     );
-  return <FullControl audioId={audioId} source={source} />;
+  return <FullControl audioId={audioId} source={source} caption={caption} autoPlay={autoPlay} />;
 }
-function FullControl({ audioId, source }: { audioId: string; source: string | number }) {
+function FullControl({
+  audioId,
+  source,
+  caption,
+  autoPlay,
+}: {
+  audioId: string;
+  source: string | number;
+  caption: TextKey;
+  autoPlay: boolean;
+}) {
   const player = useAudioPlayer(source);
   const status = useAudioPlayerStatus(player);
   const { state, dispatch } = useDemo();
@@ -106,6 +122,13 @@ function FullControl({ audioId, source }: { audioId: string; source: string | nu
     const timer = setTimeout(() => setError(true), 10000);
     return () => clearTimeout(timer);
   }, [status.isLoaded, audioId]);
+  // A child who cannot read yet hears the word as the task appears (once, never when muted).
+  const autoPlayed = useRef(false);
+  useEffect(() => {
+    if (!autoPlay || autoPlayed.current || !status.isLoaded || !state.soundEnabled) return;
+    autoPlayed.current = true;
+    void play();
+  }, [autoPlay, status.isLoaded, state.soundEnabled]);
   async function play() {
     if (!state.soundEnabled) dispatch({ type: 'sound', enabled: true });
     try {
@@ -140,9 +163,7 @@ function FullControl({ audioId, source }: { audioId: string; source: string | nu
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Label style={s.caption}>
-              {status.playing ? t('audio.listening') : t('audio.question')}
-            </Label>
+            <Label style={s.caption}>{status.playing ? t('audio.listening') : t(caption)}</Label>
             <Label style={s.title}>
               {error
                 ? t('audio.reload')

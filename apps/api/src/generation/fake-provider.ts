@@ -1,4 +1,6 @@
 import { fakePng, fakeWav } from './fake-media.js';
+import { GENERATION_MECHANICS } from './mechanics/index.js';
+import { fakeSentences } from './sentences.js';
 import type {
   CourseTextsPayload,
   WardrobeTextsPayload,
@@ -6,6 +8,7 @@ import type {
   LessonTextsPayload,
   LessonTranslationPayload,
   PlanPayload,
+  SentencesPayload,
   TranslationPayload,
 } from './prompts.js';
 import {
@@ -56,19 +59,21 @@ export class FakeProvider implements GenerationProvider {
             ? lessonTranslationFor(request.payload as LessonTranslationPayload)
             : request.schemaName === 'lesson_texts'
               ? lessonTextsFor(request.payload as LessonTextsPayload)
-              : request.schemaName === 'course_texts'
-                ? courseTextsFor(request.payload as CourseTextsPayload)
-                : request.schemaName === 'mascot_texts' || request.schemaName === 'item_texts'
-                  ? wardrobeTextsFor(request.payload as WardrobeTextsPayload)
-                  : request.schemaName === 'mascot_slots'
-                    ? {
-                        head: { x: 0.28, y: 0.04, w: 0.44, h: 0.22 },
-                        eyes: { x: 0.32, y: 0.2, w: 0.36, h: 0.1 },
-                        outfit: { x: 0.26, y: 0.38, w: 0.48, h: 0.32 },
-                        back: { x: 0.12, y: 0.3, w: 0.76, h: 0.45 },
-                        companion: { x: 0.74, y: 0.3, w: 0.22, h: 0.22 },
-                      }
-                    : lessonFor(request.payload as LessonPayload);
+              : request.schemaName === 'lesson_sentences'
+                ? fakeSentences((request.payload as SentencesPayload).words)
+                : request.schemaName === 'course_texts'
+                  ? courseTextsFor(request.payload as CourseTextsPayload)
+                  : request.schemaName === 'mascot_texts' || request.schemaName === 'item_texts'
+                    ? wardrobeTextsFor(request.payload as WardrobeTextsPayload)
+                    : request.schemaName === 'mascot_slots'
+                      ? {
+                          head: { x: 0.28, y: 0.04, w: 0.44, h: 0.22 },
+                          eyes: { x: 0.32, y: 0.2, w: 0.36, h: 0.1 },
+                          outfit: { x: 0.26, y: 0.38, w: 0.48, h: 0.32 },
+                          back: { x: 0.12, y: 0.3, w: 0.76, h: 0.45 },
+                          companion: { x: 0.74, y: 0.3, w: 0.22, h: 0.22 },
+                        }
+                      : lessonFor(request.payload as LessonPayload);
     return {
       ok: true as const,
       data,
@@ -213,35 +218,14 @@ function lessonFor(payload: LessonPayload) {
   const exercises = Array.from({ length: payload.exerciseCount }, (_, i) => {
     const type = payload.mix[i % payload.mix.length]!;
     const word = keys[i % keys.length]!;
-    const others = keys.filter((k) => k !== word);
-    if (type === 'match-pairs')
-      return {
-        type,
-        prompt: `Найди пары ${i + 1}`,
-        hint: 'Соедини слово с картинкой',
-        wordKey: '',
-        choiceKeys: [],
-        pairKeys: [word, ...others].slice(0, 2 + (i % 3)),
-        distractorLetters: '',
-      };
-    if (type === 'listen-and-select')
-      return {
-        type,
-        prompt: `Послушай и выбери ${i + 1}`,
-        hint: `Это слово начинается на «${word[0]}»`,
-        wordKey: word,
-        choiceKeys: [word, ...others].slice(0, 2 + (i % 3)),
-        pairKeys: [],
-        distractorLetters: '',
-      };
     return {
       type,
-      prompt: `Собери слово ${i + 1}`,
-      hint: 'Начни с первой буквы',
-      wordKey: word,
-      choiceKeys: [],
-      pairKeys: [],
-      distractorLetters: 'qz',
+      sentence: '',
+      ...GENERATION_MECHANICS[type].fake(
+        i,
+        word,
+        keys.filter((k) => k !== word),
+      ),
     };
   });
   return { exercises };
@@ -271,7 +255,8 @@ function lessonTranslationFor(payload: LessonTranslationPayload) {
     exercises: payload.exercises.map((e) => ({
       prompt: e.prompt,
       hint: e.hint,
-      distractorLetters: e.type === 'build-word' ? 'qz' : '',
+      distractorLetters: e.letters ? 'qz' : '',
+      sentence: e.sentence,
     })),
   };
 }

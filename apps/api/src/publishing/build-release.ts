@@ -1,6 +1,7 @@
 import {
   OVERLAY_LOCALES,
   courseLocales,
+  exerciseCountsOf,
   lessonLocales,
   releaseSchema,
   type Catalog,
@@ -201,6 +202,7 @@ export function buildRelease(input: BuildInput): BuildOutput {
         title: pkg.title,
         ...(Object.keys(titles).length ? { titles } : {}),
         exerciseCount: pkg.exercises.length,
+        ...(exerciseCountsOf(pkg) ? { exerciseCounts: exerciseCountsOf(pkg) } : {}),
         requiredTypes: [...new Set(pkg.exercises.map((e) => e.type))].sort(),
       });
     }

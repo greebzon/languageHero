@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { Asset } from 'expo-asset';
 import {
+  MECHANIC_TYPES,
   catalogSchema,
   courseLessonSchema,
   releaseSchema,
@@ -60,7 +61,12 @@ async function fetchWithTimeout(url: string) {
 }
 export async function fetchCatalog(): Promise<Catalog> {
   return catalogSchema.parse(
-    await (await fetchWithTimeout(`${apiUrl}/v1/catalog?schemaVersion=2`)).json(),
+    // The app can show every mechanic it was built with (src/mechanics has a view for each).
+    await (
+      await fetchWithTimeout(
+        `${apiUrl}/v1/catalog?schemaVersion=2&mechanics=${MECHANIC_TYPES.join(',')}`,
+      )
+    ).json(),
   );
 }
 export async function fetchLesson(

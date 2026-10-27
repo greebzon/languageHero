@@ -1,28 +1,41 @@
-import { useReducer, useRef, useState } from 'react';
+import { useReducer, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import {
+  AGE_BANDS,
   lessonLocales,
   localizeLesson,
+  type AgeBand,
   type Answer,
   type CourseExercise,
   type CourseLesson,
   type Locale,
 } from '@lingvohero/contracts';
-import { assess, learn, newLearningState, starsFor } from '@lingvohero/learning-core';
+import {
+  assess,
+  currentExercise,
+  inReview,
+  learn,
+  newLearningState,
+  starsFor,
+} from '@lingvohero/learning-core';
 import { ApiError, api, describeError } from '../../app/api';
 import type { Preview } from '../../app/types';
 import { Crumbs, Notice } from '../../components/ui';
+import { mechanicFor } from '../../mechanics';
 
 /**
  * The lesson exactly as the mobile engine runs it (same reducer, same grading, same review
  * queue), rendered with plain HTML. State lives only in this component: nothing is saved.
  */
 const LOCALE_LABELS: Record<Locale, string> = { ru: 'Русский', en: 'English', he: 'עברית' };
+// 8–9 plays the lesson as published; 6–7 gets fewer options and extra letters.
+const AGE_LABELS: Record<AgeBand, string> = { '6-7': '6–7 лет', '8-9': '8–9 лет' };
 
 export function PreviewPage() {
   const { id = '' } = useParams();
   const [locale, setLocale] = useState<Locale>('ru');
+  const [ageBand, setAgeBand] = useState<AgeBand>('8-9');
   const query = useQuery({
     queryKey: ['preview', id],
     queryFn: () => api<Preview>(`/lessons/${id}/preview`),
@@ -85,20 +98,40 @@ export function PreviewPage() {
       <p className="muted small">
         Ответы, ошибки, повторение и звёзды считаются движком приложения; прогресс не сохраняется.
       </p>
+      <p className="row">
+        <span className="muted small">Возраст ребёнка:</span>
+        {AGE_BANDS.map((band) => (
+          <button
+            key={band}
+            type="button"
+            className={`btn sm ${ageBand === band ? '' : 'light'}`}
+            aria-pressed={ageBand === band}
+            onClick={() => setAgeBand(band)}
+          >
+            {AGE_LABELS[band]}
+          </button>
+        ))}
+      </p>
       <div dir={locale === 'he' ? 'rtl' : 'ltr'}>
         <Player
-          key={`${query.dataUpdatedAt}-${locale}`}
+          key={`${query.dataUpdatedAt}-${locale}-${ageBand}`}
           preview={{ ...query.data, lesson: localizeLesson(query.data.lesson, locale) }}
+          ageBand={ageBand}
         />
       </div>
     </>
   );
 }
 
-function Player({ preview }: { preview: Preview }) {
+function Player({ preview, ageBand }: { preview: Preview; ageBand: AgeBand }) {
   const { lesson, mediaUrls } = preview;
+  // Every replay eases the lesson anew (the seed is random), as a new attempt in the app does.
   const [state, dispatch] = useReducer(learn, undefined, () =>
-    learn(newLearningState(), { type: 'start', lesson }),
+    learn(newLearningState(), {
+      type: 'start',
+      lesson,
+      difficulty: { ageBand, seed: crypto.randomUUID() },
+    }),
   );
   const [wrong, setWrong] = useState(false);
   const [hint, setHint] = useState(false);
@@ -131,10 +164,10 @@ function Player({ preview }: { preview: Preview }) {
       </div>
     );
   }
-  const exercise = lesson.exercises[session.queue[session.exerciseIndex]!]!;
+  const exercise = currentExercise(session);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
-  const review = session.exerciseIndex >= lesson.exercises.length;
+  const review = inReview(session);
   const last = session.exerciseIndex === session.queue.length - 1;
   return (
     <div className="play">
@@ -219,66 +252,7 @@ function Player({ preview }: { preview: Preview }) {
   );
 }
 
-function Sprite({
-  lesson,
-  id,
-  size,
-  mediaUrls,
-}: {
-  lesson: CourseLesson;
-  id: string;
-  size: number;
-  mediaUrls: Record<string, string>;
-}) {
-  const media = lesson.media.find((m) => m.id === id)!;
-  const region = media.region ?? { columns: 1, rows: 1, column: 0, row: 0 };
-  return (
-    <span className="sprite" style={{ width: size, height: size }}>
-      <img
-        src={mediaUrls[id]}
-        alt=""
-        style={{
-          width: size * region.columns,
-          height: size * region.rows,
-          left: -size * region.column,
-          top: -size * region.row,
-        }}
-      />
-    </span>
-  );
-}
-
-function AudioButtons({ src }: { src: string }) {
-  const ref = useRef<HTMLAudioElement>(null);
-  const play = (rate: number) => {
-    const audio = ref.current;
-    if (!audio) return;
-    audio.pause();
-    audio.currentTime = 0;
-    audio.playbackRate = rate;
-    void audio.play();
-  };
-  return (
-    <div className="audio-row">
-      <audio ref={ref} src={src} preload="auto" />
-      <button className="btn amber" type="button" onClick={() => play(1)}>
-        🔊 Послушать
-      </button>
-      <button className="btn light" type="button" onClick={() => play(0.7)}>
-        🐢 Медленно
-      </button>
-    </div>
-  );
-}
-
-function Exercise({
-  lesson,
-  exercise,
-  draft,
-  correct,
-  mediaUrls,
-  onChange,
-}: {
+function Exercise(props: {
   lesson: CourseLesson;
   exercise: CourseExercise;
   draft: Answer | null;
@@ -286,141 +260,6 @@ function Exercise({
   mediaUrls: Record<string, string>;
   onChange: (answer: Answer | null) => void;
 }) {
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
-  const word = (id: string) => lesson.words.find((w) => w.id === id)!;
-  if (exercise.type === 'listen-and-select')
-    return (
-      <>
-        <p className="muted small">Послушай слово и выбери картинку.</p>
-        <AudioButtons src={mediaUrls[word(exercise.wordId).audioId]!} />
-        <div className="choice-grid">
-          {exercise.choices.map((id) => {
-            const selected = draft !== null && 'choiceId' in draft && draft.choiceId === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                className={`choice ${selected ? 'selected' : ''} ${correct && id === exercise.wordId ? 'correct' : ''}`}
-                disabled={correct}
-                onClick={() => onChange({ choiceId: id })}
-              >
-                <Sprite lesson={lesson} id={word(id).imageId} size={110} mediaUrls={mediaUrls} />
-                <span className="word">{word(id).text}</span>
-                <span className="muted small">{correct ? word(id).translation : ' '}</span>
-              </button>
-            );
-          })}
-        </div>
-      </>
-    );
-  if (exercise.type === 'match-pairs') {
-    const pairs = draft && 'pairs' in draft ? draft.pairs : {};
-    return (
-      <>
-        <p className="muted small">Сначала слово, потом картинка. Номера покажут твои пары.</p>
-        <div className="pairs">
-          <div className="col">
-            {exercise.wordIds.map((id, index) => (
-              <button
-                key={id}
-                type="button"
-                className={`pair ${pairs[id] ? 'paired' : ''} ${selectedWord === id ? 'selected' : ''} ${correct ? 'correct' : ''}`}
-                disabled={correct}
-                onClick={() => setSelectedWord(id)}
-              >
-                <span className="word">
-                  {index + 1}. {word(id).text}
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="col">
-            {exercise.imageOrder.map((id) => {
-              const owner = exercise.wordIds.find((w) => pairs[w] === id);
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  className={`pair ${owner ? 'paired' : ''} ${correct ? 'correct' : ''}`}
-                  disabled={correct || !selectedWord}
-                  onClick={() => {
-                    if (!selectedWord) return;
-                    const next = { ...pairs };
-                    if (owner) delete next[owner];
-                    next[selectedWord] = id;
-                    onChange({ pairs: next });
-                    setSelectedWord(null);
-                  }}
-                >
-                  <Sprite lesson={lesson} id={word(id).imageId} size={62} mediaUrls={mediaUrls} />
-                  <span className="n">{owner ? exercise.wordIds.indexOf(owner) + 1 : '?'}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        {!correct && (
-          <button
-            className="btn light"
-            type="button"
-            onClick={() => {
-              onChange(null);
-              setSelectedWord(null);
-            }}
-          >
-            Сбросить пары
-          </button>
-        )}
-      </>
-    );
-  }
-  const chosen = draft && 'tileIds' in draft ? draft.tileIds : [];
-  const tile = (id: string) => exercise.tiles.find((t) => t.id === id)!;
-  return (
-    <>
-      <p className="muted small">Собери слово без артикля. Нажми на буквы по порядку.</p>
-      <div style={{ textAlign: 'center' }}>
-        <Sprite
-          lesson={lesson}
-          id={word(exercise.wordId).imageId}
-          size={110}
-          mediaUrls={mediaUrls}
-        />
-        <div>{word(exercise.wordId).translation}</div>
-      </div>
-      <AudioButtons src={mediaUrls[word(exercise.wordId).audioId]!} />
-      <div className="answer-box" aria-label="Собранное слово">
-        {chosen.length === 0 && <span className="muted">Здесь появится слово</span>}
-        {chosen.map((id) => (
-          <button
-            key={id}
-            type="button"
-            className="letter chosen"
-            disabled={correct}
-            onClick={() => onChange({ tileIds: chosen.filter((t) => t !== id) })}
-          >
-            {tile(id).letter}
-          </button>
-        ))}
-      </div>
-      <div className="tiles" style={{ justifyContent: 'center', margin: '16px 0' }}>
-        {exercise.tiles.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            className={`letter ${chosen.includes(t.id) ? 'used' : ''}`}
-            disabled={correct || chosen.includes(t.id)}
-            onClick={() => onChange({ tileIds: [...chosen, t.id] })}
-          >
-            {t.letter}
-          </button>
-        ))}
-      </div>
-      {!correct && (
-        <button className="btn light" type="button" onClick={() => onChange(null)}>
-          Начать слово заново
-        </button>
-      )}
-    </>
-  );
+  const { Preview } = mechanicFor(props.exercise.type);
+  return <Preview {...props} />;
 }

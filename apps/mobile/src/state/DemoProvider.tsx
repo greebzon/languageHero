@@ -22,8 +22,15 @@ import {
   reconcileCourseAccess,
   migrateDemo,
   newLearningState,
+  pickReviewWords,
   restoreLearningState,
+  reviewPool,
+  REVIEW_MIN_WORDS,
   coinBalance,
+  composeBoss,
+  dayKey,
+  composeReview,
+  difficultyFor,
   emptyJournal,
   recordLesson,
   restoreJournal,
@@ -35,6 +42,7 @@ import {
   type ShopItem,
 } from '@lingvohero/learning-core';
 import {
+  MECHANIC_TYPES,
   catalogSchema,
   courseLessonSchema,
   visibleCatalog,
@@ -78,6 +86,14 @@ type ContextValue = {
   refreshing: boolean;
   catalogStatus: 'saved' | 'live' | 'unavailable';
   startLesson: (id: string) => Promise<boolean>;
+  /** «Повторение» from the finished lessons of the current language (resumes one in progress). */
+  startReview: () => Promise<boolean>;
+  /** Enough finished lessons in the current language for a review. */
+  canReview: boolean;
+  /** «Испытание сета» from every lesson of a finished set (resumes one in progress). */
+  startBoss: (courseId: string) => Promise<boolean>;
+  /** The set whose challenge was just won for the first time (the chest is on its way). */
+  freshCrown: string | null;
   loadingLesson: boolean;
   /** The last lesson could not be loaded (screens show `app.errors.lesson`). */
   lessonError: boolean;
@@ -123,6 +139,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     journal: Journal;
     /** Languages picked offline that the server has not stored yet. */
     addedLanguages?: string[];
+    /** The set crowned by the challenge just won (cleared when the next lesson starts). */
+    freshCrown?: string | null;
   };
   const [record, setRecord] = useState<Record>(() => {
     const remote = auth.account!.learning;
@@ -149,6 +167,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         let pending = current.pending;
         let journal = current.journal;
         const s = next.session;
+        // A new run clears the «first win» note of the last challenge.
+        let freshCrown =
+          s && s.attemptId !== current.state.session?.attemptId ? null : current.freshCrown;
         if (s?.finished && !current.state.session?.finished) {
           if (s.attemptId && s.events)
             pending = [
@@ -157,18 +178,38 @@ export function DemoProvider({ children }: { children: ReactNode }) {
                 id: s.attemptId,
                 lessonId: s.lesson.id,
                 version: s.lesson.version,
+                ...(s.difficulty ? { difficulty: s.difficulty } : {}),
+                ...(s.review ? { review: s.review } : {}),
+                ...(s.boss ? { boss: s.boss } : {}),
                 events: s.events,
               },
             ];
-          journal = recordLesson(journal, {
-            firstTime: !current.state.progress[s.lesson.id],
-            words: s.lesson.words.length,
-            perfect: s.mistakes === 0,
-            stars: starsFor(s.mistakes),
-            at: new Date(),
-          });
+          // A lost challenge counts for nothing; a won one crowns its set.
+          if (s.boss && !s.lost && !journal.bosses[s.boss.courseId]) {
+            journal = {
+              ...journal,
+              bosses: { ...journal.bosses, [s.boss.courseId]: dayKey(new Date()) },
+            };
+            freshCrown = s.boss.courseId;
+          }
+          if (!s.lost)
+            journal = recordLesson(journal, {
+              // A review teaches no new words: they count once, with their own lessons.
+              firstTime: !s.review && !s.boss && !current.state.progress[s.lesson.id],
+              words: s.review || s.boss ? 0 : s.lesson.words.length,
+              perfect: s.mistakes === 0,
+              stars: starsFor(s.mistakes),
+              at: new Date(),
+            });
         }
-        return { ...current, state: next, pending, journal, sequence: current.sequence + 1 };
+        return {
+          ...current,
+          state: next,
+          pending,
+          journal,
+          freshCrown,
+          sequence: current.sequence + 1,
+        };
       }),
     [],
   );
@@ -188,7 +229,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     };
   }, []);
   const [catalog, setCatalog] = useState(seed.catalog);
-  const visible = useMemo(() => visibleCatalog(catalog, locale), [catalog, locale]);
+  // A cached or bundled catalog may still list lessons this app cannot show.
+  const visible = useMemo(() => visibleCatalog(catalog, locale, MECHANIC_TYPES), [catalog, locale]);
   const profile = auth.account!.profile;
   const languages = useMemo(
     () => [...new Set([...(profile.languages ?? []), ...(record.addedLanguages ?? [])])],
@@ -357,6 +399,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         soundEnabled: sent.state.soundEnabled,
         tzOffset: tzOffset(),
         locale: localeRef.current,
+        mechanics: MECHANIC_TYPES,
       });
       if (stopped.current) return false;
       auth.update(result);
@@ -575,6 +618,104 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           type: 'start',
           lesson,
           attemptId: randomUUID(),
+          difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
+        }),
+      );
+      return true;
+    } catch {
+      setLessonError(true);
+      return false;
+    } finally {
+      startBusy.current = false;
+      setLoadingLesson(false);
+    }
+  }
+  /* The lessons of the current language the child finished, newest last. */
+  const finishedRefs = visible.courses
+    .filter((c) => c.language === language)
+    .flatMap((c) => c.lessons)
+    .filter((l) => state.progress[l.id]);
+  async function startReview() {
+    if (startBusy.current) return false;
+    startBusy.current = true;
+    setLoadingLesson(true);
+    setLessonError(false);
+    try {
+      const resumable = resumableSession(state, catalog);
+      if (resumable) {
+        await prepareLesson(resumable.lesson);
+        return true;
+      }
+      const sources: CourseLesson[] = [];
+      for (const ref of finishedRefs.slice(-12)) {
+        let lesson = packages.current.get(packageKey(ref));
+        if (!lesson) lesson = await fetchLesson(ref, language);
+        packages.current.set(packageKey(lesson), lesson);
+        sources.push(lesson);
+      }
+      setLibrary([...packages.current.values()]);
+      const seed = randomUUID();
+      const words = pickReviewWords(reviewPool(sources), state.progress, seed);
+      if (words.length < REVIEW_MIN_WORDS) throw new Error('Too few words to review');
+      const lesson = composeReview(
+        words.map((w) => ({ lesson: sources.find((l) => l.id === w.lessonId)!, wordId: w.wordId })),
+        seed,
+      );
+      await prepareLesson(lesson);
+      setState((current) =>
+        learn(resumableSession(current, catalog) ? current : { ...current, session: null }, {
+          type: 'start',
+          lesson,
+          attemptId: randomUUID(),
+          difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
+          review: { seed, words },
+        }),
+      );
+      return true;
+    } catch {
+      setLessonError(true);
+      return false;
+    } finally {
+      startBusy.current = false;
+      setLoadingLesson(false);
+    }
+  }
+  async function startBoss(courseId: string) {
+    if (startBusy.current) return false;
+    startBusy.current = true;
+    setLoadingLesson(true);
+    setLessonError(false);
+    try {
+      const resumable = resumableSession(state, catalog);
+      if (resumable) {
+        await prepareLesson(resumable.lesson);
+        return true;
+      }
+      const course = visible.courses.find((c) => c.id === courseId);
+      if (!course || course.lessons.some((l) => !state.progress[l.id]))
+        throw new Error('The set is not finished');
+      const lessons: CourseLesson[] = [];
+      for (const ref of course.lessons) {
+        let lesson = packages.current.get(packageKey(ref));
+        if (!lesson) lesson = await fetchLesson(ref, course.language);
+        packages.current.set(packageKey(lesson), lesson);
+        lessons.push(lesson);
+      }
+      setLibrary([...packages.current.values()]);
+      const seed = randomUUID();
+      const lesson = composeBoss(lessons, seed);
+      await prepareLesson(lesson);
+      setState((current) =>
+        learn(resumableSession(current, catalog) ? current : { ...current, session: null }, {
+          type: 'start',
+          lesson,
+          attemptId: randomUUID(),
+          difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
+          boss: {
+            courseId,
+            seed,
+            lessons: lessons.map((l) => ({ lessonId: l.id, version: l.version })),
+          },
         }),
       );
       return true;
@@ -615,7 +756,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           setState((current) =>
             learn(
               current,
-              action.type === 'start' ? { ...action, attemptId: randomUUID() } : action,
+              action.type === 'start'
+                ? {
+                    ...action,
+                    attemptId: randomUUID(),
+                    difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
+                  }
+                : action,
             ),
           ),
         storageError,
@@ -625,6 +772,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         refreshing,
         catalogStatus,
         startLesson,
+        startReview,
+        canReview: finishedRefs.length > 0,
+        startBoss,
+        freshCrown: record.freshCrown ?? null,
         loadingLesson,
         lessonError,
         library,

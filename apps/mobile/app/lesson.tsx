@@ -12,21 +12,25 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
-import { assess } from '@lingvohero/learning-core';
+import { assess, currentExercise, inReview } from '@lingvohero/learning-core';
+import { BOSS_HEARTS } from '@lingvohero/contracts';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
+import { mechanicFor } from '../src/mechanics';
 import { NetworkNotice } from '../src/components/NetworkNotice';
 import { fraction, useT } from '../src/i18n';
-import { useLocalizedLesson, wordDirection } from '../src/i18n/content';
-import { colors, fonts } from '../src/theme';
+import { useLocalizedLesson } from '../src/i18n/content';
+import { colors } from '../src/theme';
 
 export default function LessonScreen() {
   const { account } = useAccount();
-  const { state, dispatch, fullCatalog } = useDemo();
+  const { state, dispatch } = useDemo();
   const { t, isRTL } = useT();
   const localized = useLocalizedLesson(state.session?.lesson);
   const [wrong, setWrong] = useState(false);
+  // Right answers in a row in this sitting (a wrong one starts again from zero).
+  const [streak, setStreak] = useState(0);
   const [hint, setHint] = useState(false);
   const [exit, setExit] = useState(false);
   const scroll = useRef<ScrollView>(null);
@@ -48,17 +52,13 @@ export default function LessonScreen() {
   if (!session || !localized) return <Redirect href="/" />;
   if (session.finished) return <Redirect href="/result" />;
   const lesson = localized;
-  const exercise = lesson.exercises[session.queue[session.exerciseIndex]];
+  // Eased for the child's age group, as the session was started (learning-core `adapt`).
+  const exercise = currentExercise(session, lesson);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
-  const review = session.exerciseIndex >= lesson.exercises.length;
-  // «Собери слово»: the hint also shows how the word is written, letter by letter.
-  const spelling =
-    exercise.type === 'build-word'
-      ? Array.from(
-          (lesson.words.find((w) => w.id === exercise.wordId)?.spelling ?? '').normalize('NFC'),
-        )
-      : [];
+  const review = inReview(session);
+  // Some mechanics add their own help under the hint (build-word: the spelling).
+  const { Hint } = mechanicFor(exercise.type);
   return (
     <SafeAreaView style={s.safe} edges={['top', 'bottom', 'left', 'right']}>
       <View style={s.container}>
@@ -80,7 +80,30 @@ export default function LessonScreen() {
             </View>
             <Progress value={(session.exerciseIndex + (correct ? 1 : 0)) / session.queue.length} />
           </View>
-          <Icon name="star" color={colors.amber} size={25} />
+          {session.boss && (
+            <Label
+              testID="hearts"
+              accessibilityLabel={t('lesson.hearts', {
+                n: Math.max(0, BOSS_HEARTS - session.mistakes),
+              })}
+              style={s.hearts}
+            >
+              {'❤️'.repeat(Math.max(0, BOSS_HEARTS - session.mistakes))}
+              {'🤍'.repeat(Math.min(BOSS_HEARTS, session.mistakes))}
+            </Label>
+          )}
+          {streak >= 2 ? (
+            <View
+              testID="streak"
+              accessible
+              accessibilityLabel={t('lesson.streakA11y', { n: streak })}
+              style={s.streak}
+            >
+              <Label style={s.streakText}>🔥 {streak}</Label>
+            </View>
+          ) : (
+            <Icon name="star" color={colors.amber} size={25} />
+          )}
         </View>
         <NetworkNotice />
         <ScrollView
@@ -92,7 +115,11 @@ export default function LessonScreen() {
           <View style={s.mascotRow}>
             <MascotFace id={account!.profile.avatar} size={49} />
             <Label style={s.bubble}>
-              {review ? t('lesson.review') : (lesson.presentation?.intro ?? t('lesson.intro'))}
+              {correct && streak >= 3
+                ? t('lesson.combo', { n: streak })
+                : review
+                  ? t('lesson.review')
+                  : (lesson.presentation?.intro ?? t('lesson.intro'))}
             </Label>
           </View>
           {review && (
@@ -124,28 +151,7 @@ export default function LessonScreen() {
           {hint && (
             <View accessibilityLiveRegion="polite" style={s.hint}>
               <Label style={s.hintText}>{exercise.hint}</Label>
-              {spelling.length > 0 && (
-                <View
-                  style={s.spelling}
-                  accessible
-                  accessibilityLabel={t('lesson.spelledA11y', { letters: spelling.join(' ') })}
-                >
-                  <Label style={s.spellingCaption}>{t('lesson.spelled')}</Label>
-                  <View
-                    style={[
-                      s.spellingRow,
-                      { direction: wordDirection(fullCatalog, lesson.language) },
-                    ]}
-                    testID="hint-spelling"
-                  >
-                    {spelling.map((letter, i) => (
-                      <Label key={i} style={s.spellingLetter}>
-                        {letter}
-                      </Label>
-                    ))}
-                  </View>
-                </View>
-              )}
+              {Hint && <Hint lesson={lesson} exercise={exercise} />}
             </View>
           )}
         </ScrollView>
@@ -191,6 +197,7 @@ export default function LessonScreen() {
               } else {
                 dispatch({ type: 'answer' });
                 setWrong(assessment === 'wrong');
+                setStreak((n) => (assessment === 'correct' ? n + 1 : 0));
               }
             }}
           />
@@ -225,6 +232,16 @@ const s = StyleSheet.create({
     paddingVertical: 10,
   },
   close: { minWidth: 44, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
+  streak: {
+    minWidth: 44,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: '#FFF1DC',
+    alignItems: 'center',
+  },
+  streakText: { fontSize: 15, color: '#B45309' },
+  hearts: { fontSize: 15, letterSpacing: 1 },
   progressLabel: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 7, gap: 8 },
   caption: { fontSize: 11, color: colors.muted, flexShrink: 1 },
   content: { paddingHorizontal: 22, paddingTop: 8, paddingBottom: 16 },
@@ -241,23 +258,6 @@ const s = StyleSheet.create({
   },
   hint: { backgroundColor: colors.cream, padding: 15, borderRadius: 14, gap: 10 },
   hintText: { textAlign: 'center', fontSize: 13 },
-  spelling: { alignItems: 'center', gap: 6 },
-  spellingCaption: { fontSize: 11, color: colors.muted },
-  spellingRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6 },
-  spellingLetter: {
-    minWidth: 30,
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 2,
-    borderBottomColor: colors.line,
-    textAlign: 'center',
-    fontFamily: fonts.heading,
-    fontSize: 20,
-    lineHeight: 26,
-    color: colors.greenInk,
-  },
   dock: { padding: 16, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: '#FFFFFF' },
   feedback: { flexDirection: 'row', gap: 10, alignItems: 'center', marginBottom: 13 },
   feedbackTitle: { fontSize: 17, lineHeight: 24 },

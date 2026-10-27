@@ -1,9 +1,13 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import { courseLessonSchema, type CourseLesson } from '../../packages/contracts/src';
+import {
+  courseLessonSchema,
+  MECHANIC_TYPES,
+  type CourseLesson,
+} from '../../packages/contracts/src';
 import { env } from '../../apps/api/src/env';
-import { solve } from './helpers';
+import { playable, solve } from './helpers';
 import { signIn, switchLanguage } from './account-helper';
 
 const API = 'http://127.0.0.1:3002';
@@ -102,6 +106,50 @@ test('a set created in the panel appears in the running app and can be played', 
           { id: 't5', letter: 'x' },
         ],
       },
+      // «Выбор»: three variants built from the same two words, no extra media.
+      {
+        id: 'ex-3',
+        type: 'choice',
+        prompt: 'Найди картинку',
+        hint: 'Рыжая',
+        show: [{ view: 'text', wordId: 'fuchs' }],
+        as: 'image',
+        options: [
+          { id: 'eule', wordId: 'eule' },
+          { id: 'fuchs', wordId: 'fuchs' },
+        ],
+        answerId: 'fuchs',
+      },
+      {
+        id: 'ex-4',
+        type: 'choice',
+        prompt: 'Это правда?',
+        hint: 'Посмотри на картинку',
+        show: [
+          { view: 'image', wordId: 'eule' },
+          { view: 'text', wordId: 'fuchs' },
+        ],
+        as: 'yes-no',
+        options: [{ id: 'yes' }, { id: 'no' }],
+        answerId: 'no',
+      },
+      {
+        id: 'ex-5',
+        type: 'choice',
+        prompt: 'С какой буквы начинается слово?',
+        hint: 'Послушай',
+        show: [
+          { view: 'image', wordId: 'fuchs' },
+          { view: 'audio', wordId: 'fuchs' },
+        ],
+        as: 'letter',
+        options: [
+          { id: 'l1', letter: 'e' },
+          { id: 'l2', letter: 'f' },
+          { id: 'l3', letter: 'x' },
+        ],
+        answerId: 'l2',
+      },
     ],
   };
   await call('post', '/courses/de-zoo/lessons', {
@@ -119,7 +167,12 @@ test('a set created in the panel appears in the running app and can be played', 
 
   const published = await call('post', '/publications', { planId: plan.publication.id });
   expect(published.publication.status).toBe('published');
-  const catalog = await (await request.get(`${API}/v1/catalog?schemaVersion=2`)).json();
+  // An app that does not know «Выбор» does not get the lesson (and so not the set).
+  const old = await (await request.get(`${API}/v1/catalog?schemaVersion=2`)).json();
+  expect(old.courses.map((c: { id: string }) => c.id)).not.toContain('de-zoo');
+  const catalog = await (
+    await request.get(`${API}/v1/catalog?schemaVersion=2&mechanics=${MECHANIC_TYPES.join(',')}`)
+  ).json();
   expect(catalog.revision).toBe(before.revision + 1);
   expect(catalog.courses.map((c: { id: string }) => c.id)).toContain('de-zoo');
   expect(JSON.stringify(catalog)).not.toContain('de-secret');
@@ -141,7 +194,11 @@ test('a set created in the panel appears in the running app and can be played', 
   await page.screenshot({ path: 'test-results/admin-published-set.png', fullPage: true });
   await page.getByTestId('start-lesson').click();
   await expect(page.getByText('Кто это?', { exact: true })).toBeVisible();
-  for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
+  for (const exercise of lesson.exercises) {
+    if (exercise.type === 'choice')
+      await page.screenshot({ path: `test-results/choice-${exercise.as}.png`, fullPage: true });
+    await solve(page, exercise, lesson);
+  }
   await expect(page.getByText('ЛИСА И СОВА — ПРОЙДЕНО')).toBeVisible();
   await page.screenshot({ path: 'test-results/admin-lesson-done.png', fullPage: true });
 });
@@ -175,28 +232,47 @@ test('an AI-generated draft set (fake provider) can be reviewed, published and p
     })
     .toBe('awaiting-review');
   const view = await call('get', `/generations/${started.job.id}`);
-  expect(view.job.result.lessons).toHaveLength(2);
+  // Two word lessons and the closing «Собери фразу» lesson.
+  expect(view.job.result.lessons).toHaveLength(3);
   expect(view.progress.done).toBe(view.progress.total);
   const course = await call('get', '/courses/fr-farm');
-  expect(course.lessons).toHaveLength(2);
+  expect(course.lessons).toHaveLength(3);
   expect(course.course.cover).toBeTruthy();
   expect((await call('post', '/courses/fr-farm/validate')).ok).toBe(true);
 
   const plan = await call('post', '/publication-plans');
   expect(plan.diff.courses.added).toContain('fr-farm');
   await call('post', '/publications', { planId: plan.publication.id });
-  const lesson: CourseLesson = courseLessonSchema.parse(
-    await (await request.get(`${API}/v1/lessons/${course.lessons[0].id}/versions/1`)).json(),
-  );
-  expect(lesson.exercises).toHaveLength(6);
+  const packages: CourseLesson[] = [];
+  for (const ref of course.lessons as { id: string }[])
+    packages.push(
+      courseLessonSchema.parse(
+        await (await request.get(`${API}/v1/lessons/${ref.id}/versions/1`)).json(),
+      ),
+    );
+  expect(packages[0]!.exercises).toHaveLength(6);
+  const sentences = packages[2]!;
+  expect(sentences.exercises.every((e) => e.type === 'build-sentence')).toBe(true);
 
   await signIn(page);
   await expect(page.getByText('Приключения обновлены')).toBeVisible();
   await switchLanguage(page, 'fr');
   await expect(page.getByTestId('course-fr-farm')).toBeVisible();
-  await page.getByTestId('start-lesson').click();
-  await expect(page.getByText(lesson.exercises[0]!.prompt, { exact: true })).toBeVisible();
-  for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
-  await expect(page.getByText(`${lesson.title.toUpperCase()} — ПРОЙДЕНО`)).toBeVisible();
-  await page.screenshot({ path: 'test-results/generated-lesson-done.png', fullPage: true });
+  // The whole set in order; the last lesson builds sentences (a 9-year-old gets the longer ones).
+  for (const [index, lesson] of packages.entries()) {
+    await page.getByTestId('start-lesson').click();
+    const exercises = playable(lesson);
+    await expect(page.getByText(exercises[0]!.prompt, { exact: true })).toBeVisible();
+    for (const exercise of exercises) {
+      if (exercise.type === 'build-sentence' && exercise === exercises[0])
+        await page.screenshot({ path: 'test-results/sentence-lesson.png', fullPage: true });
+      if (exercise.type === 'fill-gap')
+        await page.screenshot({ path: 'test-results/fill-gap.png', fullPage: true });
+      await solve(page, exercise, lesson);
+    }
+    await expect(page.getByText(`${lesson.title.toUpperCase()} — ПРОЙДЕНО`)).toBeVisible();
+    if (index === 0)
+      await page.screenshot({ path: 'test-results/generated-lesson-done.png', fullPage: true });
+    await page.getByTestId('back-to-map').click();
+  }
 });

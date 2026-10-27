@@ -3,6 +3,7 @@ import fastifyStatic from '@fastify/static';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { BASE_MECHANICS, catalogForMechanics } from '@lingvohero/contracts';
 import { defaultContentRoot, readCatalog, readLesson } from './content.js';
 import { adminPlugin, type AdminOptions } from './admin/plugin.js';
 import { accountPlugin, type AccountOptions } from './account/plugin.js';
@@ -97,15 +98,24 @@ async function publicRoutes(app: FastifyInstance, { contentRoot }: { contentRoot
     reply.header('Access-Control-Expose-Headers', 'ETag');
   });
   app.get('/health', async () => ({ status: 'ok', service: 'lingvohero-api', version: '0.1.0' }));
-  app.get<{ Querystring: { schemaVersion?: string } }>('/v1/catalog', async (request, reply) => {
-    if (request.query.schemaVersion !== '2')
-      return reply.code(409).send({ error: 'Unsupported content schema', supported: [2] });
-    const catalog = await readCatalog(contentRoot);
-    reply.header('Cache-Control', 'no-cache').header('ETag', `"catalog-${catalog.revision}"`);
-    if (request.headers['if-none-match'] === `"catalog-${catalog.revision}"`)
-      return reply.code(304).send();
-    return catalog;
-  });
+  app.get<{ Querystring: { schemaVersion?: string; mechanics?: string } }>(
+    '/v1/catalog',
+    async (request, reply) => {
+      if (request.query.schemaVersion !== '2')
+        return reply.code(409).send({ error: 'Unsupported content schema', supported: [2] });
+      // The app lists the mechanics it can show; lessons with others are left out for it.
+      const mechanics = request.query.mechanics?.split(',').filter(Boolean) ?? BASE_MECHANICS;
+      const variant = createHash('sha256')
+        .update([...new Set(mechanics)].sort().join(','))
+        .digest('hex')
+        .slice(0, 8);
+      const catalog = await readCatalog(contentRoot);
+      const etag = `"catalog-${catalog.revision}-${variant}"`;
+      reply.header('Cache-Control', 'no-cache').header('ETag', etag);
+      if (request.headers['if-none-match'] === etag) return reply.code(304).send();
+      return catalogForMechanics(catalog, mechanics);
+    },
+  );
   app.get<{ Params: { id: string; version: string } }>(
     '/v1/lessons/:id/versions/:version',
     {

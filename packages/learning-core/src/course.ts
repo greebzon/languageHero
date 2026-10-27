@@ -4,49 +4,59 @@ import {
   type Answer,
   type CourseExercise,
   type CourseLesson,
+  type Difficulty,
   type LearningState,
+  type Review,
+  type Boss,
+  BOSS_HEARTS,
 } from '@lingvohero/contracts';
+import { adaptExercise, assessExercise, type Assessment } from './mechanics';
+import { RECENT_RUNS } from './age';
 import { starsFor } from './scoring';
 
 export function newLearningState(): LearningState {
   return { version: 2, soundEnabled: true, progress: {}, session: null };
 }
-export function assess(
-  exercise: CourseExercise,
-  answer: Answer,
-  lesson: CourseLesson,
-): 'correct' | 'wrong' | 'invalid' {
-  if (exercise.type === 'listen-and-select') {
-    if (!('choiceId' in answer) || !exercise.choices.includes(answer.choiceId)) return 'invalid';
-    return answer.choiceId === exercise.wordId ? 'correct' : 'wrong';
-  }
-  if (exercise.type === 'match-pairs') {
-    if (
-      !('pairs' in answer) ||
-      Object.keys(answer.pairs).length !== exercise.wordIds.length ||
-      exercise.wordIds.some((id) => !exercise.imageOrder.includes(answer.pairs[id])) ||
-      new Set(Object.values(answer.pairs)).size !== exercise.wordIds.length
-    )
-      return 'invalid';
-    return exercise.wordIds.every((id) => answer.pairs[id] === id) ? 'correct' : 'wrong';
-  }
-  if (
-    !('tileIds' in answer) ||
-    answer.tileIds.length === 0 ||
-    new Set(answer.tileIds).size !== answer.tileIds.length ||
-    answer.tileIds.some((id) => !exercise.tiles.some((t) => t.id === id))
-  )
-    return 'invalid';
-  const text = answer.tileIds
-    .map((id) => exercise.tiles.find((t) => t.id === id)!.letter)
-    .join('')
-    .normalize('NFC');
-  return text === lesson.words.find((w) => w.id === exercise.wordId)!.spelling.normalize('NFC')
-    ? 'correct'
-    : 'wrong';
+export function assess(exercise: CourseExercise, answer: Answer, lesson: CourseLesson): Assessment {
+  return assessExercise(exercise, answer, lesson);
+}
+type Session = NonNullable<LearningState['session']>;
+/**
+ * The exercises a child of this age group plays, in lesson order (an exercise may be meant for
+ * one age group only). Without an age the older group's are played.
+ */
+export function playableIndices(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>) {
+  const band = difficulty?.ageBand ?? '8-9';
+  return lesson.exercises.flatMap((e, i) => (!e.ageBands || e.ageBands.includes(band) ? [i] : []));
+}
+/** The session has gone past its exercises and repeats the ones answered wrong. */
+export const inReview = (session: Session) =>
+  session.exerciseIndex >= playableIndices(session.lesson, session.difficulty).length;
+/**
+ * The exercise in front of the child, eased for the session's age group. `lesson` may be the
+ * session's lesson in the interface language: easing only touches structure, not texts.
+ */
+export function currentExercise(session: Session, lesson: CourseLesson = session.lesson) {
+  const exercise = lesson.exercises[session.queue[session.exerciseIndex]];
+  return adaptExercise(
+    exercise,
+    lesson,
+    session.difficulty,
+    `${session.difficulty?.seed}:${exercise.id}`,
+  );
 }
 export type LearningAction =
-  | { type: 'start'; lesson: CourseLesson; attemptId?: string }
+  | {
+      type: 'start';
+      lesson: CourseLesson;
+      attemptId?: string;
+      /** Without a seed the attempt id (or the lesson id) becomes the seed. */
+      difficulty?: Pick<Difficulty, 'ageBand'> & { seed?: string };
+      /** A review (`composeReview`): what it was assembled from. */
+      review?: Review;
+      /** A set's challenge (`composeBoss`): what it was assembled from. */
+      boss?: Boss;
+    }
   | { type: 'draft'; answer: Answer | null }
   | { type: 'answer' }
   | { type: 'next' }
@@ -60,9 +70,19 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
       ...state,
       session: {
         ...(action.attemptId ? { attemptId: action.attemptId } : {}),
+        ...(action.difficulty
+          ? {
+              difficulty: {
+                ageBand: action.difficulty.ageBand,
+                seed: action.difficulty.seed ?? action.attemptId ?? action.lesson.id,
+              },
+            }
+          : {}),
+        ...(action.review ? { review: action.review } : {}),
+        ...(action.boss ? { boss: action.boss } : {}),
         events: [],
         lesson: action.lesson,
-        queue: action.lesson.exercises.map((_, i) => i),
+        queue: playableIndices(action.lesson, action.difficulty),
         exerciseIndex: 0,
         mistakes: 0,
         correct: false,
@@ -73,24 +93,38 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
   }
   const session = state.session;
   if (!session || session.finished) return state;
-  const exercise = session.lesson.exercises[session.queue[session.exerciseIndex]];
+  const exercise = currentExercise(session);
   if (action.type === 'draft')
     return session.correct ? state : { ...state, session: { ...session, draft: action.answer } };
   if (action.type === 'answer') {
     if (session.correct || !session.draft) return state;
     const result = assess(exercise, session.draft, session.lesson);
     if (result === 'invalid') return state;
+    const events = [...(session.events ?? []), { type: 'answer' as const, answer: session.draft }];
+    // A set's challenge has three hearts: the last one lost ends it, without stars.
+    if (session.boss && result === 'wrong' && session.mistakes + 1 >= BOSS_HEARTS)
+      return {
+        ...state,
+        recent: [...(state.recent ?? []), 1].slice(-RECENT_RUNS),
+        session: {
+          ...session,
+          events,
+          mistakes: session.mistakes + 1,
+          finished: true,
+          lost: true,
+        },
+      };
     const queue = [...session.queue];
     const sourceIndex = queue[session.exerciseIndex];
-    if (result === 'wrong' && !queue.slice(session.lesson.exercises.length).includes(sourceIndex))
-      queue.push(sourceIndex);
+    const played = playableIndices(session.lesson, session.difficulty).length;
+    if (result === 'wrong' && !queue.slice(played).includes(sourceIndex)) queue.push(sourceIndex);
     return {
       ...state,
       session: {
         ...session,
         queue,
         correct: result === 'correct',
-        events: [...(session.events ?? []), { type: 'answer', answer: session.draft }],
+        events,
         mistakes: session.mistakes + (result === 'wrong' ? 1 : 0),
       },
     };
@@ -109,16 +143,21 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
     };
   return {
     ...state,
-    progress: {
-      ...state.progress,
-      [session.lesson.id]: {
-        bestStars: Math.max(
-          state.progress[session.lesson.id]?.bestStars ?? 0,
-          starsFor(session.mistakes),
-        ),
-        completedVersion: session.lesson.version,
-      },
-    },
+    recent: [...(state.recent ?? []), starsFor(session.mistakes)].slice(-RECENT_RUNS),
+    // A review or a challenge is not a lesson of the map: no progress entry (no XP or coins).
+    progress:
+      session.review || session.boss
+        ? state.progress
+        : {
+            ...state.progress,
+            [session.lesson.id]: {
+              bestStars: Math.max(
+                state.progress[session.lesson.id]?.bestStars ?? 0,
+                starsFor(session.mistakes),
+              ),
+              completedVersion: session.lesson.version,
+            },
+          },
     session: { ...session, finished: true, events: [...(session.events ?? []), { type: 'next' }] },
   };
 }
@@ -137,18 +176,22 @@ export function restoreLearningState(value: unknown): LearningState | null {
   const state = parsed.data;
   const s = state.session;
   if (s) {
-    const n = s.lesson.exercises.length;
+    const playable = playableIndices(s.lesson, s.difficulty);
+    const n = playable.length;
     if (
       s.queue.length < n ||
-      s.queue.some((i) => i >= n) ||
-      s.queue.slice(0, n).some((i, j) => i !== j) ||
+      s.queue.slice(0, n).some((i, j) => i !== playable[j]) ||
+      s.queue.slice(n).some((i) => !playable.includes(i)) ||
       new Set(s.queue.slice(n)).size !== s.queue.length - n ||
       s.exerciseIndex >= s.queue.length ||
+      // A lost challenge ends at its last heart, wherever it was.
+      (s.lost && (!s.boss || !s.finished || s.mistakes < BOSS_HEARTS)) ||
       (s.finished &&
-        (!s.correct || s.exerciseIndex !== s.queue.length - 1 || !state.progress[s.lesson.id])) ||
-      (s.correct &&
-        (!s.draft ||
-          assess(s.lesson.exercises[s.queue[s.exerciseIndex]], s.draft, s.lesson) !== 'correct'))
+        !s.lost &&
+        (!s.correct ||
+          s.exerciseIndex !== s.queue.length - 1 ||
+          (!s.review && !s.boss && !state.progress[s.lesson.id]))) ||
+      (s.correct && (!s.draft || assess(currentExercise(s), s.draft, s.lesson) !== 'correct'))
     )
       return null;
   }

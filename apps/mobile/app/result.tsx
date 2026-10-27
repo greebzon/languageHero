@@ -12,14 +12,19 @@ import { colors, fonts } from '../src/theme';
 
 export default function ResultScreen() {
   const { account } = useAccount();
-  const { state, dispatch, storageError, coins } = useDemo();
+  const { state, dispatch, storageError, coins, startReview, startBoss, freshCrown } = useDemo();
   const { t } = useT();
   const lesson = useLocalizedLesson(state.session?.lesson);
+  // «Repeat» of a review or a challenge starts a new run while this screen is still up.
+  if (state.session && !state.session.finished) return <Redirect href="/lesson" />;
   if (!state.session?.finished || !lesson) return <Redirect href="/" />;
   const stars = starsFor(state.session.mistakes);
   const rewards = learningRewards(state);
   // Replaying starts from the package itself, not its translated view.
   const original = state.session.lesson;
+  const review = !!state.session.review;
+  const boss = state.session.boss;
+  const lost = !!state.session.lost;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={s.scroll}>
@@ -37,7 +42,7 @@ export default function ResultScreen() {
             </View>
           </Appear>
           <View style={s.stars}>
-            {[1, 2, 3].map((value) => (
+            {(lost ? [] : [1, 2, 3]).map((value) => (
               <View key={value} style={{ transform: [{ translateY: value === 2 ? -12 : 0 }] }}>
                 <Icon
                   name="star"
@@ -47,15 +52,27 @@ export default function ResultScreen() {
               </View>
             ))}
           </View>
-          <Label style={s.eyebrow}>
-            {t('result.passed', { title: lesson.title.toUpperCase() })}
-          </Label>
-          <Heading style={s.title}>
-            {lesson.presentation?.completionTitle ?? t('result.title')}
+          {!lost && (
+            <Label style={s.eyebrow}>
+              {t('result.passed', { title: lesson.title.toUpperCase() })}
+            </Label>
+          )}
+          <Heading style={s.title} testID={lost ? 'boss-lost' : undefined}>
+            {lost
+              ? t('result.bossLostTitle')
+              : (lesson.presentation?.completionTitle ?? t('result.title'))}
           </Heading>
           <Label style={s.subtitle}>
-            {lesson.presentation?.completionMessage ?? t('result.message')}
+            {lost
+              ? t('result.bossLostText')
+              : (lesson.presentation?.completionMessage ?? t('result.message'))}
           </Label>
+          {boss && !lost && freshCrown === boss.courseId && (
+            <View style={s.chest} testID="boss-chest">
+              <Label style={s.chestIcon}>🎁</Label>
+              <Label style={s.chestText}>{t('result.bossChest')}</Label>
+            </View>
+          )}
           <View style={s.stats}>
             <Stat icon="flash" value={String(rewards.xp)} label={t('result.xp')} />
             <Stat icon="book" value={String(lesson.words.length)} label={t('result.words')} />
@@ -78,11 +95,18 @@ export default function ResultScreen() {
             onPress={() => router.dismissTo('/')}
           />
           <ToyButton
-            title={t('result.repeat')}
-            tone="light"
+            testID="repeat"
+            title={lost ? t('result.bossRetry') : boss ? t('result.bossAgain') : t('result.repeat')}
+            tone={lost ? 'green' : 'light'}
             onPress={() => {
-              dispatch({ type: 'start', lesson: original });
-              router.replace('/lesson');
+              // A review or a challenge is assembled anew; a lesson replays its own package.
+              // The new run sends this screen on to the lesson (see the redirect above).
+              if (boss) void startBoss(boss.courseId);
+              else if (review) void startReview();
+              else {
+                dispatch({ type: 'start', lesson: original });
+                router.replace('/lesson');
+              }
             }}
             style={{ marginTop: 12 }}
           />
@@ -158,6 +182,17 @@ const s = StyleSheet.create({
   statLabel: { fontSize: 10, color: colors.muted },
   note: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginVertical: 22 },
   noteText: { color: colors.muted, fontSize: 11 },
+  chest: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 18,
+    padding: 14,
+    borderRadius: 18,
+    backgroundColor: '#FFF4D8',
+  },
+  chestIcon: { fontSize: 28, lineHeight: 34 },
+  chestText: { flex: 1, fontSize: 14, lineHeight: 20, color: '#7A4B00' },
   repeatNote: {
     textAlign: 'center',
     fontSize: 11,

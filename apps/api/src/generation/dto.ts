@@ -1,12 +1,14 @@
-import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import type {
-  DraftExercise,
-  GenerationInput,
-  GenerationLessonPlan,
-  GenerationWord,
-  LessonDocument,
+import {
+  exerciseTypeSchema,
+  type DraftExercise,
+  type GenerationInput,
+  type GenerationLessonPlan,
+  type GenerationWord,
+  type LessonDocument,
 } from '@lingvohero/contracts';
+import { bareLetters, clip, generationMechanic, retranslate, slug } from './mechanics/index.js';
+import { arrangeExercises } from './rhythm.js';
 
 /*
  * What the model is allowed to say. Strict structured outputs need every property required and
@@ -38,13 +40,17 @@ export const planDtoSchema = z.object({
 export const lessonDtoSchema = z.object({
   exercises: z.array(
     z.object({
-      type: z.enum(['listen-and-select', 'match-pairs', 'build-word']),
+      type: exerciseTypeSchema,
       prompt: z.string(),
       hint: z.string(),
       wordKey: z.string(),
       choiceKeys: z.array(z.string()),
       pairKeys: z.array(z.string()),
       distractorLetters: z.string(),
+      /* A mechanic's variant (the preset of a `choice`), "" when it has none. */
+      variant: z.string(),
+      /* fill-gap: the sentence with ___ for the word, "" for every other type. */
+      sentence: z.string(),
     }),
   ),
 });
@@ -64,16 +70,6 @@ export class MaterialError extends Error {
     super(message);
   }
 }
-
-const slug = (text: string) =>
-  text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
-const clip = (text: string, max: number) => text.trim().slice(0, max);
 
 /**
  * Normalises the model's vocabulary: unique slug keys, bare spellings, length limits.
@@ -166,18 +162,7 @@ export function buildLessonPlans(
   return lessons;
 }
 
-/** Deterministic shuffle so a re-run of the same input yields the same tiles. */
-function shuffle<T>(items: T[], seed: string) {
-  const out = [...items];
-  const digest = createHash('sha256').update(seed).digest();
-  for (let i = out.length - 1; i > 0; i -= 1) {
-    const j = digest[i % digest.length]! % (i + 1);
-    [out[i], out[j]] = [out[j]!, out[i]!];
-  }
-  return out;
-}
-
-/** Model exercises → draft exercises with server-assigned ids and letter tiles. */
+/** Model exercises → draft exercises with server-assigned ids, options and letter tiles. */
 export function buildExercises(
   dto: LessonDto,
   lesson: GenerationLessonPlan,
@@ -188,81 +173,34 @@ export function buildExercises(
   const problems: string[] = [];
   const allowed = new Set(lesson.wordKeys);
   const byKey = new Map(words.map((w) => [w.key, w]));
-  const resolve = (k: string) => keyMap.get(k) ?? slug(k);
   const exercises: DraftExercise[] = [];
   dto.exercises.forEach((item, index) => {
     const id = `ex-${index + 1}`;
-    const prompt = clip(item.prompt, 200) || 'Выполни задание';
-    const hint = clip(item.hint, 300) || 'Подумай ещё немного!';
     if (!mix.includes(item.type)) {
       problems.push(`exercise ${index + 1} uses a mechanic that was not requested`);
       return;
     }
-    if (item.type === 'match-pairs') {
-      const keys = [...new Set(item.pairKeys.map(resolve))].filter((k) => allowed.has(k));
-      if (keys.length < 2) {
-        problems.push(`exercise ${index + 1} (pairs) needs 2–4 known words`);
-        return;
-      }
-      const wordIds = keys.slice(0, 4);
-      exercises.push({
-        id,
-        type: 'match-pairs',
-        prompt,
-        hint,
-        wordIds,
-        imageOrder: shuffle(wordIds, `${lesson.lessonId}:${id}`),
-      });
-      return;
-    }
-    const wordId = resolve(item.wordKey);
-    const word = byKey.get(wordId);
-    if (!word || !allowed.has(wordId)) {
-      problems.push(`exercise ${index + 1} refers to unknown word "${item.wordKey}"`);
-      return;
-    }
-    if (item.type === 'listen-and-select') {
-      const choices = [...new Set([wordId, ...item.choiceKeys.map(resolve)])].filter((k) =>
-        allowed.has(k),
-      );
-      if (choices.length < 2) {
-        // Borrow another lesson word so the exercise stays valid.
-        const other = lesson.wordKeys.find((k) => k !== wordId);
-        if (other) choices.push(other);
-      }
-      if (choices.length < 2) {
-        problems.push(`exercise ${index + 1} (listen) needs at least 2 choices`);
-        return;
-      }
-      exercises.push({
-        id,
-        type: 'listen-and-select',
-        prompt,
-        hint,
-        wordId,
-        choices: shuffle(choices.slice(0, 6), `${lesson.lessonId}:${id}`),
-      });
-      return;
-    }
-    const letters = Array.from(word.spelling.normalize('NFC'));
-    const distractors = Array.from(item.distractorLetters.toLowerCase().replace(/[^\p{L}]/gu, ''))
-      .filter((l) => !letters.includes(l))
-      .slice(0, 3);
-    const tiles = shuffle(
-      [...letters, ...(distractors.length ? distractors : ['x'])].map((letter, i) => ({
-        id: `t${i + 1}`,
-        letter,
-      })),
-      `${lesson.lessonId}:${id}`,
-    );
-    exercises.push({ id, type: 'build-word', prompt, hint, wordId, tiles: tiles.slice(0, 30) });
+    const built = generationMechanic(item.type).build(item, {
+      id,
+      prompt: clip(item.prompt, 200) || 'Выполни задание',
+      hint: clip(item.hint, 300) || 'Подумай ещё немного!',
+      lesson,
+      key: (k) => {
+        const key = keyMap.get(k) ?? slug(k);
+        return allowed.has(key) && byKey.has(key) ? key : undefined;
+      },
+      word: (key) => byKey.get(key)!,
+      seed: `${lesson.lessonId}:${id}`,
+    });
+    if (typeof built === 'string') problems.push(`exercise ${index + 1} ${built}`);
+    else exercises.push(built);
   });
   if (exercises.length !== lesson.exerciseCount)
     problems.push(
       `lesson "${lesson.title}" has ${exercises.length} usable exercises, expected ${lesson.exerciseCount}`,
     );
   if (problems.length) throw new MaterialError('Задания не прошли проверку', problems);
-  return exercises;
+  return arrangeExercises(exercises, `${lesson.lessonId}:rhythm`);
 }
 
 /** The lesson document with placeholder media ids; assets are attached by `assemble`. */
@@ -282,15 +220,23 @@ export function buildDocument(
       imageId: `${w.key}-image`,
       audioId: `${w.key}-audio`,
     })),
-    media: used.flatMap((w) => [
-      {
-        id: `${w.key}-image`,
-        kind: 'image' as const,
-        assetId: w.image?.assetId ?? assetIds[`image:${w.key}`] ?? '',
-        ...(w.image?.region ? { region: w.image.region } : {}),
-      },
-      { id: `${w.key}-audio`, kind: 'audio' as const, assetId: assetIds[`audio:${w.key}`] ?? '' },
-    ]),
+    media: [
+      ...used.flatMap((w) => [
+        {
+          id: `${w.key}-image`,
+          kind: 'image' as const,
+          assetId: w.image?.assetId ?? assetIds[`image:${w.key}`] ?? '',
+          ...(w.image?.region ? { region: w.image.region } : {}),
+        },
+        { id: `${w.key}-audio`, kind: 'audio' as const, assetId: assetIds[`audio:${w.key}`] ?? '' },
+      ]),
+      // Recordings of the sentence lesson's sentences (audio tasks `<lesson id>/<key>`).
+      ...(lesson.sentences ?? []).map((s) => ({
+        id: `${s.key}-audio`,
+        kind: 'audio' as const,
+        assetId: assetIds[`audio:${lesson.lessonId}/${s.key}`] ?? '',
+      })),
+    ],
     exercises,
   };
 }
@@ -312,18 +258,17 @@ export const courseTranslationDtoSchema = z.object({
 });
 export const lessonTranslationDtoSchema = z.object({
   exercises: z.array(
-    z.object({ prompt: z.string(), hint: z.string(), distractorLetters: z.string() }),
+    z.object({
+      prompt: z.string(),
+      hint: z.string(),
+      distractorLetters: z.string(),
+      /* The exercise's sentence in the new language with ___, "" when it has none. */
+      sentence: z.string(),
+    }),
   ),
 });
 export type CourseTranslationDto = z.infer<typeof courseTranslationDtoSchema>;
 export type LessonTranslationDto = z.infer<typeof lessonTranslationDtoSchema>;
-
-const bareLetters = (text: string) =>
-  text
-    .normalize('NFC')
-    .toLowerCase()
-    .replace(/[^\p{L}]/gu, '') // drops spaces, articles' punctuation and Hebrew vowel points
-    .slice(0, 24);
 
 /** Source words keep key, Russian translation and picture; text, spelling and speech are new. */
 export function buildTranslatedWords(
@@ -352,7 +297,8 @@ export function buildTranslatedWords(
 
 /**
  * Source exercises with adapted prompt/hint. Word references and the order of choices, pairs
- * and pictures stay; build-word tiles are rebuilt from the new spelling plus distractors.
+ * and pictures stay; what depends on spelling (build-word tiles, first-letter options) is
+ * rebuilt by the mechanic from the new spelling plus distractors.
  */
 export function buildTranslatedExercises(
   dto: LessonTranslationDto,
@@ -364,25 +310,14 @@ export function buildTranslatedExercises(
     throw new MaterialError('Перевод заданий не прошёл проверку', [
       `lesson "${lesson.title}" returned ${dto.exercises.length} exercises, expected ${source.length}`,
     ]);
-  const byKey = new Map(words.map((w) => [w.key, w]));
   return source.map((exercise, index) => {
     const item = dto.exercises[index]!;
     const prompt = clip(item.prompt, 200) || exercise.prompt;
     const hint = clip(item.hint, 300) || exercise.hint;
-    if (exercise.type !== 'build-word') return { ...exercise, prompt, hint };
-    const word = byKey.get(exercise.wordId);
-    const letters = Array.from(word?.spelling ?? '');
-    // Distractors from the model, else letters of the other words, so the script stays the same.
-    const pool = [
-      ...Array.from(bareLetters(item.distractorLetters)),
-      ...words.flatMap((w) => Array.from(w.spelling)),
-    ];
-    const distractors = [...new Set(pool.filter((l) => !letters.includes(l)))].slice(0, 2);
-    const tiles = shuffle(
-      [...letters, ...distractors].map((letter, i) => ({ id: `t${i + 1}`, letter })),
-      `${lesson.lessonId}:${exercise.id}`,
-    );
-    return { ...exercise, prompt, hint, tiles: tiles.slice(0, 30) };
+    return retranslate({ ...exercise, prompt, hint }, item, {
+      words,
+      seed: `${lesson.lessonId}:${exercise.id}`,
+    });
   });
 }
 

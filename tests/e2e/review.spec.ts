@@ -1,0 +1,59 @@
+import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+import { releaseSchema, type CourseLesson } from '../../packages/contracts/src';
+import { signIn } from './account-helper';
+import { playable, solve } from './helpers';
+
+const seed = releaseSchema.parse(
+  JSON.parse(await readFile(new URL('../../content/seed.json', import.meta.url), 'utf8')),
+);
+
+test('a review is assembled from finished lessons and the server accepts it', async ({ page }) => {
+  await signIn(page);
+  await expect(page.getByTestId('start-review')).toHaveCount(0);
+  const lesson = seed.lessons[0]!;
+  await page.getByTestId('start-lesson').click();
+  for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
+  await page.getByTestId('back-to-map').click();
+
+  // One finished lesson is enough: its words make the review.
+  await page.getByTestId('start-review').click();
+  await expect(page.getByText('Повторим слова, которые уже знакомы!')).toBeVisible();
+  const review = await page.evaluate(() => {
+    const key = Object.keys(localStorage).find((k) => k.startsWith('lingvohero.learning.v3:'))!;
+    return JSON.parse(localStorage.getItem(key)!).state.session.lesson;
+  });
+  expect(review.id).toBe('review');
+  await page.screenshot({ path: 'test-results/review.png', fullPage: true });
+  const synced = page.waitForResponse(
+    (r) =>
+      r.url().endsWith('/v1/account/sync') &&
+      r.request().method() === 'POST' &&
+      (r.request().postDataJSON()?.attempts ?? []).some(
+        (a: { lessonId: string }) => a.lessonId === 'review',
+      ),
+  );
+  for (const [index, exercise] of playable(review as CourseLesson).entries()) {
+    // Right answers in a row light up a counter; from the third Tim cheers.
+    if (index === 3) {
+      await expect(page.getByTestId('streak')).toContainText('3');
+      await page.screenshot({ path: 'test-results/streak.png', fullPage: true });
+    }
+    if (exercise.type === 'memory') {
+      await page.getByTestId(`card-${exercise.wordIds[0]}-image`).click();
+      await page.screenshot({ path: 'test-results/memory.png', fullPage: true });
+      // Turn it back: the helper plays the game from the start.
+      await page.getByTestId(`card-${exercise.wordIds[1]}-text`).click();
+      await page.waitForTimeout(1000);
+    }
+    if (exercise.type === 'catch-word')
+      await page.screenshot({ path: 'test-results/catch-word.png', fullPage: true });
+    await solve(page, exercise, review as CourseLesson);
+  }
+  await expect(page.getByTestId('back-to-map')).toBeVisible();
+  const body = await (await synced).json();
+  expect(body.rejected).toEqual([]);
+  // Stars from the lesson and the review; a review adds no lesson of the map.
+  expect(body.journal.stars).toBe(6);
+  expect(Object.keys(body.learning.progress)).toEqual([lesson.id]);
+});
