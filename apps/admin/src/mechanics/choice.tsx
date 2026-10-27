@@ -8,7 +8,7 @@ import {
   type DraftExerciseOf,
 } from '@lingvohero/contracts';
 import { Field } from '../components/ui';
-import { AudioButtons, Sprite, WordSelect, wordLabel } from './shared';
+import { AudioButtons, Sprite, wordLabel } from './shared';
 import type { AdminMechanic, EditorProps, PreviewProps } from './types';
 
 type Draft = DraftExerciseOf<'choice'>;
@@ -77,7 +77,7 @@ function Editor({ exercise, words, errors, onChange }: EditorProps<'choice'>) {
         error={errors('show')}
       >
         {exercise.show.map((piece, i) => (
-          <span key={i} className="row">
+          <span key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: 8 }}>
             <select
               aria-label={`Часть вопроса ${i + 1}`}
               value={piece.view}
@@ -95,14 +95,24 @@ function Editor({ exercise, words, errors, onChange }: EditorProps<'choice'>) {
                 </option>
               ))}
             </select>
-            <WordSelect
-              label=""
+            <select
+              aria-label={`Слово части ${i + 1}`}
               value={piece.wordId}
-              words={words}
-              onSelect={(wordId) =>
-                set({ show: exercise.show.map((p, j) => (j === i ? { ...p, wordId } : p)) })
+              onChange={(e) =>
+                set({
+                  show: exercise.show.map((p, j) =>
+                    j === i ? { ...p, wordId: e.target.value } : p,
+                  ),
+                })
               }
-            />
+            >
+              <option value="">— слово —</option>
+              {words.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {wordLabel(w)}
+                </option>
+              ))}
+            </select>
             <button
               className="link"
               type="button"
