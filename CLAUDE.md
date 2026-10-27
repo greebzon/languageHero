@@ -53,7 +53,7 @@ Env: `apps/mobile/.env` → `EXPO_PUBLIC_API_URL`. By default the app uses `loca
 
 ## Account concept
 
-One account belongs to one child with their own email address. The child gives an age at sign-up (6/7/8/9+, stored as `birth_year`, editable in the profile); 6–7-year-olds get eased exercises (see Architecture, mechanics). Parents do not participate in the app. Family accounts, multiple child profiles per account and parental controls are outside the product scope. A profile is the child's own account data. Settings, progress and inventory belong to that account.
+One account belongs to one child with their own email address. The child gives an age at sign-up (6/7/8/9+, stored as `birth_year`, editable in the profile); 6–7-year-olds get eased exercises (see Architecture, mechanics). `difficultyFor(birthYear, state.recent)` also follows results: `LearningState.recent` (stars of the last 5 runs, written by `learn()`) — three flawless runs lift a 6–7-year-old to the 8–9 tasks, three one-star runs ease an older child. Parents do not participate in the app. Family accounts, multiple child profiles per account and parental controls are outside the product scope. A profile is the child's own account data. Settings, progress and inventory belong to that account.
 
 ## Levels and mascot gallery
 

@@ -236,13 +236,39 @@ test('6–7-year-olds get fewer options and extra letters, always solvable and r
   );
 });
 
+test('every finished run is remembered, the last five of them', () => {
+  const pkg = release.lessons[0]!;
+  let state = newLearningState();
+  for (let run = 0; run < 7; run += 1) {
+    state = learn(state, { type: 'start', lesson: pkg });
+    while (!state.session!.finished) {
+      state = learn(state, {
+        type: 'draft',
+        answer: answerTo(currentExercise(state.session!), pkg),
+      });
+      state = learn(state, { type: 'answer' });
+      state = learn(state, { type: 'next' });
+    }
+  }
+  assert.deepEqual(state.recent, [3, 3, 3, 3, 3]);
+  assert.ok(restoreLearningState(state));
+});
+
 test('the age group follows the birth year', () => {
   const now = new Date('2026-10-27T12:00:00Z');
-  assert.equal(difficultyFor(null, now), undefined);
+  assert.equal(difficultyFor(null, [], now), undefined);
   assert.equal(birthYearFor(6, now), 2020);
-  assert.deepEqual(difficultyFor(birthYearFor(7, now), now), { ageBand: '6-7' });
-  assert.deepEqual(difficultyFor(birthYearFor(8, now), now), { ageBand: '8-9' });
-  assert.deepEqual(difficultyFor(2010, now), { ageBand: '8-9' });
+  assert.deepEqual(difficultyFor(birthYearFor(7, now), [], now), { ageBand: '6-7' });
+  assert.deepEqual(difficultyFor(birthYearFor(8, now), [], now), { ageBand: '8-9' });
+  assert.deepEqual(difficultyFor(2010, [], now), { ageBand: '8-9' });
+  // Three flawless runs lift a 6-year-old, three hard ones ease an older child; one run or a
+  // mixed streak changes nothing.
+  const six = birthYearFor(6, now);
+  assert.deepEqual(difficultyFor(six, [1, 3, 3, 3], now), { ageBand: '8-9' });
+  assert.deepEqual(difficultyFor(six, [3, 2, 3], now), { ageBand: '6-7' });
+  assert.deepEqual(difficultyFor(2010, [3, 1, 1, 1], now), { ageBand: '6-7' });
+  assert.deepEqual(difficultyFor(null, [1, 1, 1], now), { ageBand: '6-7' });
+  assert.deepEqual(difficultyFor(2010, [1, 1], now), { ageBand: '8-9' });
 });
 
 const answerTo = (ex: CourseExercise, pkg: CourseLesson): Answer => solveExercise(ex, pkg);

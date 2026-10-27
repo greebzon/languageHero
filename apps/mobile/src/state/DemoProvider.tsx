@@ -590,7 +590,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           type: 'start',
           lesson,
           attemptId: randomUUID(),
-          difficulty: difficultyFor(auth.account?.profile.birthYear),
+          difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
         }),
       );
       return true;
@@ -639,7 +639,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           type: 'start',
           lesson,
           attemptId: randomUUID(),
-          difficulty: difficultyFor(auth.account?.profile.birthYear),
+          difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
           review: { seed, words },
         }),
       );
@@ -685,7 +685,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
                 ? {
                     ...action,
                     attemptId: randomUUID(),
-                    difficulty: difficultyFor(auth.account?.profile.birthYear),
+                    difficulty: difficultyFor(auth.account?.profile.birthYear, current.recent),
                   }
                 : action,
             ),

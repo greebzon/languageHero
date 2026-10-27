@@ -273,6 +273,8 @@ test('a review is rebuilt on the server: stars count, no XP or coins, only finis
   assert.equal(done.json().profile.xp, 100, 'no XP for a review');
   assert.equal(done.json().journal.stars, starsBefore + 3, 'a review earns its stars');
   assert.equal(done.json().learning.progress.review, undefined);
+  // The server replays the runs, so it keeps the same history that moves the difficulty.
+  assert.deepEqual(done.json().learning.recent, [3, 3]);
   // Words of a lesson the child has not finished cannot make a review.
   const other = reviewOf(seed.lessons[2]!, 'other');
   const forged = attempt(

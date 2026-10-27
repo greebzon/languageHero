@@ -9,6 +9,7 @@ import {
   type Review,
 } from '@lingvohero/contracts';
 import { adaptExercise, assessExercise, type Assessment } from './mechanics';
+import { RECENT_RUNS } from './age';
 import { starsFor } from './scoring';
 
 export function newLearningState(): LearningState {
@@ -123,6 +124,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
     };
   return {
     ...state,
+    recent: [...(state.recent ?? []), starsFor(session.mistakes)].slice(-RECENT_RUNS),
     // A review is not a lesson of the map: it leaves no progress entry (and so no XP or coins).
     progress: session.review
       ? state.progress

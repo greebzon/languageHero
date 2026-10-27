@@ -291,6 +291,8 @@ export const learningStateSchema = z.object({
   version: z.literal(2),
   soundEnabled: z.boolean(),
   unlockedCourseIds: z.array(id).optional(),
+  /** Stars of the last runs, newest last (at most 5): difficulty follows how they went. */
+  recent: z.array(z.number().int().min(1).max(3)).max(5).optional(),
   completedCourseIds: z.array(id).optional(),
   progress: z.record(
     id,

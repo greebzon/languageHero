@@ -106,7 +106,21 @@ test('clone a set: copy as is, and translate with AI keeping pictures', async (t
     workerId: 'clone-test',
   });
   const view = (await call('GET', `/generations/${jobId}`)).json();
-  assert.equal(view.job.status, 'awaiting-review', view.job.error ?? '');
+  assert.equal(
+    view.job.status,
+    'awaiting-review',
+    JSON.stringify(
+      view.tasks
+        .filter((x: { status: string }) => x.status !== 'succeeded')
+        .map((x: Record<string, unknown>) => [
+          x.stage,
+          x.targetId,
+          x.status,
+          x.attempts,
+          x.lastError,
+        ]),
+    ),
+  );
   const stages = new Set(view.tasks.map((x: { stage: string }) => x.stage));
   assert.equal(stages.has('image'), false);
   assert.equal(stages.has('cover'), false);
@@ -184,7 +198,23 @@ test('a translated clone writes its sentence lesson anew from the translated wor
   assert.equal(generated.statusCode, 202, generated.body);
   await runWorkerUntilIdle(worker);
   const source = await lessonsOf('en-zoo');
-  assert.equal(source.length, 2);
+  const generatedView = (await call('GET', `/generations/${generated.json().job.id}`)).json();
+  assert.equal(
+    source.length,
+    2,
+    JSON.stringify({
+      status: generatedView.job.status,
+      tasks: generatedView.tasks
+        .filter((x: { status: string }) => x.status !== 'succeeded')
+        .map((x: Record<string, unknown>) => [
+          x.stage,
+          x.targetId,
+          x.status,
+          x.attempts,
+          x.lastError,
+        ]),
+    }),
+  );
   assert.ok(isSentenceLesson(source[1]!.document));
 
   const clone = await call('POST', '/courses/en-zoo/clone', {
@@ -197,7 +227,21 @@ test('a translated clone writes its sentence lesson anew from the translated wor
   assert.equal(clone.statusCode, 202, clone.body);
   await runWorkerUntilIdle(worker);
   const view = (await call('GET', `/generations/${clone.json().job.job.id}`)).json();
-  assert.equal(view.job.status, 'awaiting-review', view.job.error ?? '');
+  assert.equal(
+    view.job.status,
+    'awaiting-review',
+    JSON.stringify(
+      view.tasks
+        .filter((x: { status: string }) => x.status !== 'succeeded')
+        .map((x: Record<string, unknown>) => [
+          x.stage,
+          x.targetId,
+          x.status,
+          x.attempts,
+          x.lastError,
+        ]),
+    ),
+  );
   const [words, sentences] = await lessonsOf('he-zoo-c3d4');
   assert.ok(words && sentences && isSentenceLesson(sentences.document));
   assert.equal(sentences.document.exercises.length, 8);

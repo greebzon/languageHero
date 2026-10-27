@@ -27,7 +27,8 @@ export default function MapScreen() {
   } = useDemo();
   const { t, tn, locale, isRTL } = useT();
   // Some lessons have tasks for one age group only: count the child's own.
-  const ageBand = difficultyFor(useAccount().account?.profile.birthYear)?.ageBand ?? '8-9';
+  const ageBand =
+    difficultyFor(useAccount().account?.profile.birthYear, state.recent)?.ageBand ?? '8-9';
   const { id } = useLocalSearchParams<{ id: string }>();
   const card = catalog.courses.find((c) => c.id === id);
   const access =

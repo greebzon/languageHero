@@ -55,6 +55,7 @@ export async function runWorkerLoop(ctx: StageContext, options: LoopOptions) {
   const inflight = new Set<Promise<void>>();
   const pollMs = options.pollMs ?? 1000;
   let lastRecovery = 0;
+  let idleLooks = 0;
   while (!options.signal?.aborted) {
     if (Date.now() - lastRecovery > 15_000) {
       const recovered = await recoverLeases(ctx.db);
@@ -64,6 +65,7 @@ export async function runWorkerLoop(ctx: StageContext, options: LoopOptions) {
     let claimed: TaskRow | null = null;
     if (inflight.size < options.concurrency) claimed = await claimTask(ctx.db, ctx.workerId);
     if (claimed) {
+      idleLooks = 0;
       options.log?.(`run ${claimed.stage}/${claimed.targetId} (attempt ${claimed.attempts})`);
       const task = claimed;
       const promise = runTask(ctx, task).finally(() => inflight.delete(promise));
@@ -76,7 +78,16 @@ export async function runWorkerLoop(ctx: StageContext, options: LoopOptions) {
       await Promise.race(inflight);
       continue;
     }
-    if (options.untilIdle) return;
+    if (options.untilIdle) {
+      // A claim can miss a task that became runnable a moment ago (the tests saw a finished
+      // stage whose next one was still «pending»); look twice more before calling it idle.
+      // The polling loop below never needs this: it simply claims on the next round.
+      if (++idleLooks < 3) {
+        await sleep(25);
+        continue;
+      }
+      return;
+    }
     await sleep(pollMs);
   }
   await Promise.allSettled(inflight);
