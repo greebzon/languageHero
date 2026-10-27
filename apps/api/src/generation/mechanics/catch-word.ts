@@ -2,6 +2,7 @@ import type { GenerationMechanic } from './types.js';
 import { shuffle } from './util.js';
 
 export const catchWord: GenerationMechanic<'catch-word'> = {
+  effort: 2,
   label:
     'catch-word (an arcade game: hear a word, pop the bubble with its picture; one round per word)',
   rules:

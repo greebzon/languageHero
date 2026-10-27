@@ -2,6 +2,7 @@ import type { GenerationMechanic } from './types.js';
 import { shuffle } from './util.js';
 
 export const matchPairs: GenerationMechanic<'match-pairs'> = {
+  effort: 2,
   label: 'match-pairs (connect 2–4 words with their pictures)',
   rules:
     'wordKey = ""; pairKeys = 2–4 distinct keys; choiceKeys = []; distractorLetters = ""; variant = "".',

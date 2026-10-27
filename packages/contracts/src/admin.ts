@@ -246,6 +246,8 @@ export type GenerationLessonPlan = {
   lessonId: string;
   /** `sentences`: the set's closing lesson of «Собери фразу» tasks (generation/sentences.ts). */
   kind?: 'sentences';
+  /** Word lessons: the mechanics of this lesson (generation/rhythm.ts); absent on old jobs. */
+  mechanics?: DraftExercise['type'][];
   /** Sentence lesson: the sentences to record, `key` names the media (`<key>-audio`). */
   sentences?: { key: string; text: string }[];
   title: string;

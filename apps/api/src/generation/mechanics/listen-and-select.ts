@@ -2,6 +2,7 @@ import type { GenerationMechanic } from './types.js';
 import { shuffle } from './util.js';
 
 export const listenAndSelect: GenerationMechanic<'listen-and-select'> = {
+  effort: 1,
   label: 'listen-and-select (hear a word, pick its picture among 2–4 options)',
   rules:
     'wordKey = the correct word; choiceKeys = 2–4 distinct keys including wordKey (order is the display order); pairKeys = []; distractorLetters = ""; variant = "".',

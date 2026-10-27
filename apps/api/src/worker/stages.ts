@@ -42,6 +42,7 @@ import {
 } from '../generation/dto.js';
 import type { CostRates } from '../generation/estimate.js';
 import { needsLetters, wordLessonMix } from '../generation/mechanics/index.js';
+import { lessonMechanics } from '../generation/rhythm.js';
 import {
   SENTENCES_PER_BAND,
   SENTENCE_LESSON_SIZE,
@@ -265,7 +266,12 @@ async function plan(env: Env): Promise<StageResult> {
     (d) => planDtoSchema.parse(d),
   );
   const { words, keyMap } = material(() => buildVocabulary(data, payload.wordCount));
-  const plans = material(() => buildLessonPlans(data, words, distribution, course.id, keyMap));
+  const plans: GenerationLessonPlan[] = material(() =>
+    buildLessonPlans(data, words, distribution, course.id, keyMap).map((plan, index) => ({
+      ...plan,
+      mechanics: lessonMechanics(job.input.mix, index),
+    })),
+  );
   // «Собери фразу»: the set ends with sentences made of its words.
   if (job.input.mix.includes('build-sentence'))
     plans.push(
@@ -300,7 +306,7 @@ async function text(env: Env): Promise<StageResult> {
     lesson: { title: lesson.title, goal: lesson.goal, wordKeys: lesson.wordKeys },
     words: output.words,
     exerciseCount: lesson.exerciseCount,
-    mix: wordLessonMix(job.input.mix),
+    mix: lesson.mechanics ?? wordLessonMix(job.input.mix),
     feedback,
   };
   const keyMap = new Map(output.words.map((w) => [w.key, w.key]));
@@ -312,9 +318,7 @@ async function text(env: Env): Promise<StageResult> {
     payload,
     (d) => lessonDtoSchema.parse(d),
   );
-  const exercises = material(() =>
-    buildExercises(data, lesson, output.words, keyMap, wordLessonMix(job.input.mix)),
-  );
+  const exercises = material(() => buildExercises(data, lesson, output.words, keyMap, payload.mix));
   const document = buildDocument(lesson, output.words, exercises);
   await updateOutput(env.ctx.db, job.id, (current) => ({
     ...current,

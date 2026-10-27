@@ -28,6 +28,8 @@ export default function LessonScreen() {
   const { t, isRTL } = useT();
   const localized = useLocalizedLesson(state.session?.lesson);
   const [wrong, setWrong] = useState(false);
+  // Right answers in a row in this sitting (a wrong one starts again from zero).
+  const [streak, setStreak] = useState(0);
   const [hint, setHint] = useState(false);
   const [exit, setExit] = useState(false);
   const scroll = useRef<ScrollView>(null);
@@ -77,7 +79,18 @@ export default function LessonScreen() {
             </View>
             <Progress value={(session.exerciseIndex + (correct ? 1 : 0)) / session.queue.length} />
           </View>
-          <Icon name="star" color={colors.amber} size={25} />
+          {streak >= 2 ? (
+            <View
+              testID="streak"
+              accessible
+              accessibilityLabel={t('lesson.streakA11y', { n: streak })}
+              style={s.streak}
+            >
+              <Label style={s.streakText}>🔥 {streak}</Label>
+            </View>
+          ) : (
+            <Icon name="star" color={colors.amber} size={25} />
+          )}
         </View>
         <NetworkNotice />
         <ScrollView
@@ -89,7 +102,11 @@ export default function LessonScreen() {
           <View style={s.mascotRow}>
             <MascotFace id={account!.profile.avatar} size={49} />
             <Label style={s.bubble}>
-              {review ? t('lesson.review') : (lesson.presentation?.intro ?? t('lesson.intro'))}
+              {correct && streak >= 3
+                ? t('lesson.combo', { n: streak })
+                : review
+                  ? t('lesson.review')
+                  : (lesson.presentation?.intro ?? t('lesson.intro'))}
             </Label>
           </View>
           {review && (
@@ -167,6 +184,7 @@ export default function LessonScreen() {
               } else {
                 dispatch({ type: 'answer' });
                 setWrong(assessment === 'wrong');
+                setStreak((n) => (assessment === 'correct' ? n + 1 : 0));
               }
             }}
           />
@@ -201,6 +219,15 @@ const s = StyleSheet.create({
     paddingVertical: 10,
   },
   close: { minWidth: 44, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
+  streak: {
+    minWidth: 44,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: '#FFF1DC',
+    alignItems: 'center',
+  },
+  streakText: { fontSize: 15, color: '#B45309' },
   progressLabel: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 7, gap: 8 },
   caption: { fontSize: 11, color: colors.muted, flexShrink: 1 },
   content: { paddingHorizontal: 22, paddingTop: 8, paddingBottom: 16 },

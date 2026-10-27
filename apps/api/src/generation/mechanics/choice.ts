@@ -24,6 +24,7 @@ function letterOptions(answer: string, pool: string[], seed: string) {
 /* The model names a preset and the word; the server builds the options itself, so every
    variant is solvable by construction (and checked again by the strict schema). */
 export const choice: GenerationMechanic<'choice'> = {
+  effort: 1,
   label:
     'choice (a quick question about one word; pick a variant: find-picture — read the word, pick its picture; name-picture — see the picture, pick the written word; translate — read the Russian translation, pick the word; is-it — a picture with a word under it, answer yes or no; first-sound — see and hear the word, pick its first letter)',
   rules: `variant = one of ${GENERATED_CHOICES.join(', ')} (vary them across the lesson); wordKey = the word asked about; choiceKeys = 1–3 other keys of the lesson for the wrong options (for is-it the server sometimes shows one of them instead of the right word); distractorLetters = for first-sound 2 lowercase letters that are not the word's first letter, otherwise ""; pairKeys = [].`,

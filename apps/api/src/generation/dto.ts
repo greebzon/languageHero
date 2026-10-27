@@ -8,6 +8,7 @@ import {
   type LessonDocument,
 } from '@lingvohero/contracts';
 import { bareLetters, clip, generationMechanic, retranslate, slug } from './mechanics/index.js';
+import { arrangeExercises } from './rhythm.js';
 
 /*
  * What the model is allowed to say. Strict structured outputs need every property required and
@@ -197,7 +198,7 @@ export function buildExercises(
       `lesson "${lesson.title}" has ${exercises.length} usable exercises, expected ${lesson.exerciseCount}`,
     );
   if (problems.length) throw new MaterialError('Задания не прошли проверку', problems);
-  return exercises;
+  return arrangeExercises(exercises, `${lesson.lessonId}:rhythm`);
 }
 
 /** The lesson document with placeholder media ids; assets are attached by `assemble`. */

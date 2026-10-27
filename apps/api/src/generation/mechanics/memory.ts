@@ -3,6 +3,7 @@ import type { GenerationMechanic } from './types.js';
 import { shuffle } from './util.js';
 
 export const memory: GenerationMechanic<'memory'> = {
+  effort: 2,
   label: 'memory (a game: turn cards two at a time to find each word with its picture)',
   rules:
     'wordKey = ""; pairKeys = 3–4 distinct keys (one card pair each); choiceKeys = []; distractorLetters = ""; variant = "".',

@@ -33,7 +33,12 @@ test('a review is assembled from finished lessons and the server accepts it', as
         (a: { lessonId: string }) => a.lessonId === 'review',
       ),
   );
-  for (const exercise of playable(review as CourseLesson)) {
+  for (const [index, exercise] of playable(review as CourseLesson).entries()) {
+    // Right answers in a row light up a counter; from the third Tim cheers.
+    if (index === 3) {
+      await expect(page.getByTestId('streak')).toContainText('3');
+      await page.screenshot({ path: 'test-results/streak.png', fullPage: true });
+    }
     if (exercise.type === 'memory') {
       await page.getByTestId(`card-${exercise.wordIds[0]}-image`).click();
       await page.screenshot({ path: 'test-results/memory.png', fullPage: true });

@@ -31,7 +31,7 @@ export function reviewMaterial(
       lessonId: null,
       message: `Получилось ${total} заданий вместо ${input.totalExercises}`,
     });
-  const requested = new Set(wordLessonMix(input.mix));
+  const wordMix = wordLessonMix(input.mix);
   const seen = new Set<string>();
   const usedWords = new Set<string>();
   for (const lesson of output.lessons) {
@@ -64,6 +64,8 @@ export function reviewMaterial(
           .map(([k, v]) => `${k === '_' ? '' : k + ': '}${v.join('; ')}`)
           .join(' · '),
       });
+    // Each word lesson has its own mechanics (generation/rhythm.ts); old jobs used all of them.
+    const requested = new Set(lesson.mechanics ?? wordMix);
     const types = new Set(lesson.document.exercises.map((e) => e.type));
     const missing = [...requested].filter((t) => !types.has(t));
     if (

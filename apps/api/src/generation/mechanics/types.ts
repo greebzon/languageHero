@@ -28,6 +28,8 @@ export type GenerationMechanic<K extends ExerciseType> = {
   label: string;
   /** false: never a task of a word lesson (sentences have a lesson of their own). */
   wordLessons?: false;
+  /** How hard the task feels (1 quick, 3 demanding): a lesson rises, then ends easy. */
+  effort: 1 | 2 | 3;
   /** Field rules for the model; every DTO field must be mentioned. */
   rules: string;
   /** The draft exercise, or why the model's item cannot become one. */

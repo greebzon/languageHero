@@ -16,7 +16,7 @@ function ListenAndSelect({
   return (
     <>
       <Label style={kit.instructions}>{t('exercise.listen')}</Label>
-      <AudioControl lesson={lesson} audioId={word(exercise.wordId).audioId} />
+      <AudioControl lesson={lesson} audioId={word(exercise.wordId).audioId} autoPlay />
       <View style={kit.grid}>
         {exercise.choices.map((id) => (
           <Pressable

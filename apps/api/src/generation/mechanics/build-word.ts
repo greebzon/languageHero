@@ -2,6 +2,7 @@ import type { GenerationMechanic } from './types.js';
 import { bareLetters, shuffle } from './util.js';
 
 export const buildWord: GenerationMechanic<'build-word'> = {
+  effort: 3,
   label: 'build-word (spell a word from letter tiles with a few distractor letters)',
   rules:
     'wordKey = the word to spell; distractorLetters = 1–3 extra lowercase letters not helping to spell it; choiceKeys = []; pairKeys = []; variant = "".',

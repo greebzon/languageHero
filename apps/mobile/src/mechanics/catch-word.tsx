@@ -81,7 +81,12 @@ function CatchWord({ lesson, exercise, draft, correct, onChange }: MechanicProps
       {current ? (
         <>
           {/* A new round, a new player: the key makes it load the round's word. */}
-          <AudioControl key={round} lesson={lesson} audioId={word(current.wordId).audioId} />
+          <AudioControl
+            key={round}
+            lesson={lesson}
+            audioId={word(current.wordId).audioId}
+            autoPlay
+          />
           <View style={s.sky}>
             {current.choices.map((id, index) => (
               <Bubble

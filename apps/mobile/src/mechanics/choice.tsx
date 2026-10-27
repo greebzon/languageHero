@@ -48,7 +48,7 @@ function Choice({ lesson, exercise, draft, correct, onChange }: MechanicProps<'c
             if (view === 'audio')
               return (
                 <View key={i} style={s.audio}>
-                  <AudioControl lesson={lesson} audioId={w.audioId} caption="audio.word" />
+                  <AudioControl lesson={lesson} audioId={w.audioId} caption="audio.word" autoPlay />
                 </View>
               );
             if (view === 'image')

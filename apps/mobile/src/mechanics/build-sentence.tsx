@@ -23,7 +23,7 @@ function BuildSentence({
   return (
     <>
       <Label style={kit.instructions}>{t('exercise.sentence')}</Label>
-      <AudioControl lesson={lesson} audioId={exercise.audioId} caption="audio.sentence" />
+      <AudioControl lesson={lesson} audioId={exercise.audioId} caption="audio.sentence" autoPlay />
       <View style={[s.answer, direction]} accessibilityLabel={t('exercise.sentenceBuilt')}>
         {chosen.length === 0 && (
           <Label style={{ color: colors.muted }}>{t('exercise.sentencePlaceholder')}</Label>

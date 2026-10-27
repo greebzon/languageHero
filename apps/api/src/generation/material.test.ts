@@ -164,10 +164,14 @@ test('fake provider material maps into valid lessons that pass review', async ()
     ['choice'],
   );
   choiceLesson.document = buildDocument(choiceLesson, words, choices);
-  assert.deepEqual(
-    choices.map((e) => e.type === 'choice' && choicePresetOf(e)),
-    ['find-picture', 'name-picture', 'translate', 'is-it', 'first-sound'],
-  );
+  // Every kind once (the order is the lesson's rhythm, see rhythm.test.ts).
+  assert.deepEqual(choices.map((e) => (e.type === 'choice' && choicePresetOf(e)) || '').sort(), [
+    'find-picture',
+    'first-sound',
+    'is-it',
+    'name-picture',
+    'translate',
+  ]);
   assert.deepEqual(
     reviewMaterial(
       { words, lessons: [choiceLesson], distribution: [5] },
