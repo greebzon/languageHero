@@ -146,7 +146,42 @@ export function composeReview(
   entries: { lesson: CourseLesson; wordId: string }[],
   seed: string,
 ): CourseLesson {
-  const rand = seeded(`review:${seed}`);
+  return composeWordLesson(entries, seed, {
+    id: REVIEW_LESSON_ID,
+    plan: PLAN,
+    frame: (locale) => TEXTS[locale],
+  });
+}
+
+/** What a lesson assembled from words is called and says, per locale. */
+export type Frame = Pick<
+  (typeof TEXTS)['ru'],
+  'title' | 'intro' | 'completionTitle' | 'completionMessage'
+>;
+/** Tasks a word lesson can be planned with (`composeWordLesson`). */
+export type TaskKind = Kind;
+
+/**
+ * A lesson made of tasks over the given words (review, the set's challenge): every task built
+ * from the words' own pictures and recordings, deterministic for the seed. `extra` adds
+ * ready exercises (with their media and texts) at `extraAt`.
+ */
+export function composeWordLesson(
+  entries: { lesson: CourseLesson; wordId: string }[],
+  seed: string,
+  spec: {
+    id: string;
+    plan: TaskKind[];
+    frame: (locale: Locale) => Frame;
+    extra?: {
+      exercises: CourseExercise[];
+      media: CourseLesson['media'];
+      texts: Partial<Record<'en' | 'he', Record<string, { prompt: string; hint: string }>>>;
+    };
+    extraAt?: number;
+  },
+): CourseLesson {
+  const rand = seeded(`${spec.id}:${seed}`);
   const shuffled = <T>(items: T[]) => shuffle(items, rand);
   const sources = entries.map(({ lesson, wordId }) => {
     const word = lesson.words.find((w) => w.id === wordId);
@@ -176,8 +211,8 @@ export function composeReview(
     Array.from(words.find((w) => w.id === id)!.spelling.normalize('NFC'));
 
   const exercises: (CourseExercise & { kind: Kind })[] = [];
-  for (const [index, planned] of PLAN.entries()) {
-    const id = `review-${index + 1}`;
+  for (const [index, planned] of spec.plan.entries()) {
+    const id = `${spec.id}-${index + 1}`;
     const [prompt, hint] = TEXTS.ru.tasks[planned];
     const base = { id, prompt, hint };
     const w = target();
@@ -283,16 +318,20 @@ export function composeReview(
   const texts: Partial<Record<'en' | 'he', LessonTexts>> = {};
   for (const locale of ['en', 'he'] as const) {
     const t = TEXTS[locale];
+    const frame = spec.frame(locale);
     texts[locale] = {
-      title: t.title,
+      title: frame.title,
       presentation: {
-        intro: t.intro,
-        completionTitle: t.completionTitle,
-        completionMessage: t.completionMessage,
+        intro: frame.intro,
+        completionTitle: frame.completionTitle,
+        completionMessage: frame.completionMessage,
       },
-      exercises: Object.fromEntries(
-        exercises.map((e) => [e.id, { prompt: t.tasks[e.kind][0], hint: t.tasks[e.kind][1] }]),
-      ),
+      exercises: {
+        ...Object.fromEntries(
+          exercises.map((e) => [e.id, { prompt: t.tasks[e.kind][0], hint: t.tasks[e.kind][1] }]),
+        ),
+        ...spec.extra?.texts[locale],
+      },
       words: Object.fromEntries(
         sources.flatMap(({ lesson, word }) => {
           const translation = lesson.texts?.[locale]?.words?.[word.id]?.translation;
@@ -301,21 +340,24 @@ export function composeReview(
       ),
     };
   }
+  const frame = spec.frame('ru');
+  const tasks: CourseExercise[] = exercises.map(({ kind: _kind, ...e }) => e);
+  const at = spec.extraAt ?? tasks.length;
   return {
     schemaVersion: 2,
-    id: REVIEW_LESSON_ID,
+    id: spec.id,
     version: 1,
     language: sources[0]!.lesson.language,
-    title: TEXTS.ru.title,
+    title: frame.title,
     presentation: {
-      intro: TEXTS.ru.intro,
-      completionTitle: TEXTS.ru.completionTitle,
-      completionMessage: TEXTS.ru.completionMessage,
+      intro: frame.intro,
+      completionTitle: frame.completionTitle,
+      completionMessage: frame.completionMessage,
     },
     texts,
     words,
-    media,
-    exercises: exercises.map(({ kind: _kind, ...e }) => e),
+    media: [...media, ...(spec.extra?.media ?? [])],
+    exercises: [...tasks.slice(0, at), ...(spec.extra?.exercises ?? []), ...tasks.slice(at)],
   };
 }
 

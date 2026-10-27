@@ -4,6 +4,7 @@ import {
   difficultySchema,
   learningStateSchema,
   reviewSchema,
+  bossSchema,
   localeSchema,
   type Locale,
 } from './course';
@@ -47,6 +48,8 @@ export const attemptSchema = z.object({
   difficulty: difficultySchema.optional(),
   /** A review: the words and seed it was assembled from (`lessonId` is `review`). */
   review: reviewSchema.optional(),
+  /** A set's challenge: the set, its lessons and the seed (`lessonId` is `boss`). */
+  boss: bossSchema.optional(),
   events: z
     .array(
       z.discriminatedUnion('type', [
@@ -86,6 +89,8 @@ export const journalSchema = z.object({
   days: z.record(z.string(), journalDaySchema),
   claimedQuests: z.record(z.string(), z.array(z.string())),
   trophies: z.record(z.string(), z.string()),
+  /** Sets whose challenge was won (set id → day): their crown. */
+  bosses: z.record(z.string(), z.string()).default({}),
   bonusCoins: z.number().int().nonnegative(),
   spentCoins: z.number().int().nonnegative(),
   /** Stars of every verified completion, repeats included: what opens sets. */

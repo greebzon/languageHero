@@ -8,9 +8,11 @@ import {
   type CourseLesson,
   type Difficulty,
   type Review,
+  type Boss,
 } from '@lingvohero/contracts';
 import {
   coinBalance,
+  composeBoss,
   composeReview,
   currentExercise,
   dayKey,
@@ -76,7 +78,12 @@ async function login(ctx: Ctx, email: string) {
   }
   return data;
 }
-function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>, review?: Review) {
+function attempt(
+  lesson: CourseLesson,
+  difficulty?: Pick<Difficulty, 'ageBand'>,
+  review?: Review,
+  boss?: Boss,
+) {
   const id = randomUUID();
   let state = learn(newLearningState(), {
     type: 'start',
@@ -84,8 +91,9 @@ function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>,
     attemptId: id,
     difficulty,
     review,
+    boss,
   });
-  for (let i = 0; i < lesson.exercises.length; i += 1) {
+  while (!state.session!.finished) {
     const ex = currentExercise(state.session!);
     const answer = solveExercise(ex, lesson);
     state = learn(state, { type: 'draft', answer });
@@ -98,6 +106,7 @@ function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>,
     version: lesson.version,
     ...(state.session!.difficulty ? { difficulty: state.session!.difficulty } : {}),
     ...(review ? { review } : {}),
+    ...(boss ? { boss } : {}),
     events: state.session!.events!,
   };
 }
@@ -295,6 +304,93 @@ test('a review is rebuilt on the server: stars count, no XP or coins, only finis
     rejected.json().rejected.map((r: { code: string }) => r.code),
     ['review_invalid'],
   );
+});
+test('the set challenge: only after the whole set, a chest and a crown once, hearts end it', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const boss: Boss = {
+    courseId: 'en-forest',
+    seed: 'boss-seed',
+    lessons: seed.lessons.map((l) => ({ lessonId: l.id, version: l.version })),
+  };
+  const lesson = composeBoss(seed.lessons, boss.seed);
+  const body = { deviceId: randomUUID(), session: null, soundEnabled: true };
+  // Not before the set is finished.
+  const early = await login(ctx, 'early-boss@example.test');
+  const tooSoon = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 1, attempts: [attempt(lesson, undefined, undefined, boss)] },
+    early.token,
+  );
+  assert.deepEqual(
+    tooSoon.json().rejected.map((r: { code: string }) => r.code),
+    ['boss_invalid'],
+  );
+
+  const user = await login(ctx, 'boss@example.test');
+  const set = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 1, attempts: seed.lessons.map((l) => attempt(l)) },
+    user.token,
+  );
+  assert.equal(set.json().profile.xp, 500);
+  // Three wrong answers: the challenge is lost, verified, but it earns nothing.
+  let state = learn(newLearningState(), {
+    type: 'start',
+    lesson,
+    attemptId: randomUUID(),
+    boss,
+  });
+  for (let i = 0; i < 3; i += 1) {
+    const ex = currentExercise(state.session!);
+    assert.ok(ex.type === 'listen-and-select');
+    state = learn(state, {
+      type: 'draft',
+      answer: { choiceId: ex.choices.find((c) => c !== ex.wordId)! },
+    });
+    state = learn(state, { type: 'answer' });
+  }
+  assert.equal(state.session!.lost, true);
+  const lostRun = {
+    id: state.session!.attemptId!,
+    lessonId: 'boss',
+    version: 1,
+    boss,
+    events: state.session!.events!,
+  };
+  const afterLoss = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 2, attempts: [lostRun] },
+    user.token,
+  );
+  assert.deepEqual(afterLoss.json().accepted, [lostRun.id]);
+  assert.equal(afterLoss.json().journal.stars, set.json().journal.stars);
+  assert.deepEqual(afterLoss.json().journal.bosses, {});
+
+  const win = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 3, attempts: [attempt(lesson, undefined, undefined, boss)] },
+    user.token,
+  );
+  assert.equal(win.statusCode, 200, win.body);
+  assert.deepEqual(win.json().rejected, []);
+  assert.ok(win.json().journal.bosses['en-forest'], 'the crown');
+  assert.equal(win.json().journal.inventory.items.length, 1, 'the chest gave an item');
+  assert.equal(win.json().journal.stars, set.json().journal.stars + 3);
+  assert.equal(win.json().profile.xp, 500, 'no XP for the challenge');
+  // Winning again earns stars, not another chest.
+  const again = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 4, attempts: [attempt(lesson, undefined, undefined, boss)] },
+    user.token,
+  );
+  assert.equal(again.json().journal.inventory.items.length, 1);
+  assert.equal(again.json().journal.stars, set.json().journal.stars + 6);
 });
 test('treasury: quests count verified lessons, claims and purchases are recorded once on the server', async (t) => {
   const ctx = await createTestContext(t);

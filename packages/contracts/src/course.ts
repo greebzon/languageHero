@@ -285,6 +285,20 @@ export const reviewSchema = z.object({
   seed: z.string().min(1).max(100),
   words: z.array(reviewWordSchema).min(3).max(8),
 });
+/* «Испытание сета» (boss): assembled on the device from every lesson of a finished set
+   (learning-core `composeBoss`), three hearts; the first win of a set earns a chest and its
+   crown. Like a review, it travels as what it was assembled from. */
+export const BOSS_LESSON_ID = 'boss';
+export const BOSS_HEARTS = 3;
+export const bossSchema = z.object({
+  courseId: id,
+  seed: z.string().min(1).max(100),
+  lessons: z
+    .array(z.object({ lessonId: id, version: z.number().int().positive() }))
+    .min(1)
+    .max(30),
+});
+export type Boss = z.infer<typeof bossSchema>;
 export type ReviewWord = z.infer<typeof reviewWordSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export const learningStateSchema = z.object({
@@ -308,6 +322,9 @@ export const learningStateSchema = z.object({
       difficulty: difficultySchema.optional(),
       /** Present for a review: no progress entry, no XP or coins, stars still count. */
       review: reviewSchema.optional(),
+      /** Present for a set's challenge; `lost` once its hearts ran out. */
+      boss: bossSchema.optional(),
+      lost: z.boolean().optional(),
       events: z
         .array(
           z.discriminatedUnion('type', [

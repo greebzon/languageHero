@@ -21,6 +21,7 @@ export const lesson = defineTexts({
     pauseText: 'Твоё место в уроке сохранится. Можно вернуться и продолжить.',
     keepPlaying: 'Продолжить играть',
     combo: 'Уже {n} подряд — так держать!',
+    hearts: 'Осталось сердечек: {n}',
     streakA11y: 'Правильных ответов подряд: {n}',
   },
   en: {
@@ -42,6 +43,7 @@ export const lesson = defineTexts({
     pauseText: 'Your place in the lesson will be saved. You can come back and keep going.',
     keepPlaying: 'Keep playing',
     combo: '{n} in a row — keep it up!',
+    hearts: 'Hearts left: {n}',
     streakA11y: 'Right answers in a row: {n}',
   },
   he: {
@@ -63,6 +65,7 @@ export const lesson = defineTexts({
     pauseText: 'המקום שלך בשיעור יישמר. אפשר לחזור ולהמשיך.',
     keepPlaying: 'להמשיך לשחק',
     combo: 'כבר {n} ברצף — ממשיכים ככה!',
+    hearts: 'לבבות שנשארו: {n}',
     streakA11y: 'תשובות נכונות ברצף: {n}',
   },
 });

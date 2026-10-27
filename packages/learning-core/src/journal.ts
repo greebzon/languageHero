@@ -71,6 +71,7 @@ export function emptyJournal(): Journal {
     days: {},
     claimedQuests: {},
     trophies: {},
+    bosses: {},
     bonusCoins: 0,
     spentCoins: 0,
     stars: 0,
@@ -85,6 +86,7 @@ export function restoreJournal(value: unknown): Journal {
     days: j.days,
     claimedQuests: j.claimedQuests ?? {},
     trophies: j.trophies ?? {},
+    bosses: j.bosses ?? {},
     bonusCoins: typeof j.bonusCoins === 'number' ? j.bonusCoins : 0,
     spentCoins: typeof j.spentCoins === 'number' ? j.spentCoins : 0,
     stars: typeof j.stars === 'number' ? j.stars : 0,
@@ -201,7 +203,7 @@ export function wallClock(utc: Date, tzOffset: number): Date {
   return new Date(shifted.getTime() + shifted.getTimezoneOffset() * 60000);
 }
 export type LedgerEntry = {
-  kind: 'quest' | 'trophy' | 'purchase' | 'chest' | 'freeze';
+  kind: 'quest' | 'trophy' | 'purchase' | 'chest' | 'freeze' | 'boss';
   ref: string;
   day: string;
   coins: number;
@@ -225,6 +227,7 @@ export function buildJournal(completions: Completion[], ledger: LedgerEntry[]): 
   }
   const claimedQuests: Record<string, string[]> = {};
   const trophies: Record<string, string> = {};
+  const bosses: Record<string, string> = {};
   const items: string[] = [];
   let bonusCoins = 0;
   let spentCoins = 0;
@@ -237,6 +240,11 @@ export function buildJournal(completions: Completion[], ledger: LedgerEntry[]): 
     } else if (entry.kind === 'trophy') {
       trophies[entry.ref] = entry.day;
       bonusCoins += entry.coins;
+    } else if (entry.kind === 'boss') {
+      // A set's challenge won: its crown, and the chest's item (or coins when nothing is left).
+      bosses[entry.ref] = entry.day;
+      bonusCoins += entry.coins;
+      if (entry.itemId) items.push(entry.itemId);
     } else if (entry.kind === 'freeze') {
       freezes -= 1;
       days[entry.day] ??= { lessons: 0, perfect: 0, words: 0, evening: false };
@@ -252,6 +260,7 @@ export function buildJournal(completions: Completion[], ledger: LedgerEntry[]): 
     days,
     claimedQuests,
     trophies,
+    bosses,
     bonusCoins,
     spentCoins,
     stars: journal.stars,

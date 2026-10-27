@@ -22,6 +22,7 @@ export default function MapScreen() {
     refreshing,
     catalogStatus,
     startLesson,
+    startBoss,
     loadingLesson,
     lessonError,
   } = useDemo();
@@ -38,6 +39,10 @@ export default function MapScreen() {
   const resume = resumableSession(state, fullCatalog);
   async function start(id: string) {
     if (await startLesson(id)) router.push('/lesson');
+  }
+  async function challenge(courseId: string) {
+    if (resume && !resume.boss) setLocked(true);
+    else if (await startBoss(courseId)) router.push('/lesson');
   }
   return (
     <Screen>
@@ -196,6 +201,12 @@ export default function MapScreen() {
                   </View>
                 );
               })}
+              <BossCard
+                done={course.lessons.every((l) => state.progress[l.id])}
+                crowned={!!journal.bosses[course.id]}
+                busy={loadingLesson}
+                onStart={() => void challenge(course.id)}
+              />
             </View>
           );
         })}
@@ -226,7 +237,61 @@ export default function MapScreen() {
     </Screen>
   );
 }
+/* «Испытание сета»: opens when every lesson of the set is done; its first win crowns the set. */
+function BossCard({
+  done,
+  crowned,
+  busy,
+  onStart,
+}: {
+  done: boolean;
+  crowned: boolean;
+  busy: boolean;
+  onStart: () => void;
+}) {
+  const { t } = useT();
+  return (
+    <View style={[s.boss, !done && { opacity: 0.6 }]} testID="boss-card">
+      <View style={s.bossHead}>
+        <Label style={s.bossIcon}>{crowned ? '👑' : '🏰'}</Label>
+        <View style={{ flex: 1 }}>
+          <Heading style={s.bossTitle}>{t('course.boss.title')}</Heading>
+          <Label style={s.bossText}>
+            {!done
+              ? t('course.boss.locked')
+              : crowned
+                ? t('course.boss.won')
+                : t('course.boss.ready')}
+          </Label>
+        </View>
+      </View>
+      {done && (
+        <ToyButton
+          testID="start-boss"
+          title={busy ? t('common.preparingLesson') : t('course.boss.start')}
+          tone={crowned ? 'light' : 'amber'}
+          icon="flash"
+          disabled={busy}
+          onPress={onStart}
+        />
+      )}
+    </View>
+  );
+}
 const s = StyleSheet.create({
+  boss: {
+    marginTop: 18,
+    gap: 12,
+    padding: 18,
+    borderRadius: 24,
+    backgroundColor: '#FFF4D8',
+    borderWidth: 2,
+    borderColor: '#F2C94C',
+  },
+  bossHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  bossIcon: { fontSize: 36, lineHeight: 44 },
+  bossTitle: { fontSize: 20, lineHeight: 26 },
+  bossText: { fontSize: 13, color: colors.muted },
   intro: { paddingHorizontal: 22, paddingTop: 12, paddingBottom: 20, gap: 12 },
   eyebrow: { fontFamily: fonts.bold, letterSpacing: 1, fontSize: 10, color: colors.muted },
   hero: {

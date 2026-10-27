@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
 import { assess, currentExercise, inReview } from '@lingvohero/learning-core';
+import { BOSS_HEARTS } from '@lingvohero/contracts';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
@@ -79,6 +80,18 @@ export default function LessonScreen() {
             </View>
             <Progress value={(session.exerciseIndex + (correct ? 1 : 0)) / session.queue.length} />
           </View>
+          {session.boss && (
+            <Label
+              testID="hearts"
+              accessibilityLabel={t('lesson.hearts', {
+                n: Math.max(0, BOSS_HEARTS - session.mistakes),
+              })}
+              style={s.hearts}
+            >
+              {'❤️'.repeat(Math.max(0, BOSS_HEARTS - session.mistakes))}
+              {'🤍'.repeat(Math.min(BOSS_HEARTS, session.mistakes))}
+            </Label>
+          )}
           {streak >= 2 ? (
             <View
               testID="streak"
@@ -228,6 +241,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   streakText: { fontSize: 15, color: '#B45309' },
+  hearts: { fontSize: 15, letterSpacing: 1 },
   progressLabel: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 7, gap: 8 },
   caption: { fontSize: 11, color: colors.muted, flexShrink: 1 },
   content: { paddingHorizontal: 22, paddingTop: 8, paddingBottom: 16 },

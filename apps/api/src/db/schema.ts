@@ -147,7 +147,9 @@ export const learnerLedger = pgTable(
       .notNull()
       .references(() => learnerAccounts.id, { onDelete: 'cascade' }),
     key: text('key').notNull(),
-    kind: text('kind').$type<'quest' | 'trophy' | 'purchase' | 'chest' | 'freeze'>().notNull(),
+    kind: text('kind')
+      .$type<'quest' | 'trophy' | 'purchase' | 'chest' | 'freeze' | 'boss'>()
+      .notNull(),
     ref: text('ref').notNull(),
     day: text('day').notNull(),
     coins: integer('coins').notNull(),

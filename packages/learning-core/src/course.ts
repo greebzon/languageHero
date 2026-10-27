@@ -7,6 +7,8 @@ import {
   type Difficulty,
   type LearningState,
   type Review,
+  type Boss,
+  BOSS_HEARTS,
 } from '@lingvohero/contracts';
 import { adaptExercise, assessExercise, type Assessment } from './mechanics';
 import { RECENT_RUNS } from './age';
@@ -52,6 +54,8 @@ export type LearningAction =
       difficulty?: Pick<Difficulty, 'ageBand'> & { seed?: string };
       /** A review (`composeReview`): what it was assembled from. */
       review?: Review;
+      /** A set's challenge (`composeBoss`): what it was assembled from. */
+      boss?: Boss;
     }
   | { type: 'draft'; answer: Answer | null }
   | { type: 'answer' }
@@ -75,6 +79,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
             }
           : {}),
         ...(action.review ? { review: action.review } : {}),
+        ...(action.boss ? { boss: action.boss } : {}),
         events: [],
         lesson: action.lesson,
         queue: playableIndices(action.lesson, action.difficulty),
@@ -95,6 +100,20 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
     if (session.correct || !session.draft) return state;
     const result = assess(exercise, session.draft, session.lesson);
     if (result === 'invalid') return state;
+    const events = [...(session.events ?? []), { type: 'answer' as const, answer: session.draft }];
+    // A set's challenge has three hearts: the last one lost ends it, without stars.
+    if (session.boss && result === 'wrong' && session.mistakes + 1 >= BOSS_HEARTS)
+      return {
+        ...state,
+        recent: [...(state.recent ?? []), 1].slice(-RECENT_RUNS),
+        session: {
+          ...session,
+          events,
+          mistakes: session.mistakes + 1,
+          finished: true,
+          lost: true,
+        },
+      };
     const queue = [...session.queue];
     const sourceIndex = queue[session.exerciseIndex];
     const played = playableIndices(session.lesson, session.difficulty).length;
@@ -105,7 +124,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
         ...session,
         queue,
         correct: result === 'correct',
-        events: [...(session.events ?? []), { type: 'answer', answer: session.draft }],
+        events,
         mistakes: session.mistakes + (result === 'wrong' ? 1 : 0),
       },
     };
@@ -125,19 +144,20 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
   return {
     ...state,
     recent: [...(state.recent ?? []), starsFor(session.mistakes)].slice(-RECENT_RUNS),
-    // A review is not a lesson of the map: it leaves no progress entry (and so no XP or coins).
-    progress: session.review
-      ? state.progress
-      : {
-          ...state.progress,
-          [session.lesson.id]: {
-            bestStars: Math.max(
-              state.progress[session.lesson.id]?.bestStars ?? 0,
-              starsFor(session.mistakes),
-            ),
-            completedVersion: session.lesson.version,
+    // A review or a challenge is not a lesson of the map: no progress entry (no XP or coins).
+    progress:
+      session.review || session.boss
+        ? state.progress
+        : {
+            ...state.progress,
+            [session.lesson.id]: {
+              bestStars: Math.max(
+                state.progress[session.lesson.id]?.bestStars ?? 0,
+                starsFor(session.mistakes),
+              ),
+              completedVersion: session.lesson.version,
+            },
           },
-        },
     session: { ...session, finished: true, events: [...(session.events ?? []), { type: 'next' }] },
   };
 }
@@ -164,10 +184,13 @@ export function restoreLearningState(value: unknown): LearningState | null {
       s.queue.slice(n).some((i) => !playable.includes(i)) ||
       new Set(s.queue.slice(n)).size !== s.queue.length - n ||
       s.exerciseIndex >= s.queue.length ||
+      // A lost challenge ends at its last heart, wherever it was.
+      (s.lost && (!s.boss || !s.finished || s.mistakes < BOSS_HEARTS)) ||
       (s.finished &&
+        !s.lost &&
         (!s.correct ||
           s.exerciseIndex !== s.queue.length - 1 ||
-          (!s.review && !state.progress[s.lesson.id]))) ||
+          (!s.review && !s.boss && !state.progress[s.lesson.id]))) ||
       (s.correct && (!s.draft || assess(currentExercise(s), s.draft, s.lesson) !== 'correct'))
     )
       return null;

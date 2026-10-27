@@ -197,7 +197,11 @@ export default function WorldsScreen() {
           const caption = (
             <View style={[s.coverCopy, course.cover && { backgroundColor: '#235F43' }]}>
               <Label style={s.eyebrow}>{t('common.yourAdventure')}</Label>
-              <Heading style={s.coverTitle}>{course.title}</Heading>
+              <Heading style={s.coverTitle}>
+                {/* The crown of a set whose challenge was won. */}
+                {journal.bosses[course.id] ? '👑 ' : ''}
+                {course.title}
+              </Heading>
               <Label style={s.coverDescription}>
                 {course.description ?? t('home.defaultDescription')}
               </Label>

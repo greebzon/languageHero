@@ -4,6 +4,11 @@ import { defineTexts } from '../define';
 export const result = defineTexts({
   ru: {
     passed: '{title} — ПРОЙДЕНО',
+    bossLostTitle: 'Сердечки закончились',
+    bossLostText: 'Ничего страшного: Тим верит в тебя. Попробуем ещё раз?',
+    bossRetry: 'Попробовать снова',
+    bossAgain: 'Пройти испытание ещё раз',
+    bossChest: 'За первую победу — сундук! Вещь из него уже в твоём гардеробе.',
     title: 'Ты — друг леса!',
     message: 'Слова становятся знакомее с каждой игрой.\nОтличная работа!',
     xp: 'опыта всего',
@@ -16,6 +21,11 @@ export const result = defineTexts({
   },
   en: {
     passed: '{title} — DONE',
+    bossLostTitle: 'Out of hearts',
+    bossLostText: 'That’s okay: Tim believes in you. Shall we try again?',
+    bossRetry: 'Try again',
+    bossAgain: 'Take the challenge again',
+    bossChest: 'A chest for your first win! Its item is already in your wardrobe.',
     title: 'You’re a friend of the forest!',
     message: 'Words get more familiar with every game.\nGreat work!',
     xp: 'XP in total',
@@ -28,6 +38,11 @@ export const result = defineTexts({
   },
   he: {
     passed: '{title} — הושלם',
+    bossLostTitle: 'הלבבות נגמרו',
+    bossLostText: 'זה בסדר: טים מאמין בך. ננסה שוב?',
+    bossRetry: 'לנסות שוב',
+    bossAgain: 'לעשות את האתגר שוב',
+    bossChest: 'תיבה על הניצחון הראשון! הפריט שבה כבר בארון שלך.',
     title: 'כל היער חוגג!',
     message: 'המילים נעשות מוכרות יותר בכל משחק.\nכל הכבוד!',
     xp: 'נקודות ניסיון',
