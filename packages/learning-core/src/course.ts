@@ -4,9 +4,10 @@ import {
   type Answer,
   type CourseExercise,
   type CourseLesson,
+  type Difficulty,
   type LearningState,
 } from '@lingvohero/contracts';
-import { assessExercise, type Assessment } from './mechanics';
+import { adaptExercise, assessExercise, type Assessment } from './mechanics';
 import { starsFor } from './scoring';
 
 export function newLearningState(): LearningState {
@@ -15,8 +16,28 @@ export function newLearningState(): LearningState {
 export function assess(exercise: CourseExercise, answer: Answer, lesson: CourseLesson): Assessment {
   return assessExercise(exercise, answer, lesson);
 }
+type Session = NonNullable<LearningState['session']>;
+/**
+ * The exercise in front of the child, eased for the session's age group. `lesson` may be the
+ * session's lesson in the interface language: easing only touches structure, not texts.
+ */
+export function currentExercise(session: Session, lesson: CourseLesson = session.lesson) {
+  const exercise = lesson.exercises[session.queue[session.exerciseIndex]];
+  return adaptExercise(
+    exercise,
+    lesson,
+    session.difficulty,
+    `${session.difficulty?.seed}:${exercise.id}`,
+  );
+}
 export type LearningAction =
-  | { type: 'start'; lesson: CourseLesson; attemptId?: string }
+  | {
+      type: 'start';
+      lesson: CourseLesson;
+      attemptId?: string;
+      /** Without a seed the attempt id (or the lesson id) becomes the seed. */
+      difficulty?: Pick<Difficulty, 'ageBand'> & { seed?: string };
+    }
   | { type: 'draft'; answer: Answer | null }
   | { type: 'answer' }
   | { type: 'next' }
@@ -30,6 +51,14 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
       ...state,
       session: {
         ...(action.attemptId ? { attemptId: action.attemptId } : {}),
+        ...(action.difficulty
+          ? {
+              difficulty: {
+                ageBand: action.difficulty.ageBand,
+                seed: action.difficulty.seed ?? action.attemptId ?? action.lesson.id,
+              },
+            }
+          : {}),
         events: [],
         lesson: action.lesson,
         queue: action.lesson.exercises.map((_, i) => i),
@@ -43,7 +72,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
   }
   const session = state.session;
   if (!session || session.finished) return state;
-  const exercise = session.lesson.exercises[session.queue[session.exerciseIndex]];
+  const exercise = currentExercise(session);
   if (action.type === 'draft')
     return session.correct ? state : { ...state, session: { ...session, draft: action.answer } };
   if (action.type === 'answer') {
@@ -116,9 +145,7 @@ export function restoreLearningState(value: unknown): LearningState | null {
       s.exerciseIndex >= s.queue.length ||
       (s.finished &&
         (!s.correct || s.exerciseIndex !== s.queue.length - 1 || !state.progress[s.lesson.id])) ||
-      (s.correct &&
-        (!s.draft ||
-          assess(s.lesson.exercises[s.queue[s.exerciseIndex]], s.draft, s.lesson) !== 'correct'))
+      (s.correct && (!s.draft || assess(currentExercise(s), s.draft, s.lesson) !== 'correct'))
     )
       return null;
   }

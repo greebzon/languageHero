@@ -2,14 +2,22 @@ import { useReducer, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import {
+  AGE_BANDS,
   lessonLocales,
   localizeLesson,
+  type AgeBand,
   type Answer,
   type CourseExercise,
   type CourseLesson,
   type Locale,
 } from '@lingvohero/contracts';
-import { assess, learn, newLearningState, starsFor } from '@lingvohero/learning-core';
+import {
+  assess,
+  currentExercise,
+  learn,
+  newLearningState,
+  starsFor,
+} from '@lingvohero/learning-core';
 import { ApiError, api, describeError } from '../../app/api';
 import type { Preview } from '../../app/types';
 import { Crumbs, Notice } from '../../components/ui';
@@ -20,10 +28,13 @@ import { mechanicFor } from '../../mechanics';
  * queue), rendered with plain HTML. State lives only in this component: nothing is saved.
  */
 const LOCALE_LABELS: Record<Locale, string> = { ru: 'Русский', en: 'English', he: 'עברית' };
+// 8–9 plays the lesson as published; 6–7 gets fewer options and extra letters.
+const AGE_LABELS: Record<AgeBand, string> = { '6-7': '6–7 лет', '8-9': '8–9 лет' };
 
 export function PreviewPage() {
   const { id = '' } = useParams();
   const [locale, setLocale] = useState<Locale>('ru');
+  const [ageBand, setAgeBand] = useState<AgeBand>('8-9');
   const query = useQuery({
     queryKey: ['preview', id],
     queryFn: () => api<Preview>(`/lessons/${id}/preview`),
@@ -86,20 +97,40 @@ export function PreviewPage() {
       <p className="muted small">
         Ответы, ошибки, повторение и звёзды считаются движком приложения; прогресс не сохраняется.
       </p>
+      <p className="row">
+        <span className="muted small">Возраст ребёнка:</span>
+        {AGE_BANDS.map((band) => (
+          <button
+            key={band}
+            type="button"
+            className={`btn sm ${ageBand === band ? '' : 'light'}`}
+            aria-pressed={ageBand === band}
+            onClick={() => setAgeBand(band)}
+          >
+            {AGE_LABELS[band]}
+          </button>
+        ))}
+      </p>
       <div dir={locale === 'he' ? 'rtl' : 'ltr'}>
         <Player
-          key={`${query.dataUpdatedAt}-${locale}`}
+          key={`${query.dataUpdatedAt}-${locale}-${ageBand}`}
           preview={{ ...query.data, lesson: localizeLesson(query.data.lesson, locale) }}
+          ageBand={ageBand}
         />
       </div>
     </>
   );
 }
 
-function Player({ preview }: { preview: Preview }) {
+function Player({ preview, ageBand }: { preview: Preview; ageBand: AgeBand }) {
   const { lesson, mediaUrls } = preview;
+  // Every replay eases the lesson anew (the seed is random), as a new attempt in the app does.
   const [state, dispatch] = useReducer(learn, undefined, () =>
-    learn(newLearningState(), { type: 'start', lesson }),
+    learn(newLearningState(), {
+      type: 'start',
+      lesson,
+      difficulty: { ageBand, seed: crypto.randomUUID() },
+    }),
   );
   const [wrong, setWrong] = useState(false);
   const [hint, setHint] = useState(false);
@@ -132,7 +163,7 @@ function Player({ preview }: { preview: Preview }) {
       </div>
     );
   }
-  const exercise = lesson.exercises[session.queue[session.exerciseIndex]!]!;
+  const exercise = currentExercise(session);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
   const review = session.exerciseIndex >= lesson.exercises.length;

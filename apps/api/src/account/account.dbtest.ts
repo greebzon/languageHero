@@ -2,9 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
-import { releaseSchema, type Answer, type CourseLesson } from '@lingvohero/contracts';
+import {
+  releaseSchema,
+  type Answer,
+  type CourseLesson,
+  type Difficulty,
+} from '@lingvohero/contracts';
 import {
   coinBalance,
+  currentExercise,
   dayKey,
   learn,
   newLearningState,
@@ -67,10 +73,11 @@ async function login(ctx: Ctx, email: string) {
   }
   return data;
 }
-function attempt(lesson: CourseLesson) {
+function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>) {
   const id = randomUUID();
-  let state = learn(newLearningState(), { type: 'start', lesson, attemptId: id });
-  for (const ex of lesson.exercises) {
+  let state = learn(newLearningState(), { type: 'start', lesson, attemptId: id, difficulty });
+  for (let i = 0; i < lesson.exercises.length; i += 1) {
+    const ex = currentExercise(state.session!);
     let answer: Answer;
     if (ex.type === 'listen-and-select') answer = { choiceId: ex.wordId };
     else if (ex.type === 'match-pairs')
@@ -92,7 +99,13 @@ function attempt(lesson: CourseLesson) {
     state = learn(state, { type: 'answer' });
     state = learn(state, { type: 'next' });
   }
-  return { id, lessonId: lesson.id, version: lesson.version, events: state.session!.events! };
+  return {
+    id,
+    lessonId: lesson.id,
+    version: lesson.version,
+    ...(state.session!.difficulty ? { difficulty: state.session!.difficulty } : {}),
+    events: state.session!.events!,
+  };
 }
 test('mandatory auth, one-time email codes, attempt limits, profile and isolated sessions', async (t) => {
   const ctx = await createTestContext(t);
@@ -168,7 +181,7 @@ test('server replays answers; retries and versions do not mint duplicate rewards
   const done = await call(
     ctx,
     '/sync',
-    { ...body, sequence: 3, attempts: seed.lessons.slice(1).map(attempt) },
+    { ...body, sequence: 3, attempts: seed.lessons.slice(1).map((l) => attempt(l)) },
     user.token,
   );
   assert.equal(done.statusCode, 200, done.body);
@@ -186,6 +199,51 @@ test('server replays answers; retries and versions do not mint duplicate rewards
   const otherDevice = await login(ctx, 'progress@example.test');
   assert.equal(otherDevice.profile.xp, 500);
   assert.equal((await ctx.db.select().from(learnerRewards)).length, 5);
+});
+test('the age is kept as a birth year; attempts are replayed for the age group they were played for', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const user = await login(ctx, 'young@example.test');
+  const year = new Date().getFullYear();
+  const aged = await call(ctx, '/me', { birthYear: year - 6 }, user.token, 'PATCH');
+  assert.equal(aged.statusCode, 200, aged.body);
+  assert.equal(aged.json().profile.birthYear, year - 6);
+  const wrong = await call(ctx, '/me', { birthYear: year - 25 }, user.token, 'PATCH');
+  assert.equal(wrong.json().code, 'age_invalid');
+  const young = { ageBand: '6-7' as const };
+  const eased = attempt(seed.lessons[0]!, young);
+  const body = { deviceId: randomUUID(), sequence: 1, session: null, soundEnabled: true };
+  const accepted = await call(ctx, '/sync', { ...body, attempts: [eased] }, user.token);
+  assert.equal(accepted.statusCode, 200, accepted.body);
+  assert.deepEqual(accepted.json().accepted, [eased.id]);
+  // A picture the 6–7 group did not see cannot be the answer of their attempt.
+  const forgedId = randomUUID();
+  const shown = currentExercise(
+    learn(newLearningState(), {
+      type: 'start',
+      lesson: seed.lessons[1]!,
+      attemptId: forgedId,
+      difficulty: young,
+    }).session!,
+  );
+  const first = seed.lessons[1]!.exercises[0]!;
+  assert.ok(shown.type === 'listen-and-select' && first.type === 'listen-and-select');
+  const hidden = first.choices.find((c) => !shown.choices.includes(c))!;
+  const forged = {
+    id: forgedId,
+    lessonId: seed.lessons[1]!.id,
+    version: seed.lessons[1]!.version,
+    difficulty: { ...young, seed: forgedId },
+    events: [{ type: 'answer', answer: { choiceId: hidden } }],
+  };
+  const rejected = await call(
+    ctx,
+    '/sync',
+    { ...body, sequence: 2, attempts: [forged] },
+    user.token,
+  );
+  assert.equal(rejected.statusCode, 200, rejected.body);
+  assert.equal(rejected.json().rejected.length, 1);
 });
 test('treasury: quests count verified lessons, claims and purchases are recorded once on the server', async (t) => {
   const ctx = await createTestContext(t);
@@ -224,7 +282,7 @@ test('treasury: quests count verified lessons, claims and purchases are recorded
       await call(
         ctx,
         '/sync',
-        { ...base, sequence: 2, attempts: seed.lessons.slice(1).map(attempt) },
+        { ...base, sequence: 2, attempts: seed.lessons.slice(1).map((l) => attempt(l)) },
         user.token,
       )
     ).json().profile.coins,
@@ -294,7 +352,7 @@ test('two devices: parallel purchases spend coins once, the outfit follows the a
       soundEnabled: true,
       tzOffset: tz,
       sequence: 1,
-      attempts: seed.lessons.map(attempt),
+      attempts: seed.lessons.map((l) => attempt(l)),
     },
     phone.token,
   );
@@ -446,7 +504,7 @@ test('mascots unlock from verified XP, cannot be forged, and stay selected on an
   const sync = {
     deviceId: randomUUID(),
     sequence: 1,
-    attempts: seed.lessons.slice(0, 3).map(attempt),
+    attempts: seed.lessons.slice(0, 3).map((l) => attempt(l)),
     session: null,
     soundEnabled: true,
   };

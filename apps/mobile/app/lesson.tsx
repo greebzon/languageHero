@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
-import { assess } from '@lingvohero/learning-core';
+import { assess, currentExercise } from '@lingvohero/learning-core';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
@@ -49,7 +49,8 @@ export default function LessonScreen() {
   if (!session || !localized) return <Redirect href="/" />;
   if (session.finished) return <Redirect href="/result" />;
   const lesson = localized;
-  const exercise = lesson.exercises[session.queue[session.exerciseIndex]];
+  // Eased for the child's age group, as the session was started (learning-core `adapt`).
+  const exercise = currentExercise(session, lesson);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
   const review = session.exerciseIndex >= lesson.exercises.length;

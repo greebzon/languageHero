@@ -238,6 +238,19 @@ export const releaseSchema = z
         ctx.addIssue({ code: 'custom', message: `Catalog/package mismatch: ${ref.id}` });
     }
   });
+/* Age group of the child, from the age the child gave. Lessons are the same for everyone; a
+   mechanic's `adapt` (learning-core) eases an exercise for the younger group while it is
+   played. The group and the seed that picks which options stay are kept in the session (and
+   sent with the attempt), so a resumed session and the server's replay show the same
+   exercise even when the attempt id changes. */
+export const AGE_BANDS = ['6-7', '8-9'] as const;
+export const ageBandSchema = z.enum(AGE_BANDS);
+export type AgeBand = z.infer<typeof ageBandSchema>;
+export const difficultySchema = z.object({
+  ageBand: ageBandSchema,
+  seed: z.string().min(1).max(100),
+});
+export type Difficulty = z.infer<typeof difficultySchema>;
 export const learningStateSchema = z.object({
   version: z.literal(2),
   soundEnabled: z.boolean(),
@@ -253,6 +266,8 @@ export const learningStateSchema = z.object({
   session: z
     .object({
       attemptId: z.string().uuid().optional(),
+      /** Absent: the exercises as published (old sessions, the panel's default preview). */
+      difficulty: difficultySchema.optional(),
       events: z
         .array(
           z.discriminatedUnion('type', [

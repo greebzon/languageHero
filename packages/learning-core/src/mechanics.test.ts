@@ -11,10 +11,12 @@ import {
   mapExerciseWords,
   releaseSchema,
   visibleCatalog,
+  type Answer,
   type CourseExercise,
   type CourseLesson,
 } from '@lingvohero/contracts';
-import { assess, learn, newLearningState } from './course';
+import { birthYearFor, difficultyFor } from './age';
+import { assess, currentExercise, learn, newLearningState, restoreLearningState } from './course';
 import data from '../../../content/seed.json';
 
 const release = releaseSchema.parse(data);
@@ -166,3 +168,86 @@ test('a client gets only the lessons whose mechanics it can show', () => {
   assert.equal(visibleCatalog(catalog, 'ru', ['choice']).courses.length, 0);
   assert.equal(visibleCatalog(catalog, 'ru'), catalog);
 });
+
+test('6–7-year-olds get fewer options and extra letters, always solvable and repeatable', () => {
+  const young = { ageBand: '6-7' as const };
+  const lessons = [...release.lessons, lesson(choices)];
+  for (const pkg of lessons) {
+    let state = learn(newLearningState(), {
+      type: 'start',
+      lesson: pkg,
+      attemptId: '7d6f1a52-3c1e-4c55-9c1a-0e1f2a3b4c5d',
+      difficulty: young,
+    });
+    const adapted: CourseExercise[] = [];
+    while (!state.session!.finished) {
+      const session = state.session!;
+      const ex = currentExercise(session);
+      assert.deepEqual(currentExercise(session), ex, 'the same seed eases the same way');
+      // A session loaded from the server gets a new attempt id; the exercise must not change.
+      assert.deepEqual(
+        currentExercise({ ...session, attemptId: '0b6a3c1e-2d4f-4a5b-8c7d-9e0f1a2b3c4d' }),
+        ex,
+      );
+      adapted.push(ex);
+      if (ex.type === 'listen-and-select') assert.ok(ex.choices.length <= 3);
+      if (ex.type === 'match-pairs') assert.ok(ex.wordIds.length <= 3);
+      if (ex.type === 'choice' && ex.as !== 'yes-no') assert.ok(ex.options.length <= 3);
+      if (ex.type === 'build-word') {
+        const spelling = pkg.words.find((w) => w.id === ex.wordId)!.spelling;
+        assert.ok(ex.tiles.length <= Array.from(spelling).length + 1);
+      }
+      state = learn(state, { type: 'draft', answer: answerTo(ex, pkg) });
+      state = learn(state, { type: 'answer' });
+      assert.ok(state.session!.correct, `${pkg.id}/${ex.id}`);
+      state = learn(state, { type: 'next' });
+    }
+    // Eased exercises are still valid exercises of the lesson.
+    assert.ok(courseLessonSchema.safeParse({ ...pkg, exercises: adapted }).success, pkg.id);
+  }
+  // Without an age, and for the older group, the lesson is played as published.
+  const pkg = release.lessons[0]!;
+  const easedFirst = currentExercise(
+    learn(newLearningState(), { type: 'start', lesson: pkg, difficulty: young }).session!,
+  );
+  assert.ok(
+    pkg.exercises[0]!.type === 'listen-and-select' && pkg.exercises[0]!.choices.length === 4,
+  );
+  assert.ok(easedFirst.type === 'listen-and-select' && easedFirst.choices.length === 3);
+  for (const difficulty of [undefined, { ageBand: '8-9' as const }]) {
+    const state = learn(newLearningState(), { type: 'start', lesson: pkg, difficulty });
+    assert.deepEqual(currentExercise(state.session!), pkg.exercises[0]);
+  }
+  assert.equal(
+    restoreLearningState(
+      learn(newLearningState(), { type: 'start', lesson: pkg, difficulty: young }),
+    )?.session?.difficulty?.ageBand,
+    '6-7',
+  );
+});
+
+test('the age group follows the birth year', () => {
+  const now = new Date('2026-10-27T12:00:00Z');
+  assert.equal(difficultyFor(null, now), undefined);
+  assert.equal(birthYearFor(6, now), 2020);
+  assert.deepEqual(difficultyFor(birthYearFor(7, now), now), { ageBand: '6-7' });
+  assert.deepEqual(difficultyFor(birthYearFor(8, now), now), { ageBand: '8-9' });
+  assert.deepEqual(difficultyFor(2010, now), { ageBand: '8-9' });
+});
+
+function answerTo(ex: CourseExercise, pkg: CourseLesson): Answer {
+  if (ex.type === 'listen-and-select') return { choiceId: ex.wordId };
+  if (ex.type === 'match-pairs')
+    return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
+  if (ex.type === 'choice') return { choiceId: ex.answerId };
+  const available = [...ex.tiles];
+  return {
+    tileIds: Array.from(pkg.words.find((w) => w.id === ex.wordId)!.spelling).map(
+      (letter) =>
+        available.splice(
+          available.findIndex((t) => t.letter === letter),
+          1,
+        )[0]!.id,
+    ),
+  };
+}

@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { learningStateSchema, answerSchema, localeSchema, type Locale } from './course';
+import {
+  answerSchema,
+  difficultySchema,
+  learningStateSchema,
+  localeSchema,
+  type Locale,
+} from './course';
 import type { Outfit } from './shop';
 
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
@@ -7,7 +13,7 @@ export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 export const avatarSchema = z.string().regex(/^[a-z][a-z0-9-]{0,39}$/);
 export const languageCodeSchema = z.string().regex(/^[a-z0-9-]{1,80}$/);
 /* `PATCH /me`: any subset. The welcome screen sends name + avatar (that completes the
-   onboarding); the language picker sends `language` (the current one, added to `languages`
+   onboarding) with the birth year; the language picker sends `language` (the current one, added to `languages`
    when new); the profile sends `locale` (the interface language). */
 export const profileInputSchema = z
   .object({
@@ -16,6 +22,8 @@ export const profileInputSchema = z
     language: languageCodeSchema.optional(),
     languages: z.array(languageCodeSchema).min(1).max(10).optional(),
     locale: localeSchema.optional(),
+    /* The child picks an age (6, 7, 8, 9+); the year is stored so the age grows by itself. */
+    birthYear: z.number().int().min(1990).max(2100).optional(),
   })
   .refine((p) => Object.values(p).some((v) => v !== undefined), { message: 'Пустой запрос.' });
 /* The profile as the app caches it; `languages`/`locale` are absent in caches from older
@@ -27,12 +35,15 @@ export const profileSnapshotSchema = z.object({
   language: languageCodeSchema,
   languages: z.array(languageCodeSchema).default([]),
   locale: localeSchema.nullable().default(null),
+  birthYear: z.number().int().nullable().default(null),
   onboarded: z.boolean(),
 });
 export const attemptSchema = z.object({
   id: z.string().uuid(),
   lessonId: z.string().regex(/^[a-z0-9-]{1,80}$/),
   version: z.number().int().positive(),
+  /** The age group the device played it for (absent: as published). */
+  difficulty: difficultySchema.optional(),
   events: z
     .array(
       z.discriminatedUnion('type', [
@@ -96,6 +107,8 @@ export type AccountProfile = {
   languages: string[];
   /** The interface language the child chose; null = the device language. */
   locale: Locale | null;
+  /** From the age the child gave; null until the child answers. */
+  birthYear: number | null;
   onboarded: boolean;
   legacyImported: boolean;
   unlockedMascotIds: string[];

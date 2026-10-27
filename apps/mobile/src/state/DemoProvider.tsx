@@ -24,6 +24,7 @@ import {
   newLearningState,
   restoreLearningState,
   coinBalance,
+  difficultyFor,
   emptyJournal,
   recordLesson,
   restoreJournal,
@@ -158,6 +159,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
                 id: s.attemptId,
                 lessonId: s.lesson.id,
                 version: s.lesson.version,
+                ...(s.difficulty ? { difficulty: s.difficulty } : {}),
                 events: s.events,
               },
             ];
@@ -578,6 +580,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           type: 'start',
           lesson,
           attemptId: randomUUID(),
+          difficulty: difficultyFor(auth.account?.profile.birthYear),
         }),
       );
       return true;
@@ -618,7 +621,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           setState((current) =>
             learn(
               current,
-              action.type === 'start' ? { ...action, attemptId: randomUUID() } : action,
+              action.type === 'start'
+                ? {
+                    ...action,
+                    attemptId: randomUUID(),
+                    difficulty: difficultyFor(auth.account?.profile.birthYear),
+                  }
+                : action,
             ),
           ),
         storageError,

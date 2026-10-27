@@ -111,6 +111,7 @@ const FAULTS = {
   quest_claimed: 'Награда уже получена.',
   quest_incomplete: 'Квест ещё не выполнен.',
   mascot_locked: 'Этот друг пока закрыт. Продолжай заниматься и повышай уровень.',
+  age_invalid: 'Такой возраст выбрать нельзя.',
   mascot_unknown: 'Этот друг сейчас недоступен.',
   outfit_invalid: 'Надеть можно только свои вещи, каждую на своё место.',
   item_unknown: 'Такого товара нет.',
@@ -218,6 +219,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         language: user.language,
         languages: user.languages ?? [],
         locale: user.uiLocale ?? null,
+        birthYear: user.birthYear ?? null,
         onboarded: !!user.onboarded,
         legacyImported: !!user.legacyImported,
         ...progress,
@@ -462,6 +464,9 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         throw new Fault(400, 'mascot_unknown');
       if (!progress.unlockedMascotIds.includes(input.avatar)) throw new Fault(403, 'mascot_locked');
     }
+    // An age from 3 to 18 (the app offers 6–9+).
+    const age = input.birthYear === undefined ? null : new Date().getFullYear() - input.birthYear;
+    if (age !== null && (age < 3 || age > 18)) throw new Fault(400, 'age_invalid');
     const catalog = await readCatalog(o.contentRoot);
     const codes = [...(input.language ? [input.language] : []), ...(input.languages ?? [])];
     if (codes.some((code) => !catalog.languages.some((l) => l.code === code)))
@@ -478,6 +483,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.avatar !== undefined ? { avatar: input.avatar } : {}),
         ...(input.locale !== undefined ? { uiLocale: input.locale } : {}),
+        ...(input.birthYear !== undefined ? { birthYear: input.birthYear } : {}),
         language,
         languages,
         // The welcome screen sends the name and the mascot together: that ends the onboarding.
@@ -586,7 +592,12 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     state: LearningState,
     lesson: Awaited<ReturnType<typeof readLesson>>,
   ) {
-    let value = learn({ ...state, session: null }, { type: 'start', lesson, attemptId: input.id });
+    // The device's age group decides which options were shown. The age is the child's own
+    // answer, so it is not checked against the profile; every answer still is.
+    let value = learn(
+      { ...state, session: null },
+      { type: 'start', lesson, attemptId: input.id, difficulty: input.difficulty },
+    );
     for (const event of input.events) {
       if (value.session?.finished) throw new Fault(422, 'attempt_extra_answers');
       if (event.type === 'answer') {
@@ -692,6 +703,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
                   id: incoming.attemptId,
                   lessonId: incoming.lesson.id,
                   version: incoming.lesson.version,
+                  difficulty: incoming.difficulty,
                   events: incoming.events,
                 },
                 state,

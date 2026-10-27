@@ -1,3 +1,4 @@
+import { keep } from './adapt';
 import type { Rules } from './types';
 
 export const matchPairs: Rules<'match-pairs'> = {
@@ -11,5 +12,13 @@ export const matchPairs: Rules<'match-pairs'> = {
     )
       return 'invalid';
     return exercise.wordIds.every((id) => answer.pairs[id] === id) ? 'correct' : 'wrong';
+  },
+  adapt(exercise, { limits, rand }) {
+    const wordIds = keep(exercise.wordIds, limits.pairs, () => false, rand);
+    return {
+      ...exercise,
+      wordIds,
+      imageOrder: exercise.imageOrder.filter((id) => wordIds.includes(id)),
+    };
   },
 };
