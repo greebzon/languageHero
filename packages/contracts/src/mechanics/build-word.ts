@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { base, draftBase, draftRef, id, unique, type Fail, type LessonWords } from './shared';
+import { base, draftBase, draftRef, id, unique, type Fail, type LessonRefs } from './shared';
 
 type Spell = { wordId: string; tiles: { id: string; letter: string }[] };
 
@@ -21,7 +21,7 @@ export const buildWord = {
     tiles: z.array(z.object({ id, letter: z.string().max(4) })).max(30),
   }),
   answer: z.object({ tileIds: z.array(id).max(30) }),
-  validate(ex: Spell, words: LessonWords, fail: Fail) {
+  validate(ex: Spell, { words }: LessonRefs, fail: Fail) {
     const word = words.get(ex.wordId);
     if (!word || !unique(ex.tiles.map((t) => t.id))) return fail('Invalid spelling exercise');
     // The tiles must hold every letter of the spelling (NFC code points), extras allowed.

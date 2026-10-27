@@ -7,7 +7,7 @@ import {
   type CourseLesson,
 } from '../../packages/contracts/src';
 import { env } from '../../apps/api/src/env';
-import { solve } from './helpers';
+import { playable, solve } from './helpers';
 import { signIn, switchLanguage } from './account-helper';
 
 const API = 'http://127.0.0.1:3002';
@@ -232,28 +232,45 @@ test('an AI-generated draft set (fake provider) can be reviewed, published and p
     })
     .toBe('awaiting-review');
   const view = await call('get', `/generations/${started.job.id}`);
-  expect(view.job.result.lessons).toHaveLength(2);
+  // Two word lessons and the closing «Собери фразу» lesson.
+  expect(view.job.result.lessons).toHaveLength(3);
   expect(view.progress.done).toBe(view.progress.total);
   const course = await call('get', '/courses/fr-farm');
-  expect(course.lessons).toHaveLength(2);
+  expect(course.lessons).toHaveLength(3);
   expect(course.course.cover).toBeTruthy();
   expect((await call('post', '/courses/fr-farm/validate')).ok).toBe(true);
 
   const plan = await call('post', '/publication-plans');
   expect(plan.diff.courses.added).toContain('fr-farm');
   await call('post', '/publications', { planId: plan.publication.id });
-  const lesson: CourseLesson = courseLessonSchema.parse(
-    await (await request.get(`${API}/v1/lessons/${course.lessons[0].id}/versions/1`)).json(),
-  );
-  expect(lesson.exercises).toHaveLength(6);
+  const packages: CourseLesson[] = [];
+  for (const ref of course.lessons as { id: string }[])
+    packages.push(
+      courseLessonSchema.parse(
+        await (await request.get(`${API}/v1/lessons/${ref.id}/versions/1`)).json(),
+      ),
+    );
+  expect(packages[0]!.exercises).toHaveLength(6);
+  const sentences = packages[2]!;
+  expect(sentences.exercises.every((e) => e.type === 'build-sentence')).toBe(true);
 
   await signIn(page);
   await expect(page.getByText('Приключения обновлены')).toBeVisible();
   await switchLanguage(page, 'fr');
   await expect(page.getByTestId('course-fr-farm')).toBeVisible();
-  await page.getByTestId('start-lesson').click();
-  await expect(page.getByText(lesson.exercises[0]!.prompt, { exact: true })).toBeVisible();
-  for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
-  await expect(page.getByText(`${lesson.title.toUpperCase()} — ПРОЙДЕНО`)).toBeVisible();
-  await page.screenshot({ path: 'test-results/generated-lesson-done.png', fullPage: true });
+  // The whole set in order; the last lesson builds sentences (a 9-year-old gets the longer ones).
+  for (const [index, lesson] of packages.entries()) {
+    await page.getByTestId('start-lesson').click();
+    const exercises = playable(lesson);
+    await expect(page.getByText(exercises[0]!.prompt, { exact: true })).toBeVisible();
+    for (const exercise of exercises) {
+      if (exercise.type === 'build-sentence' && exercise === exercises[0])
+        await page.screenshot({ path: 'test-results/sentence-lesson.png', fullPage: true });
+      await solve(page, exercise, lesson);
+    }
+    await expect(page.getByText(`${lesson.title.toUpperCase()} — ПРОЙДЕНО`)).toBeVisible();
+    if (index === 0)
+      await page.screenshot({ path: 'test-results/generated-lesson-done.png', fullPage: true });
+    await page.getByTestId('back-to-map').click();
+  }
 });

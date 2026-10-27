@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import type { Catalog } from '../course';
+import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
 import { matchPairs } from './match-pairs';
-import type { Fail, LessonWords } from './shared';
+import type { Fail, LessonRefs } from './shared';
 
 /* The registry of exercise mechanics. A mechanic is described once per layer: here (data
    shape, checks, which words it uses), in learning-core (grading), in the app, the panel and
@@ -16,12 +17,14 @@ export const courseExerciseSchema = z.discriminatedUnion('type', [
   matchPairs.exercise,
   buildWord.exercise,
   choice.exercise,
+  buildSentence.exercise,
 ]);
 export const draftExerciseSchema = z.discriminatedUnion('type', [
   listenAndSelect.draft,
   matchPairs.draft,
   buildWord.draft,
   choice.draft,
+  buildSentence.draft,
 ]);
 /* Answers carry no tag: the exercise they answer tells the mechanic, and mechanics may share a
    shape (`choice` reuses `{choiceId}`), so saved sessions stay valid. */
@@ -35,7 +38,7 @@ export type DraftExerciseOf<K extends ExerciseType> = Extract<DraftExercise, { t
 
 type Module<K extends ExerciseType> = {
   answer: z.ZodType;
-  validate(ex: ExerciseOf<K>, words: LessonWords, fail: Fail): void;
+  validate(ex: ExerciseOf<K>, lesson: LessonRefs, fail: Fail): void;
   /** The words the exercise practises. */
   words(ex: DraftExerciseOf<K>): string[];
   /** The exercise with every word reference passed through `f`. */
@@ -46,6 +49,7 @@ const MECHANICS: { [K in ExerciseType]: Module<K> } = {
   'match-pairs': matchPairs,
   'build-word': buildWord,
   choice,
+  'build-sentence': buildSentence,
 };
 export const MECHANIC_TYPES = Object.keys(MECHANICS) as ExerciseType[];
 export const exerciseTypeSchema = z.enum(MECHANIC_TYPES as [ExerciseType, ...ExerciseType[]]);
@@ -58,8 +62,8 @@ export const BASE_MECHANICS: readonly ExerciseType[] = [
 
 // One cast per helper: TypeScript cannot correlate `ex.type` with the module it selects.
 const moduleOf = (type: ExerciseType) => MECHANICS[type] as unknown as Module<ExerciseType>;
-export function validateExercise(ex: CourseExercise, words: LessonWords, fail: Fail) {
-  moduleOf(ex.type).validate(ex, words, fail);
+export function validateExercise(ex: CourseExercise, lesson: LessonRefs, fail: Fail) {
+  moduleOf(ex.type).validate(ex, lesson, fail);
 }
 export function exerciseWords(ex: DraftExercise): string[] {
   return moduleOf(ex.type).words(ex);
@@ -92,4 +96,6 @@ export function catalogForMechanics(catalog: Catalog, supported: readonly string
 }
 
 export * from './choice';
-export type { Fail, LessonWords } from './shared';
+export { sentenceKey, tilesForm } from './build-sentence';
+export { AGE_BANDS, ageBandSchema, type AgeBand } from './shared';
+export type { Fail, LessonRefs } from './shared';

@@ -1,4 +1,5 @@
 import type { DraftExercise, ExerciseType } from '@lingvohero/contracts';
+import { buildSentence } from './build-sentence.js';
 import { buildWord } from './build-word.js';
 import { choice } from './choice.js';
 import { listenAndSelect } from './listen-and-select.js';
@@ -11,7 +12,11 @@ export const GENERATION_MECHANICS: { [K in ExerciseType]: GenerationMechanic<K> 
   'match-pairs': matchPairs,
   'build-word': buildWord,
   choice,
+  'build-sentence': buildSentence,
 };
+/** The requested mechanics a word lesson may use. */
+export const wordLessonMix = <T extends ExerciseType>(mix: readonly T[]) =>
+  mix.filter((type) => GENERATION_MECHANICS[type].wordLessons !== false);
 // One cast: TypeScript cannot correlate an exercise's `type` with the module it selects.
 export const generationMechanic = (type: ExerciseType) =>
   GENERATION_MECHANICS[type] as unknown as GenerationMechanic<ExerciseType>;

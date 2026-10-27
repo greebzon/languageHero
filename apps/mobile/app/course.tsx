@@ -1,4 +1,4 @@
-import { courseCards, resumableSession } from '@lingvohero/learning-core';
+import { courseCards, difficultyFor, resumableSession } from '@lingvohero/learning-core';
 import { localizeLesson, type ExerciseType } from '@lingvohero/contracts';
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
@@ -8,6 +8,7 @@ import { Forest } from '../src/components/Forest';
 import { Animal, Badge, Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { colors, fonts } from '../src/theme';
 import { useDemo } from '../src/state/DemoProvider';
+import { useAccount } from '../src/account/AccountProvider';
 import { fraction, useT } from '../src/i18n';
 import { refTitle } from '../src/i18n/content';
 
@@ -25,6 +26,8 @@ export default function MapScreen() {
     lessonError,
   } = useDemo();
   const { t, tn, locale, isRTL } = useT();
+  // Some lessons have tasks for one age group only: count the child's own.
+  const ageBand = difficultyFor(useAccount().account?.profile.birthYear)?.ageBand ?? '8-9';
   const { id } = useLocalSearchParams<{ id: string }>();
   const card = catalog.courses.find((c) => c.id === id);
   const access =
@@ -152,7 +155,11 @@ export default function MapScreen() {
                       </Label>
                       <Heading style={s.lessonTitle}>{refTitle(lesson, locale)}</Heading>
                       <Label style={s.lessonMeta}>
-                        {tn('course.exercises', lesson.exerciseCount)} ·{' '}
+                        {tn(
+                          'course.exercises',
+                          lesson.exerciseCounts?.[ageBand] ?? lesson.exerciseCount,
+                        )}{' '}
+                        ·{' '}
                         {t(
                           lesson.requiredTypes.length === 1
                             ? // Lessons with mechanics this app lacks are not in its catalog.

@@ -1,4 +1,4 @@
-import type { DraftExercise, DraftWord } from '@lingvohero/contracts';
+import type { DraftExercise, DraftMedia, DraftWord } from '@lingvohero/contracts';
 import { Field } from '../../components/ui';
 import { mechanicFor } from '../../mechanics';
 
@@ -7,6 +7,7 @@ export function ExerciseForm({
   index,
   total,
   words,
+  media,
   errors,
   onChange,
   onRemove,
@@ -17,6 +18,7 @@ export function ExerciseForm({
   index: number;
   total: number;
   words: DraftWord[];
+  media: DraftMedia[];
   errors: (path: string) => string[] | undefined;
   onChange: (exercise: DraftExercise) => void;
   onRemove: () => void;
@@ -72,7 +74,28 @@ export function ExerciseForm({
         </Field>
       </div>
 
-      <Editor exercise={exercise} words={words} errors={errors} onChange={onChange} />
+      <Field
+        label="Для возраста"
+        hint="задание только для одной группы — например, фраза попроще для 6–7 лет"
+        error={errors('ageBands')}
+      >
+        <select
+          value={exercise.ageBands?.join(',') ?? ''}
+          onChange={(e) => {
+            const { ageBands: _all, ...rest } = exercise;
+            onChange(
+              e.target.value
+                ? { ...rest, ageBands: [e.target.value as '6-7' | '8-9'] }
+                : (rest as DraftExercise),
+            );
+          }}
+        >
+          <option value="">для всех</option>
+          <option value="6-7">6–7 лет</option>
+          <option value="8-9">8–9 лет и старше</option>
+        </select>
+      </Field>
+      <Editor exercise={exercise} words={words} media={media} errors={errors} onChange={onChange} />
     </div>
   );
 }

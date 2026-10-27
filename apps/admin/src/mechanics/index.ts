@@ -1,4 +1,5 @@
 import { MECHANIC_TYPES, type ExerciseType } from '@lingvohero/contracts';
+import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
@@ -11,6 +12,7 @@ const MECHANICS: { [K in ExerciseType]: AdminMechanic<K> } = {
   'match-pairs': matchPairs,
   'build-word': buildWord,
   choice,
+  'build-sentence': buildSentence,
 };
 // One cast: TypeScript cannot correlate an exercise's `type` with the module it selects.
 export const mechanicFor = (type: ExerciseType) =>

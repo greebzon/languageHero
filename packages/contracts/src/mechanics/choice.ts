@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { base, draftBase, draftRef, id, unique, type Fail, type LessonWords } from './shared';
+import { base, draftBase, draftRef, id, unique, type Fail, type LessonRefs } from './shared';
 
 /* «Выбор»: one mechanic for a whole family of tasks. What the child is shown (`show`) and what
    the options look like (`as`) are data, so a new kind of choice task is a new combination,
@@ -80,7 +80,7 @@ export const choice = {
     answerId: draftRef,
   }),
   answer: z.object({ choiceId: id }),
-  validate(ex: Choice, words: LessonWords, fail: Fail) {
+  validate(ex: Choice, { words }: LessonRefs, fail: Fail) {
     const ids = ex.options.map((o) => o.id);
     if (!unique(ids) || !ids.includes(ex.answerId)) return fail('Invalid choice options');
     if (ex.show.some((s) => !words.has(s.wordId))) return fail('Unknown word in choice');

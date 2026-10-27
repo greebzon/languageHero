@@ -1,5 +1,10 @@
 import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
-import { OVERLAY_LOCALES, exerciseWords, mapExerciseWords } from '@lingvohero/contracts';
+import {
+  OVERLAY_LOCALES,
+  exerciseWords,
+  isSentenceLesson,
+  mapExerciseWords,
+} from '@lingvohero/contracts';
 import type {
   DraftExercise,
   GenerationLessonPlan,
@@ -36,18 +41,27 @@ import {
   toJsonSchema,
 } from '../generation/dto.js';
 import type { CostRates } from '../generation/estimate.js';
-import { needsLetters } from '../generation/mechanics/index.js';
+import { needsLetters, wordLessonMix } from '../generation/mechanics/index.js';
+import {
+  SENTENCES_PER_BAND,
+  SENTENCE_LESSON_SIZE,
+  buildSentenceExercises,
+  sentenceLessonPlan,
+  sentencesDtoSchema,
+} from '../generation/sentences.js';
 import {
   coverPrompt,
   imagePrompt,
   lessonPrompt,
   lessonTranslationPrompt,
   planPrompt,
+  sentencesPrompt,
   speechInstructions,
   translationPrompt,
   type LessonPayload,
   type LessonTranslationPayload,
   type PlanPayload,
+  type SentencesPayload,
   type TranslationPayload,
 } from '../generation/prompts.js';
 import {
@@ -252,6 +266,11 @@ async function plan(env: Env): Promise<StageResult> {
   );
   const { words, keyMap } = material(() => buildVocabulary(data, payload.wordCount));
   const plans = material(() => buildLessonPlans(data, words, distribution, course.id, keyMap));
+  // «Собери фразу»: the set ends with sentences made of its words.
+  if (job.input.mix.includes('build-sentence'))
+    plans.push(
+      sentenceLessonPlan(`${course.id}-${String(plans.length + 1).padStart(2, '0')}`, words),
+    );
   const output: GenerationOutput = { words, lessons: plans, distribution };
   await ctx.db.transaction(async (tx) => {
     await tx.update(generationJobs).set({ output }).where(eq(generationJobs.id, job.id));
@@ -265,6 +284,9 @@ async function plan(env: Env): Promise<StageResult> {
 }
 
 async function text(env: Env): Promise<StageResult> {
+  const planned = env.job.output?.lessons.find((l) => l.lessonId === env.task.targetId);
+  // A translated clone writes its sentence lesson anew from the translated words.
+  if (planned?.kind === 'sentences') return sentenceText(env);
   if (env.job.input.source) return translateText(env);
   const { job, language, task } = env;
   const output = job.output;
@@ -278,7 +300,7 @@ async function text(env: Env): Promise<StageResult> {
     lesson: { title: lesson.title, goal: lesson.goal, wordKeys: lesson.wordKeys },
     words: output.words,
     exerciseCount: lesson.exerciseCount,
-    mix: job.input.mix,
+    mix: wordLessonMix(job.input.mix),
     feedback,
   };
   const keyMap = new Map(output.words.map((w) => [w.key, w.key]));
@@ -291,12 +313,55 @@ async function text(env: Env): Promise<StageResult> {
     (d) => lessonDtoSchema.parse(d),
   );
   const exercises = material(() =>
-    buildExercises(data, lesson, output.words, keyMap, job.input.mix),
+    buildExercises(data, lesson, output.words, keyMap, wordLessonMix(job.input.mix)),
   );
   const document = buildDocument(lesson, output.words, exercises);
   await updateOutput(env.ctx.db, job.id, (current) => ({
     ...current,
     lessons: current.lessons.map((l) => (l.lessonId === lesson.lessonId ? { ...l, document } : l)),
+  }));
+  return { output: { exercises: exercises.length, feedback }, requestId };
+}
+
+/** The closing lesson of «Собери фразу» tasks, one group per age (generation/sentences.ts). */
+async function sentenceText(env: Env): Promise<StageResult> {
+  const { job, language, task } = env;
+  const output = job.output;
+  const lesson = output?.lessons.find((l) => l.lessonId === task.targetId);
+  if (!output || !lesson) throw permanent('Урок отсутствует в плане');
+  const feedback = (task.output?.feedback as string | undefined) ?? null;
+  const payload: SentencesPayload = {
+    language: language.code,
+    languageTitle: language.title,
+    topic: job.input.topic,
+    words: output.words
+      .filter((w) => lesson.wordKeys.includes(w.key))
+      .map((w) => ({ key: w.key, spelling: w.spelling, translation: w.translation })),
+    perBand: SENTENCES_PER_BAND,
+    feedback,
+  };
+  const { data, requestId } = await structured(
+    env,
+    'lesson_sentences',
+    toJsonSchema(sentencesDtoSchema),
+    sentencesPrompt(payload),
+    payload,
+    (d) => sentencesDtoSchema.parse(d),
+  );
+  const { exercises, sentences } = material(() =>
+    buildSentenceExercises(data, lesson, output.words),
+  );
+  // The lesson keeps only the words its sentences are made of (pictures on the tiles).
+  const wordKeys = lesson.wordKeys.filter((k) =>
+    exercises.some((e) => exerciseWords(e).includes(k)),
+  );
+  const planned = { ...lesson, wordKeys, sentences };
+  const document = buildDocument(planned, output.words, exercises);
+  await updateOutput(env.ctx.db, job.id, (current) => ({
+    ...current,
+    lessons: current.lessons.map((l) =>
+      l.lessonId === lesson.lessonId ? { ...l, wordKeys, sentences, document } : l,
+    ),
   }));
   return { output: { exercises: exercises.length, feedback }, requestId };
 }
@@ -393,18 +458,25 @@ async function mediaPlan(env: Env): Promise<StageResult> {
           }),
         })),
       ];
+  // Recordings: every word, and every sentence of the sentence lesson (`<lesson id>/<key>`).
+  const speech = [
+    ...words.map((w) => ({ targetId: w.key, text: w.speechText })),
+    ...job.output.lessons.flatMap((l) =>
+      (l.sentences ?? []).map((s) => ({ targetId: `${l.lessonId}/${s.key}`, text: s.text })),
+    ),
+  ];
   const tasks = [
     ...pictures,
-    ...words.map((w, i) => ({
+    ...speech.map((item, i) => ({
       stage: 'audio' as const,
-      targetId: w.key,
+      targetId: item.targetId,
       position: i,
       inputHash: artifactHash({
         stage: 'audio',
-        targetId: w.key,
+        targetId: item.targetId,
         promptVersion: job.promptVersion,
         model: `${model.tts}/${model.voice}`,
-        payload: { text: w.speechText, language: env.language.code },
+        payload: { text: item.text, language: env.language.code },
         provider,
       }),
     })),
@@ -419,7 +491,7 @@ async function mediaPlan(env: Env): Promise<StageResult> {
           ...job.output!,
           media: {
             images: translated ? 0 : words.length,
-            audios: words.length,
+            audios: speech.length,
             cover: !translated,
           },
         },
@@ -427,7 +499,7 @@ async function mediaPlan(env: Env): Promise<StageResult> {
       .where(eq(generationJobs.id, job.id));
   });
   return {
-    output: { images: translated ? 0 : words.length, audios: words.length },
+    output: { images: translated ? 0 : words.length, audios: speech.length },
     requestId: null,
   };
 }
@@ -485,7 +557,13 @@ async function audio(env: Env): Promise<StageResult> {
   const { job, task, ctx, language } = env;
   const reused = await reusable(env);
   if (reused) return { output: reused, requestId: null };
-  const word = job.output?.words.find((w) => w.key === task.targetId);
+  const sentence = job.output?.lessons
+    .flatMap((l) =>
+      (l.sentences ?? []).map((s) => ({ id: `${l.lessonId}/${s.key}`, text: s.text })),
+    )
+    .find((s) => s.id === task.targetId);
+  const found = job.output?.words.find((w) => w.key === task.targetId);
+  const word = found ?? (sentence ? { speechText: sentence.text } : undefined);
   if (!word) throw permanent('Слово отсутствует в плане');
   const result = await ctx.provider.synthesizeSpeech({
     context: env.context,
@@ -713,15 +791,27 @@ async function translatePlan(env: Env, sourceCourseId: string): Promise<StageRes
     }
     const id = (w: string) => remap.get(w) ?? w;
     const sourceExercises: DraftExercise[] = doc.exercises.map((e) => mapExerciseWords(e, id));
-    plans.push({
-      lessonId: `${course.id}-${String(index + 1).padStart(2, '0')}`,
-      title: lesson.title,
-      goal: `Перевод урока «${lesson.title}»`,
-      presentation: lesson.presentation,
-      wordKeys: [...new Set(doc.words.map((w) => id(w.id)))],
-      exerciseCount: doc.exercises.length,
-      sourceExercises,
-    });
+    const lessonId = `${course.id}-${String(index + 1).padStart(2, '0')}`;
+    const wordKeys = [...new Set(doc.words.map((w) => id(w.id)))];
+    // Sentences do not translate word for word: the clone writes them anew from its words.
+    if (isSentenceLesson(doc))
+      plans.push({
+        ...sentenceLessonPlan(lessonId, []),
+        title: lesson.title,
+        presentation: lesson.presentation,
+        wordKeys,
+        exerciseCount: SENTENCE_LESSON_SIZE,
+      });
+    else
+      plans.push({
+        lessonId,
+        title: lesson.title,
+        goal: `Перевод урока «${lesson.title}»`,
+        presentation: lesson.presentation,
+        wordKeys,
+        exerciseCount: doc.exercises.length,
+        sourceExercises,
+      });
   }
   const source = [...vocabulary.values()];
   const payload: TranslationPayload = {

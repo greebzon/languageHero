@@ -82,6 +82,32 @@ export function lessonPrompt(payload: LessonPayload) {
   return { system, user };
 }
 
+export type SentencesPayload = {
+  language: string;
+  languageTitle: string;
+  topic: string;
+  words: { key: string; spelling: string; translation: string }[];
+  perBand: number;
+  feedback: string | null;
+};
+
+export function sentencesPrompt(payload: SentencesPayload) {
+  const system = `You write short sentences for a children's ${payload.languageTitle} learning game (Russian-speaking children aged 6–9). The child builds each sentence from word tiles. ${NEUTRAL_RUSSIAN} Answer strictly in the requested JSON schema.`;
+  const words = payload.words.map((w) => `- ${w.spelling} (${w.translation})`).join('\n');
+  const user = [
+    `Topic: "${payload.topic}". The child already knows these ${payload.languageTitle} words; use them exactly in this form:\n${words}`,
+    `First list in helperWords the few other words the sentences need (at most 12 for all sentences together: pronouns, articles, "is", "and", simple verbs such as "see", "like", "have", simple adjectives), in lowercase. Every word of every sentence must be one of the known words or one of the helper words.`,
+    `Then write exactly ${payload.perBand} sentences with ageBand "6-7" (2–4 words, very simple, like "I see a cat") and exactly ${payload.perBand} with ageBand "8-9" (3–6 words, like "The cat is big"). Each uses at least one known word, is natural ${payload.languageTitle}, has no punctuation inside, and no two sentences are the same.`,
+    `For each: text — the sentence in ${payload.languageTitle}; translation — its Russian translation (max 100 chars); hint — a friendly Russian clue from Тим the fox (max 150 chars) that does not give away the word order; extraWords — 1–2 known or helper words that are not in the sentence (they become wrong tiles).`,
+    payload.feedback
+      ? `The previous attempt was rejected: ${payload.feedback}. Fix exactly that.`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+  return { system, user };
+}
+
 export const styleBrief = (style: string | null) =>
   style ??
   'soft, rounded children-book illustration, warm colours, gentle lighting, no text, no letters, no logos';

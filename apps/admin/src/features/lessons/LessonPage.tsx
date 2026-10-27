@@ -559,6 +559,7 @@ export function LessonPage() {
             index={index}
             total={doc.exercises.length}
             words={doc.words}
+            media={doc.media}
             errors={(path) => err(`exercises.${index}.${path}`)}
             onChange={(next) => setExercise(index, next)}
             onRemove={() => updateDoc({ exercises: doc.exercises.filter((_, i) => i !== index) })}

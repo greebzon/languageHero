@@ -6,6 +6,7 @@ import type {
   ExerciseType,
 } from '@lingvohero/contracts';
 import { limitsFor, seeded } from './adapt';
+import { buildSentence } from './build-sentence';
 import { buildWord } from './build-word';
 import { choice } from './choice';
 import { listenAndSelect } from './listen-and-select';
@@ -18,6 +19,7 @@ const RULES: { [K in ExerciseType]: Rules<K> } = {
   'match-pairs': matchPairs,
   'build-word': buildWord,
   choice,
+  'build-sentence': buildSentence,
 };
 export function assessExercise(
   exercise: CourseExercise,

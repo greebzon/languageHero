@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { base, draftBase, draftRef, id, unique, type Fail, type LessonWords } from './shared';
+import { base, draftBase, draftRef, id, unique, type Fail, type LessonRefs } from './shared';
 
 type Pairs = { wordIds: string[]; imageOrder: string[] };
 
@@ -18,7 +18,7 @@ export const matchPairs = {
     imageOrder: z.array(draftRef).max(4),
   }),
   answer: z.object({ pairs: z.record(id, id) }),
-  validate(ex: Pairs, words: LessonWords, fail: Fail) {
+  validate(ex: Pairs, { words }: LessonRefs, fail: Fail) {
     if (
       !unique(ex.wordIds) ||
       !unique(ex.imageOrder) ||

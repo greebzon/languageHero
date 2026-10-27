@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
-import { assess, currentExercise } from '@lingvohero/learning-core';
+import { assess, currentExercise, inReview } from '@lingvohero/learning-core';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
@@ -53,7 +53,7 @@ export default function LessonScreen() {
   const exercise = currentExercise(session, lesson);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
-  const review = session.exerciseIndex >= lesson.exercises.length;
+  const review = inReview(session);
   // Some mechanics add their own help under the hint (build-word: the spelling).
   const { Hint } = mechanicFor(exercise.type);
   return (

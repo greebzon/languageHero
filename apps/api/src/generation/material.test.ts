@@ -8,6 +8,7 @@ import {
 import { inspectMedia } from '../admin/media.js';
 import { distribute, wordCountFor } from './distribute.js';
 import {
+  MaterialError,
   buildDocument,
   buildExercises,
   buildLessonPlans,
@@ -18,9 +19,16 @@ import {
 } from './dto.js';
 import { fakePng, fakeWav } from './fake-media.js';
 import { FakeProvider } from './fake-provider.js';
-import { lessonPrompt, planPrompt } from './prompts.js';
+import { lessonPrompt, planPrompt, sentencesPrompt } from './prompts.js';
+import {
+  SENTENCES_PER_BAND,
+  buildSentenceExercises,
+  sentenceLessonPlan,
+  sentencesDtoSchema,
+} from './sentences.js';
 import { classifyError, ProviderError } from './provider.js';
 import { reviewMaterial } from './review.js';
+import { wordLessonMix } from './mechanics/index.js';
 
 test('fake media passes the same checks as uploads', () => {
   const png = inspectMedia(fakePng('fox'));
@@ -34,7 +42,7 @@ test('fake media passes the same checks as uploads', () => {
 });
 
 test('strict JSON schemas: every property required, nothing extra', () => {
-  for (const schema of [planDtoSchema, lessonDtoSchema]) {
+  for (const schema of [planDtoSchema, lessonDtoSchema, sentencesDtoSchema]) {
     const json = toJsonSchema(schema) as {
       required: string[];
       properties: Record<string, unknown>;
@@ -97,7 +105,7 @@ test('fake provider material maps into valid lessons that pass review', async ()
       lesson,
       words,
       exerciseCount: lesson.exerciseCount,
-      mix: input.mix,
+      mix: wordLessonMix(input.mix),
       feedback: null,
     };
     const prompt = lessonPrompt(payload);
@@ -116,7 +124,7 @@ test('fake provider material maps into valid lessons that pass review', async ()
       lesson,
       words,
       keyMap,
-      input.mix,
+      wordLessonMix(input.mix),
     );
     lesson.document = buildDocument(lesson, words, exercises);
   }
@@ -174,6 +182,85 @@ test('fake provider material maps into valid lessons that pass review', async ()
   broken.lessons[0]!.document!.exercises.pop();
   const problems = reviewMaterial(broken, input, 'en');
   assert.ok(problems.some((p) => /13 заданий/.test(p.message)));
+});
+
+test('the closing sentence lesson: closed vocabulary, one group per age, recordings', async () => {
+  const words = ['fox', 'owl', 'bear', 'cat'].map((w) => ({
+    key: w,
+    text: w[0]!.toUpperCase() + w.slice(1),
+    spelling: w,
+    translation: `перевод ${w}`,
+    imagePrompt: w,
+    speechText: w,
+  }));
+  const plan = sentenceLessonPlan('en-zoo-03', words);
+  assert.equal(plan.exerciseCount, SENTENCES_PER_BAND * 2);
+  const payload = {
+    language: 'en',
+    languageTitle: 'English',
+    topic: 'Зоопарк',
+    words,
+    perBand: SENTENCES_PER_BAND,
+    feedback: null,
+  };
+  const result = await new FakeProvider().generateText({
+    context: { jobId: 'job', stage: 'text', targetId: plan.lessonId },
+    model: 'fake',
+    schemaName: 'lesson_sentences',
+    schema: toJsonSchema(sentencesDtoSchema),
+    ...sentencesPrompt(payload),
+    payload,
+  });
+  assert.ok(result.ok);
+  const { exercises, sentences } = buildSentenceExercises(
+    sentencesDtoSchema.parse(result.data),
+    plan,
+    words,
+  );
+  assert.equal(exercises.length, SENTENCES_PER_BAND * 2);
+  assert.deepEqual(
+    exercises.map((e) => e.ageBands?.join()),
+    [...Array(SENTENCES_PER_BAND).fill('6-7'), ...Array(SENTENCES_PER_BAND).fill('8-9')],
+  );
+  const first = exercises[0]!;
+  assert.ok(first.type === 'build-sentence');
+  assert.deepEqual(first.answer, ['I', 'see', 'a', 'fox']);
+  assert.equal(first.tokens.length, 5, 'one extra tile for 6–7');
+  assert.equal(first.tokens.find((t) => t.text === 'fox')?.wordId, 'fox');
+  assert.equal(first.audioId, `${sentences[0]!.key}-audio`);
+  // «The bear is big» starts with a small letter: a capital would show the first tile.
+  const older = exercises[SENTENCES_PER_BAND + 1]!;
+  assert.ok(older.type === 'build-sentence' && older.answer[0] === 'the');
+  // The lesson builds and passes review like any generated lesson.
+  const lesson = {
+    ...plan,
+    sentences,
+    document: buildDocument({ ...plan, sentences }, words, exercises),
+  };
+  const input = generationInputSchema.parse({ topic: 'Зоопарк', totalExercises: 6 });
+  assert.deepEqual(
+    reviewMaterial(
+      { words, lessons: [lesson], distribution: [] },
+      { ...input, totalExercises: 0 },
+      'en',
+    ),
+    [],
+  );
+  // Words that are neither set words nor declared helper words are rejected.
+  assert.throws(
+    () =>
+      buildSentenceExercises(
+        {
+          helperWords: ['i', 'like'],
+          sentences: [
+            { ageBand: '6-7', text: 'I like pizza', translation: '', hint: '', extraWords: [] },
+          ],
+        },
+        plan,
+        words,
+      ),
+    (e: unknown) => e instanceof MaterialError && e.problems.some((p) => /pizza/.test(p)),
+  );
 });
 
 test('provider errors are classified for the queue', () => {

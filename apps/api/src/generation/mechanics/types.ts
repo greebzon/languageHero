@@ -26,6 +26,8 @@ export type RetranslateContext = { words: GenerationWord[]; seed: string };
 export type GenerationMechanic<K extends ExerciseType> = {
   /** Shown to the model in the list of allowed mechanics. */
   label: string;
+  /** false: never a task of a word lesson (sentences have a lesson of their own). */
+  wordLessons?: false;
   /** Field rules for the model; every DTO field must be mentioned. */
   rules: string;
   /** The draft exercise, or why the model's item cannot become one. */

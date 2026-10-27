@@ -1,5 +1,6 @@
 import type { GenerationInput } from '@lingvohero/contracts';
 import { distribute, wordCountFor } from './distribute.js';
+import { SENTENCE_LESSON_SIZE } from './sentences.js';
 
 export type CostRates = {
   imageUsd: number;
@@ -15,9 +16,11 @@ export function estimate(input: GenerationInput, rates: CostRates, wordsPerLesso
     requested: input.wordCount,
   });
   const images = words + 1; // one illustration per word plus the cover
-  const audios = words;
-  const ttsChars = words * 16;
-  const textTokens = 2500 + distribution.length * 3000;
+  // The closing sentence lesson: one recording per sentence, no pictures.
+  const sentences = input.mix.includes('build-sentence') ? SENTENCE_LESSON_SIZE : 0;
+  const audios = words + sentences;
+  const ttsChars = words * 16 + sentences * 24;
+  const textTokens = 2500 + (distribution.length + (sentences ? 1 : 0)) * 3000;
   const estimatedUsd =
     images * rates.imageUsd +
     (ttsChars / 1000) * rates.ttsPer1kCharsUsd +

@@ -83,7 +83,18 @@ function attempt(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>)
     else if (ex.type === 'match-pairs')
       answer = { pairs: Object.fromEntries(ex.wordIds.map((w) => [w, w])) };
     else if (ex.type === 'choice') answer = { choiceId: ex.answerId };
-    else {
+    else if (ex.type === 'build-sentence') {
+      const left = [...ex.tokens];
+      answer = {
+        tileIds: ex.answer.map(
+          (w) =>
+            left.splice(
+              left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
+              1,
+            )[0]!.id,
+        ),
+      };
+    } else {
       const tiles = [...ex.tiles];
       answer = {
         tileIds: Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling).map(

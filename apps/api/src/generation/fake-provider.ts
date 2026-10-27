@@ -1,5 +1,6 @@
 import { fakePng, fakeWav } from './fake-media.js';
 import { GENERATION_MECHANICS } from './mechanics/index.js';
+import { fakeSentences } from './sentences.js';
 import type {
   CourseTextsPayload,
   WardrobeTextsPayload,
@@ -7,6 +8,7 @@ import type {
   LessonTextsPayload,
   LessonTranslationPayload,
   PlanPayload,
+  SentencesPayload,
   TranslationPayload,
 } from './prompts.js';
 import {
@@ -57,19 +59,21 @@ export class FakeProvider implements GenerationProvider {
             ? lessonTranslationFor(request.payload as LessonTranslationPayload)
             : request.schemaName === 'lesson_texts'
               ? lessonTextsFor(request.payload as LessonTextsPayload)
-              : request.schemaName === 'course_texts'
-                ? courseTextsFor(request.payload as CourseTextsPayload)
-                : request.schemaName === 'mascot_texts' || request.schemaName === 'item_texts'
-                  ? wardrobeTextsFor(request.payload as WardrobeTextsPayload)
-                  : request.schemaName === 'mascot_slots'
-                    ? {
-                        head: { x: 0.28, y: 0.04, w: 0.44, h: 0.22 },
-                        eyes: { x: 0.32, y: 0.2, w: 0.36, h: 0.1 },
-                        outfit: { x: 0.26, y: 0.38, w: 0.48, h: 0.32 },
-                        back: { x: 0.12, y: 0.3, w: 0.76, h: 0.45 },
-                        companion: { x: 0.74, y: 0.3, w: 0.22, h: 0.22 },
-                      }
-                    : lessonFor(request.payload as LessonPayload);
+              : request.schemaName === 'lesson_sentences'
+                ? fakeSentences((request.payload as SentencesPayload).words)
+                : request.schemaName === 'course_texts'
+                  ? courseTextsFor(request.payload as CourseTextsPayload)
+                  : request.schemaName === 'mascot_texts' || request.schemaName === 'item_texts'
+                    ? wardrobeTextsFor(request.payload as WardrobeTextsPayload)
+                    : request.schemaName === 'mascot_slots'
+                      ? {
+                          head: { x: 0.28, y: 0.04, w: 0.44, h: 0.22 },
+                          eyes: { x: 0.32, y: 0.2, w: 0.36, h: 0.1 },
+                          outfit: { x: 0.26, y: 0.38, w: 0.48, h: 0.32 },
+                          back: { x: 0.12, y: 0.3, w: 0.76, h: 0.45 },
+                          companion: { x: 0.74, y: 0.3, w: 0.22, h: 0.22 },
+                        }
+                      : lessonFor(request.payload as LessonPayload);
     return {
       ok: true as const,
       data,

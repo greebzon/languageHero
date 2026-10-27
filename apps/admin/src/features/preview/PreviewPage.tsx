@@ -14,6 +14,7 @@ import {
 import {
   assess,
   currentExercise,
+  inReview,
   learn,
   newLearningState,
   starsFor,
@@ -166,7 +167,7 @@ function Player({ preview, ageBand }: { preview: Preview; ageBand: AgeBand }) {
   const exercise = currentExercise(session);
   const correct = session.correct;
   const assessment = session.draft ? assess(exercise, session.draft, lesson) : 'invalid';
-  const review = session.exerciseIndex >= lesson.exercises.length;
+  const review = inReview(session);
   const last = session.exerciseIndex === session.queue.length - 1;
   return (
     <div className="play">

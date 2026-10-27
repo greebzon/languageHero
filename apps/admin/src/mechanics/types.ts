@@ -3,6 +3,7 @@ import type {
   Answer,
   CourseLesson,
   DraftExerciseOf,
+  DraftMedia,
   DraftWord,
   ExerciseOf,
   ExerciseType,
@@ -11,6 +12,7 @@ import type {
 export type EditorProps<K extends ExerciseType> = {
   exercise: DraftExerciseOf<K>;
   words: DraftWord[];
+  media: DraftMedia[];
   /** Server field errors under this exercise (`wordId`, `tiles`, …). */
   errors: (path: string) => string[] | undefined;
   onChange: (exercise: DraftExerciseOf<K>) => void;

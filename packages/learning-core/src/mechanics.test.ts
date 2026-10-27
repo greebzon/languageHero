@@ -7,6 +7,7 @@ import {
   catalogForMechanics,
   choicePresetOf,
   courseLessonSchema,
+  exerciseCountsOf,
   exerciseWords,
   mapExerciseWords,
   releaseSchema,
@@ -16,7 +17,15 @@ import {
   type CourseLesson,
 } from '@lingvohero/contracts';
 import { birthYearFor, difficultyFor } from './age';
-import { assess, currentExercise, learn, newLearningState, restoreLearningState } from './course';
+import {
+  assess,
+  currentExercise,
+  inReview,
+  learn,
+  newLearningState,
+  playableIndices,
+  restoreLearningState,
+} from './course';
 import data from '../../../content/seed.json';
 
 const release = releaseSchema.parse(data);
@@ -240,6 +249,18 @@ function answerTo(ex: CourseExercise, pkg: CourseLesson): Answer {
   if (ex.type === 'match-pairs')
     return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
   if (ex.type === 'choice') return { choiceId: ex.answerId };
+  if (ex.type === 'build-sentence') {
+    const left = [...ex.tokens];
+    return {
+      tileIds: ex.answer.map(
+        (w) =>
+          left.splice(
+            left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
+            1,
+          )[0]!.id,
+      ),
+    };
+  }
   const available = [...ex.tiles];
   return {
     tileIds: Array.from(pkg.words.find((w) => w.id === ex.wordId)!.spelling).map(
@@ -251,3 +272,104 @@ function answerTo(ex: CourseExercise, pkg: CourseLesson): Answer {
     ),
   };
 }
+
+const sentences = (): CourseLesson => {
+  const audio = seedLesson.media.find((m) => m.kind === 'audio')!;
+  return {
+    ...seedLesson,
+    texts: undefined,
+    media: [...seedLesson.media, { ...audio, id: 's1-audio' }, { ...audio, id: 's2-audio' }],
+    exercises: [
+      {
+        id: 'young',
+        type: 'build-sentence',
+        prompt: 'Собери фразу: «Я вижу лису»',
+        hint: 'Начни с «I»',
+        ageBands: ['6-7'],
+        tokens: [
+          { id: 't1', text: 'I' },
+          { id: 't2', text: 'see' },
+          { id: 't3', text: 'a' },
+          { id: 't4', text: 'fox', wordId: 'fox' },
+          { id: 't5', text: 'owl', wordId: 'owl' },
+          { id: 't6', text: 'bear', wordId: 'bear' },
+        ],
+        answer: ['I', 'see', 'a', 'fox'],
+        audioId: 's1-audio',
+      },
+      {
+        id: 'older',
+        type: 'build-sentence',
+        prompt: 'Собери фразу: «Лиса и сова»',
+        hint: 'Два раза «the»',
+        ageBands: ['8-9'],
+        tokens: [
+          { id: 'a', text: 'the' },
+          { id: 'b', text: 'owl', wordId: 'owl' },
+          { id: 'c', text: 'and' },
+          { id: 'd', text: 'The' },
+          { id: 'e', text: 'fox', wordId: 'fox' },
+          { id: 'f', text: 'a' },
+        ],
+        answer: ['the', 'fox', 'and', 'the', 'owl'],
+        alternatives: [['the', 'owl', 'and', 'the', 'fox']],
+        audioId: 's2-audio',
+      },
+    ],
+  };
+};
+
+test('a sentence lesson: one task per age group, words compared by text, any right order', () => {
+  const pkg = courseLessonSchema.parse(sentences());
+  assert.deepEqual(playableIndices(pkg, { ageBand: '6-7' }), [0]);
+  assert.deepEqual(playableIndices(pkg, { ageBand: '8-9' }), [1]);
+  assert.deepEqual(playableIndices(pkg), [1]);
+  assert.deepEqual(exerciseCountsOf(pkg), { '6-7': 1, '8-9': 1 });
+  assert.equal(exerciseCountsOf(seedLesson), undefined);
+  const older = pkg.exercises[1]!;
+  // «the» tiles are interchangeable, case does not matter, the other order counts too.
+  assert.equal(assess(older, { tileIds: ['d', 'e', 'c', 'a', 'b'] }, pkg), 'correct');
+  assert.equal(assess(older, { tileIds: ['a', 'b', 'c', 'd', 'e'] }, pkg), 'correct');
+  assert.equal(assess(older, { tileIds: ['a', 'e', 'c', 'f', 'b'] }, pkg), 'wrong');
+  assert.equal(assess(older, { tileIds: ['a', 'a'] }, pkg), 'invalid');
+  assert.equal(assess(older, { choiceId: 'a' }, pkg), 'invalid');
+  assert.deepEqual(exerciseWords(older), ['owl', 'fox']);
+  // A 6-year-old plays only the short sentence, with one extra word.
+  let state = learn(newLearningState(), {
+    type: 'start',
+    lesson: pkg,
+    difficulty: { ageBand: '6-7' },
+  });
+  const young = currentExercise(state.session!);
+  assert.ok(young.type === 'build-sentence' && young.tokens.length === 5);
+  state = learn(state, { type: 'draft', answer: { tileIds: ['t3', 't1', 't2', 't4'] } });
+  state = learn(state, { type: 'answer' });
+  assert.equal(state.session!.mistakes, 1);
+  assert.equal(inReview(state.session!), false);
+  state = learn(state, { type: 'draft', answer: answerTo(young, pkg) });
+  state = learn(state, { type: 'answer' });
+  state = learn(state, { type: 'next' });
+  assert.equal(inReview(state.session!), true, 'the wrong one comes back');
+  assert.ok(restoreLearningState(state), 'an age-filtered queue restores');
+  // The schema checks the sentence can be built and every group has something to play.
+  const broken = sentences();
+  const first = broken.exercises[0]!;
+  assert.ok(first.type === 'build-sentence');
+  assert.equal(
+    parsesLesson({
+      ...broken,
+      exercises: [{ ...first, answer: ['I', 'see', 'the', 'fox'] }, broken.exercises[1]!],
+    }),
+    false,
+  );
+  assert.equal(parsesLesson({ ...broken, exercises: [broken.exercises[0]!] }), false);
+  assert.equal(
+    parsesLesson({
+      ...broken,
+      exercises: [{ ...first, audioId: 'fox-image' }, broken.exercises[1]!],
+    }),
+    false,
+  );
+});
+
+const parsesLesson = (lesson: CourseLesson) => courseLessonSchema.safeParse(lesson).success;

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { answerSchema, courseExerciseSchema, validateExercise } from './mechanics';
+import { AGE_BANDS, ageBandSchema } from './mechanics/shared';
 import { id, unique } from './mechanics/shared';
 
 export * from './mechanics';
@@ -94,8 +95,25 @@ export const courseLessonSchema = z
       )
         fail('Missing word media');
     }
-    for (const ex of lesson.exercises) validateExercise(ex, words, fail);
+    const media = new Map(lesson.media.map((m) => [m.id, m.kind]));
+    for (const ex of lesson.exercises) validateExercise(ex, { words, media }, fail);
+    // Every age group must have something to play.
+    for (const band of AGE_BANDS)
+      if (!lesson.exercises.some((e) => !e.ageBands || e.ageBands.includes(band)))
+        fail(`No exercises for age ${band}`);
   });
+/** Exercises per age group, or undefined when no exercise is limited to an age group. */
+export function exerciseCountsOf(lesson: {
+  exercises: { ageBands?: readonly string[] }[];
+}): Partial<Record<(typeof AGE_BANDS)[number], number>> | undefined {
+  if (!lesson.exercises.some((e) => e.ageBands)) return undefined;
+  return Object.fromEntries(
+    AGE_BANDS.map((band) => [
+      band,
+      lesson.exercises.filter((e) => !e.ageBands || e.ageBands.includes(band)).length,
+    ]),
+  );
+}
 const cardTextsSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().min(1).max(200).optional(),
@@ -177,6 +195,11 @@ export const catalogSchema = z
               title: z.string().min(1),
               titles: z.partialRecord(overlayLocaleSchema, z.string().min(1)).optional(),
               exerciseCount: z.number().int().positive(),
+              /* Exercises each age group plays, when some are for one group only
+                 (`exerciseCountsOf`); absent when every child plays all of them. */
+              exerciseCounts: z
+                .partialRecord(ageBandSchema, z.number().int().positive())
+                .optional(),
               /* Mechanics the lesson uses. Any id, not a closed list: an app filters out
                  lessons it cannot show (`catalogForMechanics`) instead of failing the catalog. */
               requiredTypes: z.array(id).min(1),
@@ -232,6 +255,7 @@ export const releaseSchema = z
         lesson.language !== ref.language ||
         lesson.title !== ref.title ||
         lesson.exercises.length !== ref.exerciseCount ||
+        AGE_BANDS.some((band) => exerciseCountsOf(lesson)?.[band] !== ref.exerciseCounts?.[band]) ||
         JSON.stringify([...new Set(lesson.exercises.map((e) => e.type))].sort()) !==
           JSON.stringify([...ref.requiredTypes].sort())
       )
@@ -243,9 +267,6 @@ export const releaseSchema = z
    played. The group and the seed that picks which options stay are kept in the session (and
    sent with the attempt), so a resumed session and the server's replay show the same
    exercise even when the attempt id changes. */
-export const AGE_BANDS = ['6-7', '8-9'] as const;
-export const ageBandSchema = z.enum(AGE_BANDS);
-export type AgeBand = z.infer<typeof ageBandSchema>;
 export const difficultySchema = z.object({
   ageBand: ageBandSchema,
   seed: z.string().min(1).max(100),

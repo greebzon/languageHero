@@ -10,7 +10,7 @@ import {
 import type { CourseLesson } from '@lingvohero/contracts';
 import { mediaSource, seed } from '../content/client';
 import { useDemo } from '../state/DemoProvider';
-import { useT } from '../i18n';
+import { useT, type TextKey } from '../i18n';
 import { Icon, Label } from './ui';
 import { colors, fonts } from '../theme';
 
@@ -75,10 +75,13 @@ export function AudioControl({
   audioId,
   compact = false,
   lesson = seed.lessons[0],
+  caption = 'audio.question',
 }: {
   audioId: string;
   compact?: boolean;
   lesson?: CourseLesson;
+  /** The line above «Нажми и послушай» (default: «Какое слово прозвучало?»). */
+  caption?: TextKey;
 }) {
   const source = mediaSource(lesson, audioId);
   if (compact)
@@ -89,9 +92,17 @@ export function AudioControl({
         word={lesson.words.find((w) => w.audioId === audioId)?.text ?? ''}
       />
     );
-  return <FullControl audioId={audioId} source={source} />;
+  return <FullControl audioId={audioId} source={source} caption={caption} />;
 }
-function FullControl({ audioId, source }: { audioId: string; source: string | number }) {
+function FullControl({
+  audioId,
+  source,
+  caption,
+}: {
+  audioId: string;
+  source: string | number;
+  caption: TextKey;
+}) {
   const player = useAudioPlayer(source);
   const status = useAudioPlayerStatus(player);
   const { state, dispatch } = useDemo();
@@ -140,9 +151,7 @@ function FullControl({ audioId, source }: { audioId: string; source: string | nu
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Label style={s.caption}>
-              {status.playing ? t('audio.listening') : t('audio.question')}
-            </Label>
+            <Label style={s.caption}>{status.playing ? t('audio.listening') : t(caption)}</Label>
             <Label style={s.title}>
               {error
                 ? t('audio.reload')

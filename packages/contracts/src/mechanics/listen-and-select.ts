@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { base, draftBase, draftRef, id, unique, type Fail, type LessonWords } from './shared';
+import { base, draftBase, draftRef, id, unique, type Fail, type LessonRefs } from './shared';
 
 /** Hear a word, pick its picture among the choices. */
 export const listenAndSelect = {
@@ -16,7 +16,7 @@ export const listenAndSelect = {
     choices: z.array(draftRef).max(6),
   }),
   answer: z.object({ choiceId: id }),
-  validate(ex: { wordId: string; choices: string[] }, words: LessonWords, fail: Fail) {
+  validate(ex: { wordId: string; choices: string[] }, { words }: LessonRefs, fail: Fail) {
     if (
       !unique(ex.choices) ||
       !ex.choices.includes(ex.wordId) ||

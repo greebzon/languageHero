@@ -182,7 +182,7 @@ export const generationInputSchema = z.object({
   mix: z
     .array(exerciseTypeSchema)
     .min(1)
-    .default([...BASE_MECHANICS, 'choice']),
+    .default([...BASE_MECHANICS, 'choice', 'build-sentence']),
   style: z.string().trim().max(300).nullable().default(null),
   voice: z.string().trim().max(40).nullable().default(null),
   /** Set by the server for a translated clone: the set whose lessons are translated. */
@@ -229,6 +229,9 @@ export type CloneInput = z.infer<typeof cloneInputSchema>;
 export type GenerationInput = z.infer<typeof generationInputSchema>;
 export type GenerationRequest = z.infer<typeof generationRequestSchema>;
 
+/** A lesson made only of «Собери фразу» tasks: the closing lesson of a generated set. */
+export const isSentenceLesson = (doc: { exercises: { type: string }[] }) =>
+  doc.exercises.length > 0 && doc.exercises.every((e) => e.type === 'build-sentence');
 export type GenerationWord = {
   key: string;
   text: string;
@@ -241,6 +244,10 @@ export type GenerationWord = {
 };
 export type GenerationLessonPlan = {
   lessonId: string;
+  /** `sentences`: the set's closing lesson of «Собери фразу» tasks (generation/sentences.ts). */
+  kind?: 'sentences';
+  /** Sentence lesson: the sentences to record, `key` names the media (`<key>-audio`). */
+  sentences?: { key: string; text: string }[];
   title: string;
   goal: string;
   presentation: LessonPresentation | null;

@@ -217,15 +217,23 @@ export function buildDocument(
       imageId: `${w.key}-image`,
       audioId: `${w.key}-audio`,
     })),
-    media: used.flatMap((w) => [
-      {
-        id: `${w.key}-image`,
-        kind: 'image' as const,
-        assetId: w.image?.assetId ?? assetIds[`image:${w.key}`] ?? '',
-        ...(w.image?.region ? { region: w.image.region } : {}),
-      },
-      { id: `${w.key}-audio`, kind: 'audio' as const, assetId: assetIds[`audio:${w.key}`] ?? '' },
-    ]),
+    media: [
+      ...used.flatMap((w) => [
+        {
+          id: `${w.key}-image`,
+          kind: 'image' as const,
+          assetId: w.image?.assetId ?? assetIds[`image:${w.key}`] ?? '',
+          ...(w.image?.region ? { region: w.image.region } : {}),
+        },
+        { id: `${w.key}-audio`, kind: 'audio' as const, assetId: assetIds[`audio:${w.key}`] ?? '' },
+      ]),
+      // Recordings of the sentence lesson's sentences (audio tasks `<lesson id>/<key>`).
+      ...(lesson.sentences ?? []).map((s) => ({
+        id: `${s.key}-audio`,
+        kind: 'audio' as const,
+        assetId: assetIds[`audio:${lesson.lessonId}/${s.key}`] ?? '',
+      })),
+    ],
     exercises,
   };
 }

@@ -80,16 +80,31 @@ test('generation routes: settings, estimates, idempotent start, progress, cancel
 
   await runWorkerUntilIdle(worker);
   const finished = await call('GET', `/generations/${jobId}`);
-  assert.equal(finished.json().job.status, 'awaiting-review', finished.body);
+  assert.equal(
+    finished.json().job.status,
+    'awaiting-review',
+    JSON.stringify(
+      finished
+        .json()
+        .tasks.filter((x: { status: string }) => x.status !== 'succeeded')
+        .map((x: { stage: string; targetId: string; status: string; lastError: string }) => [
+          x.stage,
+          x.targetId,
+          x.status,
+          x.lastError,
+        ]),
+    ),
+  );
   assert.equal(finished.json().progress.done, finished.json().progress.total);
-  assert.equal(finished.json().job.result.lessons.length, 2);
+  // Two word lessons and the closing «Собери фразу» lesson.
+  assert.equal(finished.json().job.result.lessons.length, 3);
   assert.equal(finished.json().job.result.words.length, 6);
   assert.equal(finished.json().job.input.simulate, undefined);
   assert.ok(finished.json().stages.find((s: { stage: string }) => s.stage === 'image').done > 0);
   assert.equal(finished.json().allowed.cancel, false);
   assert.deepEqual(finished.json().allowed.retryTaskIds, []);
   const course = (await call('GET', '/courses/en-space-set')).json();
-  assert.equal(course.lessons.length, 2);
+  assert.equal(course.lessons.length, 3);
   assert.ok(course.course.cover);
   assert.equal((await call('GET', `/lessons/${course.lessons[0].id}/preview`)).statusCode, 200);
   // The fresh lessons are Russian: a texts job translated them for the other interface locales.
@@ -142,9 +157,20 @@ test('generation routes: settings, estimates, idempotent start, progress, cancel
   assert.equal(retried.statusCode, 200, retried.body);
   assert.equal(retried.json().job.status, 'running');
   await runWorkerUntilIdle(worker);
+  const after = (await call('GET', `/generations/${d.json().job.id}`)).json();
   assert.equal(
-    (await call('GET', `/generations/${d.json().job.id}`)).json().job.status,
+    after.job.status,
     'awaiting-review',
+    JSON.stringify(
+      after.tasks
+        .filter((x: { status: string }) => x.status !== 'succeeded')
+        .map((x: { stage: string; targetId: string; status: string; lastError: string }) => [
+          x.stage,
+          x.targetId,
+          x.status,
+          x.lastError,
+        ]),
+    ),
   );
 
   // Conflicts: edit a lesson, regenerate, apply the AI variant explicitly.

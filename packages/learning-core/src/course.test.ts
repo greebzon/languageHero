@@ -24,6 +24,18 @@ function answerFor(ex: CourseExercise, lesson: CourseLesson): Answer {
   if (ex.type === 'match-pairs')
     return { pairs: Object.fromEntries(ex.wordIds.map((id) => [id, id])) };
   if (ex.type === 'choice') return { choiceId: ex.answerId };
+  if (ex.type === 'build-sentence') {
+    const left = [...ex.tokens];
+    return {
+      tileIds: ex.answer.map(
+        (w) =>
+          left.splice(
+            left.findIndex((t) => t.text.toLowerCase() === w.toLowerCase()),
+            1,
+          )[0]!.id,
+      ),
+    };
+  }
   const letters = Array.from(lesson.words.find((w) => w.id === ex.wordId)!.spelling);
   const available = [...ex.tiles];
   return {

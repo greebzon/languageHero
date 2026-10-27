@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { asc, eq } from 'drizzle-orm';
+import { isSentenceLesson } from '@lingvohero/contracts';
 import { assets, courses, lessons } from '../db/schema.js';
 import { buildRelease } from '../publishing/build-release.js';
 import { loadBuildInput } from '../publishing/plan.js';
@@ -150,4 +151,75 @@ test('clone a set: copy as is, and translate with AI keeping pictures', async (t
   const built = buildRelease(await loadBuildInput(db, 99));
   assert.deepEqual(built.errors, []);
   assert.ok(built.release!.catalog.courses.some((c) => c.id === 'he-forest-x9y8' && c.cover));
+});
+
+test('a translated clone writes its sentence lesson anew from the translated words', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const { app, db, contentRoot, storageRoot, headers, provider, generation } = ctx;
+  await importPublishedContent(db, contentRoot);
+  const call = (method: 'GET' | 'POST', url: string, payload?: Record<string, unknown>) =>
+    app.inject({ method, url: `/v1/admin${url}`, headers, payload });
+  const worker = {
+    db,
+    provider,
+    storageRoot,
+    rates: generation.rates,
+    workerId: 'clone-sentences',
+  };
+  const lessonsOf = (courseId: string) =>
+    db.select().from(lessons).where(eq(lessons.courseId, courseId)).orderBy(asc(lessons.position));
+  await call('POST', '/languages', {
+    code: 'he',
+    title: 'Иврит',
+    direction: 'rtl',
+    status: 'active',
+  });
+  await call('POST', '/courses', { id: 'en-zoo', languageCode: 'en', title: 'Зоопарк' });
+  const generated = await call('POST', '/courses/en-zoo/generations', {
+    topic: 'Зоопарк',
+    totalExercises: 6,
+    idempotencyKey: crypto.randomUUID(),
+  });
+  assert.equal(generated.statusCode, 202, generated.body);
+  await runWorkerUntilIdle(worker);
+  const source = await lessonsOf('en-zoo');
+  assert.equal(source.length, 2);
+  assert.ok(isSentenceLesson(source[1]!.document));
+
+  const clone = await call('POST', '/courses/en-zoo/clone', {
+    languageCode: 'he',
+    id: 'he-zoo-c3d4',
+    title: 'Зоопарк',
+    mode: 'translate',
+    idempotencyKey: crypto.randomUUID(),
+  });
+  assert.equal(clone.statusCode, 202, clone.body);
+  await runWorkerUntilIdle(worker);
+  const view = (await call('GET', `/generations/${clone.json().job.job.id}`)).json();
+  assert.equal(view.job.status, 'awaiting-review', view.job.error ?? '');
+  const [words, sentences] = await lessonsOf('he-zoo-c3d4');
+  assert.ok(words && sentences && isSentenceLesson(sentences.document));
+  assert.equal(sentences.document.exercises.length, 8);
+  // The sentences are made of the translated words («…he» in the fake translation).
+  for (const exercise of sentences.document.exercises) {
+    assert.ok(exercise.type === 'build-sentence');
+    const linked = exercise.tokens.filter((t) => t.wordId);
+    assert.ok(linked.length > 0);
+    assert.ok(
+      linked.every((t) => t.text.endsWith('he')),
+      JSON.stringify(exercise.tokens),
+    );
+  }
+  // Every sentence has its own new recording.
+  const recordings = sentences.document.media.filter((m) => m.id.startsWith('sentence-'));
+  assert.equal(recordings.length, 8);
+  assert.ok(recordings.every((m) => m.assetId));
+  await db.update(courses).set({ visibility: 'published' }).where(eq(courses.id, 'he-zoo-c3d4'));
+  const built = buildRelease(await loadBuildInput(db, 99));
+  assert.deepEqual(built.errors, []);
+  const ref = built
+    .release!.catalog.courses.find((c) => c.id === 'he-zoo-c3d4')!
+    .lessons.find((l) => l.id === sentences.id)!;
+  assert.deepEqual(ref.exerciseCounts, { '6-7': 4, '8-9': 4 });
 });

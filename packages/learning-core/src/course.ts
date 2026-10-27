@@ -18,6 +18,17 @@ export function assess(exercise: CourseExercise, answer: Answer, lesson: CourseL
 }
 type Session = NonNullable<LearningState['session']>;
 /**
+ * The exercises a child of this age group plays, in lesson order (an exercise may be meant for
+ * one age group only). Without an age the older group's are played.
+ */
+export function playableIndices(lesson: CourseLesson, difficulty?: Pick<Difficulty, 'ageBand'>) {
+  const band = difficulty?.ageBand ?? '8-9';
+  return lesson.exercises.flatMap((e, i) => (!e.ageBands || e.ageBands.includes(band) ? [i] : []));
+}
+/** The session has gone past its exercises and repeats the ones answered wrong. */
+export const inReview = (session: Session) =>
+  session.exerciseIndex >= playableIndices(session.lesson, session.difficulty).length;
+/**
  * The exercise in front of the child, eased for the session's age group. `lesson` may be the
  * session's lesson in the interface language: easing only touches structure, not texts.
  */
@@ -61,7 +72,7 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
           : {}),
         events: [],
         lesson: action.lesson,
-        queue: action.lesson.exercises.map((_, i) => i),
+        queue: playableIndices(action.lesson, action.difficulty),
         exerciseIndex: 0,
         mistakes: 0,
         correct: false,
@@ -81,8 +92,8 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
     if (result === 'invalid') return state;
     const queue = [...session.queue];
     const sourceIndex = queue[session.exerciseIndex];
-    if (result === 'wrong' && !queue.slice(session.lesson.exercises.length).includes(sourceIndex))
-      queue.push(sourceIndex);
+    const played = playableIndices(session.lesson, session.difficulty).length;
+    if (result === 'wrong' && !queue.slice(played).includes(sourceIndex)) queue.push(sourceIndex);
     return {
       ...state,
       session: {
@@ -136,11 +147,12 @@ export function restoreLearningState(value: unknown): LearningState | null {
   const state = parsed.data;
   const s = state.session;
   if (s) {
-    const n = s.lesson.exercises.length;
+    const playable = playableIndices(s.lesson, s.difficulty);
+    const n = playable.length;
     if (
       s.queue.length < n ||
-      s.queue.some((i) => i >= n) ||
-      s.queue.slice(0, n).some((i, j) => i !== j) ||
+      s.queue.slice(0, n).some((i, j) => i !== playable[j]) ||
+      s.queue.slice(n).some((i) => !playable.includes(i)) ||
       new Set(s.queue.slice(n)).size !== s.queue.length - n ||
       s.exerciseIndex >= s.queue.length ||
       (s.finished &&

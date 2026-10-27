@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { exerciseWords, type GenerationInput, type GenerationOutput } from '@lingvohero/contracts';
 import { toCourseLesson, type AssetRef } from '../publishing/convert.js';
+import { wordLessonMix } from './mechanics/index.js';
 
 export type ReviewProblem = { lessonId: string | null; message: string };
 
@@ -22,13 +23,15 @@ export function reviewMaterial(
     placeholders.set(id, { id, sha256: createHash('sha256').update(key).digest('hex'), ext });
     return id;
   };
-  const total = output.lessons.reduce((sum, l) => sum + (l.document?.exercises.length ?? 0), 0);
+  // The closing sentence lesson is outside the requested number of exercises.
+  const wordLessons = output.lessons.filter((l) => l.kind !== 'sentences');
+  const total = wordLessons.reduce((sum, l) => sum + (l.document?.exercises.length ?? 0), 0);
   if (total !== input.totalExercises)
     problems.push({
       lessonId: null,
       message: `Получилось ${total} заданий вместо ${input.totalExercises}`,
     });
-  const requested = new Set(input.mix);
+  const requested = new Set(wordLessonMix(input.mix));
   const seen = new Set<string>();
   const usedWords = new Set<string>();
   for (const lesson of output.lessons) {
@@ -63,7 +66,12 @@ export function reviewMaterial(
       });
     const types = new Set(lesson.document.exercises.map((e) => e.type));
     const missing = [...requested].filter((t) => !types.has(t));
-    if (!translated && missing.length && lesson.document.exercises.length >= requested.size)
+    if (
+      !translated &&
+      lesson.kind !== 'sentences' &&
+      missing.length &&
+      lesson.document.exercises.length >= requested.size
+    )
       problems.push({
         lessonId: lesson.lessonId,
         message: `Не использованы механики: ${missing.join(', ')}`,
