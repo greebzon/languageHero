@@ -31,6 +31,7 @@ export default function WorldsScreen() {
     startLesson,
     startReview,
     canReview,
+    startBoss,
     loadingLesson,
     lessonError,
   } = useDemo();
@@ -51,6 +52,13 @@ export default function WorldsScreen() {
       return;
     }
     if (await startLesson(id)) router.push('/lesson');
+  }
+  async function challenge(courseId: string) {
+    if (resume && !resume.boss) {
+      setMessage(t('home.finishStarted'));
+      return;
+    }
+    if (await startBoss(courseId)) router.push('/lesson');
   }
   async function review() {
     if (resume && !resume.review) {
@@ -300,6 +308,20 @@ export default function WorldsScreen() {
                       onPress={() => (complete ? openCourse(course.id) : void start(card.next.id))}
                       style={s.playButton}
                     />
+                    {/* A finished set has its challenge (three hearts, a chest for the first win). */}
+                    {complete && (
+                      <ToyButton
+                        testID={`boss-${course.id}`}
+                        title={
+                          journal.bosses[course.id] ? t('home.bossAgain') : t('home.bossStart')
+                        }
+                        icon={journal.bosses[course.id] ? 'trophy' : 'flash'}
+                        tone={journal.bosses[course.id] ? 'light' : 'amber'}
+                        disabled={loadingLesson}
+                        onPress={() => void challenge(course.id)}
+                        style={s.playButton}
+                      />
+                    )}
                     {!complete && (
                       <Pressable
                         testID={`open-${course.id}`}

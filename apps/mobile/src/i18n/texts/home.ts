@@ -7,6 +7,8 @@ export const home = defineTexts({
     finishStarted:
       'Сначала закончим начатый урок. Кнопка «Продолжить урок» вернёт тебя на сохранённое место.',
     hello: 'Привет, {name}!',
+    bossStart: 'Испытание сета 👑',
+    bossAgain: 'Испытание ещё раз',
     review: {
       title: 'Повторение',
       text: 'Слова из пройденных уроков, каждый раз по-новому. Звёзды тоже считаются!',
@@ -56,6 +58,8 @@ export const home = defineTexts({
     finishStarted:
       'Let’s finish the lesson you started first. The «Continue lesson» button takes you back to where you stopped.',
     hello: 'Hi, {name}!',
+    bossStart: 'Set challenge 👑',
+    bossAgain: 'Challenge again',
     review: {
       title: 'Review',
       text: 'Words from your finished lessons, new every time. Stars count too!',
@@ -99,6 +103,8 @@ export const home = defineTexts({
     brandSub: 'מפת העולמות',
     finishStarted: 'קודם נסיים את השיעור שהתחלנו. הכפתור «להמשיך שיעור» יחזיר לאותו מקום.',
     hello: 'שלום, {name}!',
+    bossStart: 'אתגר הסט 👑',
+    bossAgain: 'שוב לאתגר',
     review: {
       title: 'חזרה',
       text: 'מילים מהשיעורים שהושלמו, בכל פעם אחרת. גם כאן מקבלים כוכבים!',

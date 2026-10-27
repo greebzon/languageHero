@@ -24,6 +24,10 @@ test('the set challenge opens after the set, crowns it with a chest, and can be 
     for (const exercise of lesson.exercises) await solve(page, exercise, lesson);
     await page.getByTestId('back-to-map').click();
   }
+  // The finished set's card on the home screen offers its challenge.
+  await page.getByTestId('boss-en-forest').scrollIntoViewIfNeeded();
+  await expect(page.getByTestId('boss-en-forest')).toBeVisible();
+  await page.screenshot({ path: 'test-results/boss-home.png' });
   await page.getByTestId('open-en-forest').click();
   await expect(page.getByTestId('boss-card')).toContainText('Испытание сета');
   await page.screenshot({ path: 'test-results/boss-card.png', fullPage: true });
