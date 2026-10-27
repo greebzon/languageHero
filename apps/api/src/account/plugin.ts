@@ -217,6 +217,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         language: user.language,
         languages: user.languages ?? [],
         locale: user.uiLocale ?? null,
+        birthYear: user.birthYear ?? null,
         onboarded: !!user.onboarded,
         legacyImported: !!user.legacyImported,
         ...progress,
@@ -477,6 +478,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.avatar !== undefined ? { avatar: input.avatar } : {}),
         ...(input.locale !== undefined ? { uiLocale: input.locale } : {}),
+        ...(input.birthYear !== undefined ? { birthYear: input.birthYear } : {}),
         language,
         languages,
         // The welcome screen sends the name and the mascot together: that ends the onboarding.

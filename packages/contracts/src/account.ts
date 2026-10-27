@@ -6,9 +6,13 @@ export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 /* A mascot id from the shop catalog (the app bundles fox/bear/rabbit/owl as fallback). */
 export const avatarSchema = z.string().regex(/^[a-z][a-z0-9-]{0,39}$/);
 export const languageCodeSchema = z.string().regex(/^[a-z0-9-]{1,80}$/);
+/* The child's age is stored as a birth year (computed from the age they tap), so it grows by
+   itself; it picks how much help «Собери слово» gives (`spellingHelp` in learning-core). */
+export const birthYearSchema = z.number().int().min(2000).max(2100);
 /* `PATCH /me`: any subset. The welcome screen sends name + avatar (that completes the
    onboarding); the language picker sends `language` (the current one, added to `languages`
-   when new); the profile sends `locale` (the interface language). */
+   when new); the profile sends `locale` (the interface language); the age question sends
+   `birthYear`. */
 export const profileInputSchema = z
   .object({
     name: z.string().trim().min(1).max(30).optional(),
@@ -16,10 +20,11 @@ export const profileInputSchema = z
     language: languageCodeSchema.optional(),
     languages: z.array(languageCodeSchema).min(1).max(10).optional(),
     locale: localeSchema.optional(),
+    birthYear: birthYearSchema.optional(),
   })
   .refine((p) => Object.values(p).some((v) => v !== undefined), { message: 'Пустой запрос.' });
-/* The profile as the app caches it; `languages`/`locale` are absent in caches from older
-   app versions. */
+/* The profile as the app caches it; `languages`/`locale`/`birthYear` are absent in caches from
+   older app versions. */
 export const profileSnapshotSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -27,6 +32,7 @@ export const profileSnapshotSchema = z.object({
   language: languageCodeSchema,
   languages: z.array(languageCodeSchema).default([]),
   locale: localeSchema.nullable().default(null),
+  birthYear: birthYearSchema.nullable().default(null),
   onboarded: z.boolean(),
 });
 export const attemptSchema = z.object({
@@ -93,6 +99,8 @@ export type AccountProfile = {
   languages: string[];
   /** The interface language the child chose; null = the device language. */
   locale: Locale | null;
+  /** Null until the child answers «Сколько тебе лет?». */
+  birthYear: number | null;
   onboarded: boolean;
   legacyImported: boolean;
   unlockedMascotIds: string[];

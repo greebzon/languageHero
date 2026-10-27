@@ -39,6 +39,16 @@ export const welcome = defineTexts({
     noAccess: 'Нет доступа к почте?',
     backToSaved: 'Вернуться к сохранённым урокам',
     footer: 'Без пароля: код из письма действует 10 минут',
+    age: {
+      title: 'Сколько тебе лет?',
+      hint: 'Тим подберёт задания тебе по силам',
+      years: {
+        one: '{n} год',
+        few: '{n} года',
+        many: '{n} лет',
+        other: '{n} года',
+      },
+    },
     picker: {
       active: 'Активен ✨',
       selected: 'Выбран ✨',
@@ -84,6 +94,11 @@ export const welcome = defineTexts({
     noAccess: 'Can’t open your email?',
     backToSaved: 'Back to saved lessons',
     footer: 'No password: the code from the email works for 10 minutes',
+    age: {
+      title: 'How old are you?',
+      hint: 'Tim will pick tasks that are just right for you',
+      years: { one: '{n} year old', other: '{n} years old' },
+    },
     picker: {
       active: 'Active ✨',
       selected: 'Chosen ✨',
@@ -131,6 +146,11 @@ export const welcome = defineTexts({
     noAccess: 'אין גישה לאימייל?',
     backToSaved: 'חזרה לשיעורים השמורים',
     footer: 'בלי סיסמה: הקוד מהמייל תקף 10 דקות',
+    age: {
+      title: 'מה הגיל שלך?',
+      hint: 'טים יבחר משימות שמתאימות בדיוק לך',
+      years: { one: 'שנה אחת', two: 'שנתיים', other: '{n} שנים' },
+    },
     picker: {
       active: 'פעיל ✨',
       selected: 'נבחר ✨',

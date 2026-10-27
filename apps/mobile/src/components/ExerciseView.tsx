@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import type { Answer, CourseExercise, CourseLesson } from '@lingvohero/contracts';
+import { spellingTiles, type SpellingHelp } from '@lingvohero/learning-core';
 import { Heading, Label, ToyButton } from './ui';
 import { LessonImage } from './LessonImage';
 import { AudioControl } from './AudioControl';
@@ -15,14 +16,24 @@ export function ExerciseView({
   draft,
   correct,
   onChange,
+  help = 'self',
 }: {
   lesson: CourseLesson;
   exercise: CourseExercise;
   draft: Answer | null;
   correct: boolean;
   onChange: (answer: Answer | null) => void;
+  /** «Собери слово» for a child who cannot read yet: see `spellingHelp`. */
+  help?: SpellingHelp;
 }) {
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  // «По образцу»: the tile that did not fit flashes instead of landing in the word.
+  const [miss, setMiss] = useState<string | null>(null);
+  useEffect(() => {
+    if (!miss) return;
+    const timer = setTimeout(() => setMiss(null), 1500);
+    return () => clearTimeout(timer);
+  }, [miss]);
   const { width } = useWindowDimensions();
   const { fullCatalog } = useDemo();
   const { t, locale } = useT();
@@ -143,14 +154,88 @@ export function ExerciseView({
     );
   }
   const chosen = draft && 'tileIds' in draft ? draft.tileIds : [];
+  const letterOf = (id: string) => exercise.tiles.find((tile) => tile.id === id)!.letter;
+  const target = word(exercise.wordId);
+  const picture = (
+    <>
+      <View style={{ alignItems: 'center' }}>
+        <LessonImage lesson={lesson} id={target.imageId} size={110} />
+        {translated && <Label>{target.translation}</Label>}
+      </View>
+      <AudioControl lesson={lesson} audioId={target.audioId} />
+    </>
+  );
+  const restart = !correct && (
+    <ToyButton title={t('exercise.restart')} tone="light" onPress={() => onChange(null)} />
+  );
+  if (help === 'model') {
+    // The word stands in faded letters, one slot each; only its own tiles are offered and a tile
+    // lands only on the slot that shows the same letter. The answer is the same `tileIds`, so
+    // `assess` and the server's replay need nothing new.
+    const letters = Array.from(target.spelling.normalize('NFC'));
+    const next = letters[chosen.length];
+    return (
+      <>
+        <Label style={s.instructions}>{t('exercise.buildModel')}</Label>
+        {picture}
+        <View style={[s.answer, direction]} accessibilityLabel={t('exercise.built')}>
+          {letters.map((letter, index) => {
+            const placed = chosen[index];
+            return (
+              <View
+                key={index}
+                testID={`slot-${index}`}
+                accessible
+                accessibilityLabel={t('exercise.modelSlot', {
+                  position: index + 1,
+                  letter: placed ? letterOf(placed) : letter,
+                })}
+                style={[
+                  s.tile,
+                  s.slot,
+                  placed ? s.placed : index === chosen.length && !correct && s.nextSlot,
+                ]}
+              >
+                <Heading style={!placed && s.ghost}>{placed ? letterOf(placed) : letter}</Heading>
+              </View>
+            );
+          })}
+        </View>
+        <Label accessibilityLiveRegion="polite" style={s.miss}>
+          {miss ? t('exercise.otherLetter') : ' '}
+        </Label>
+        <View style={[s.tiles, direction]}>
+          {spellingTiles(exercise, target.spelling).map((tile) => (
+            <Pressable
+              key={tile.id}
+              testID={`letter-${tile.id}`}
+              accessibilityRole="button"
+              accessibilityLabel={t('exercise.letter', { letter: tile.letter })}
+              accessibilityState={{ disabled: correct || chosen.includes(tile.id) }}
+              disabled={correct || chosen.includes(tile.id)}
+              onPress={() => {
+                if (tile.letter.normalize('NFC') !== next) return setMiss(tile.id);
+                setMiss(null);
+                onChange({ tileIds: [...chosen, tile.id] });
+              }}
+              style={[
+                s.tile,
+                chosen.includes(tile.id) && { opacity: 0.25 },
+                miss === tile.id && s.missed,
+              ]}
+            >
+              <Heading>{tile.letter}</Heading>
+            </Pressable>
+          ))}
+        </View>
+        {restart}
+      </>
+    );
+  }
   return (
     <>
       <Label style={s.instructions}>{t('exercise.build')}</Label>
-      <View style={{ alignItems: 'center' }}>
-        <LessonImage lesson={lesson} id={word(exercise.wordId).imageId} size={110} />
-        {translated && <Label>{word(exercise.wordId).translation}</Label>}
-      </View>
-      <AudioControl lesson={lesson} audioId={word(exercise.wordId).audioId} />
+      {picture}
       <View style={[s.answer, direction]} accessibilityLabel={t('exercise.built')}>
         {chosen.length === 0 && (
           <Label style={{ color: colors.muted }}>{t('exercise.placeholder')}</Label>
@@ -161,14 +246,14 @@ export function ExerciseView({
             testID={`chosen-${id}`}
             accessibilityRole="button"
             accessibilityLabel={t('exercise.removeLetter', {
-              letter: exercise.tiles.find((tile) => tile.id === id)!.letter,
+              letter: letterOf(id),
               position: index + 1,
             })}
             disabled={correct}
             onPress={() => onChange({ tileIds: chosen.filter((t) => t !== id) })}
             style={[s.tile, s.selected]}
           >
-            <Heading>{exercise.tiles.find((tile) => tile.id === id)!.letter}</Heading>
+            <Heading>{letterOf(id)}</Heading>
           </Pressable>
         ))}
       </View>
@@ -188,9 +273,7 @@ export function ExerciseView({
           </Pressable>
         ))}
       </View>
-      {!correct && (
-        <ToyButton title={t('exercise.restart')} tone="light" onPress={() => onChange(null)} />
-      )}
+      {restart}
     </>
   );
 }
@@ -260,4 +343,10 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
+  slot: { borderBottomWidth: 2, borderStyle: 'dashed', borderColor: '#B9C6D6' },
+  nextSlot: { borderColor: colors.sky, borderStyle: 'solid', backgroundColor: '#EDF8FF' },
+  placed: { borderColor: colors.green, borderStyle: 'solid', borderBottomWidth: 4 },
+  ghost: { color: '#B9C6D6' },
+  miss: { textAlign: 'center', fontSize: 13, color: colors.coral, marginTop: 8 },
+  missed: { borderColor: colors.coral, backgroundColor: colors.cream },
 });

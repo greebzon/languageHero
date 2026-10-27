@@ -9,6 +9,7 @@ import { FriendProgress } from '../../src/components/FriendProgress';
 import { StatsCard } from '../../src/components/StatsCard';
 import { useAccount } from '../../src/account/AccountProvider';
 import { AccountSettings } from '../../src/account/AccountSettings';
+import { AgeSetting } from '../../src/account/AgeSetting';
 import { useDemo } from '../../src/state/DemoProvider';
 import { useT } from '../../src/i18n';
 import { languageName, mascotText } from '../../src/i18n/content';
@@ -54,6 +55,7 @@ export default function ProfileScreen() {
         <Label style={s.settingDescription}>{t('profile.levelNote')}</Label>
         <StatsCard stats={stats} />
         <Heading style={s.section}>{t('profile.comfort')}</Heading>
+        <AgeSetting />
         <View style={s.setting}>
           <View style={s.settingIcon}>
             <Icon name="volume-medium-outline" />

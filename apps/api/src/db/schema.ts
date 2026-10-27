@@ -48,6 +48,8 @@ export const learnerAccounts = pgTable(
     languages: jsonb('languages').$type<string[]>().notNull().default([]),
     /** Interface language the child chose (ru/en/he); null = the device language. */
     uiLocale: text('ui_locale').$type<Locale>(),
+    /** From the age the child tapped; picks the help in «Собери слово». Null = not asked yet. */
+    birthYear: integer('birth_year'),
     onboarded: integer('onboarded').notNull().default(0),
     recoveryHash: text('recovery_hash'),
     legacyImported: integer('legacy_imported').notNull().default(0),

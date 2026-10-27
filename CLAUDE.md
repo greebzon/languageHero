@@ -59,6 +59,10 @@ One account belongs to one child with their own email address. Parents do not pa
 
 Implemented in `learning-core/src/levels.ts`, `api/src/account/progression.ts` and `mobile/app/friends.tsx`. The first lesson gives 100 XP; cumulative level thresholds are 0, 100, 300, 600, 1000, then +500. No repeat XP or extra level coins. Tim is always open; default unlocks are rabbit 3, bear 5, owl 8. The admin edits `unlockLevel`; server-owned `learner_mascots` grants persist and `PATCH /account/me` checks avatar access. Migration 0009 preserves existing selected mascots and old levels; `ACCOUNT_LEVEL_STEP` is now only the legacy migration setting. UI strings must cover ru/en/he. See [rules](docs/LEVELS_AND_MASCOTS.md).
 
+## Age and spelling help
+
+`learner_accounts.birth_year` (migration `0013`) comes from «Сколько тебе лет?». `LaunchGate` asks it before the language picker, also once for older accounts, and the profile can change it. `learning-core/src/spelling.ts` derives `spellingHelp`: up to age 6 it gives `model`, where `ExerciseView` shows the word as faded letters in slots, offers only the word's own tiles (`spellingTiles`) and refuses a tile that does not match the next slot. The answer stays the same `tileIds`, so `assess` and the server replay are unchanged. The e2e `signIn(page, email, age = 8)` answers the question. See [roadmap 8.2](docs/ROADMAP.md).
+
 ## Architecture
 
 pnpm workspace (`nodeLinker: hoisted`). The workspace packages export raw TypeScript source (`"exports": "./src/index.ts"`), so there is no build step for them.

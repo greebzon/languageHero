@@ -19,6 +19,10 @@ export const settings = defineTexts({
     companion: 'Твой спутник',
     saveProfile: 'Сохранить профиль',
     profileSaved: 'Профиль сохранён.',
+    age: {
+      title: 'Возраст',
+      hint: 'До 7 лет Тим показывает, как пишется слово, и даёт только нужные буквы',
+    },
     locale: {
       title: 'Язык приложения',
       hint: 'Меню, подсказки и задания будут на этом языке',
@@ -79,6 +83,10 @@ export const settings = defineTexts({
     companion: 'Your buddy',
     saveProfile: 'Save profile',
     profileSaved: 'Profile saved.',
+    age: {
+      title: 'Age',
+      hint: 'Up to age 7 Tim shows how the word is written and gives only the letters it needs',
+    },
     locale: {
       title: 'App language',
       hint: 'Menus, hints and tasks will be in this language',
@@ -139,6 +147,10 @@ export const settings = defineTexts({
     companion: 'חבר המסע',
     saveProfile: 'לשמור את הפרופיל',
     profileSaved: 'הפרופיל נשמר.',
+    age: {
+      title: 'גיל',
+      hint: 'עד גיל 7 טים מראה איך כותבים את המילה ונותן רק את האותיות שצריך',
+    },
     locale: {
       title: 'שפת האפליקציה',
       hint: 'התפריטים, הרמזים והמשימות יהיו בשפה הזאת',

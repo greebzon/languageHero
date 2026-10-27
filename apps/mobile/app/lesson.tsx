@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
-import { assess } from '@lingvohero/learning-core';
+import { assess, spellingHelp } from '@lingvohero/learning-core';
 import { useDemo } from '../src/state/DemoProvider';
 import { Heading, Icon, Label, Progress, ToyButton } from '../src/components/ui';
 import { ExerciseView } from '../src/components/ExerciseView';
@@ -107,6 +107,7 @@ export default function LessonScreen() {
             exercise={exercise}
             draft={session.draft}
             correct={correct}
+            help={spellingHelp(account!.profile.birthYear, new Date())}
             onChange={(answer) => {
               dispatch({ type: 'draft', answer });
               setWrong(false);
