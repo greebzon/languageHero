@@ -3,7 +3,7 @@
     "name": "ЛингвоГерой",
     "slug": "lingvohero",
     "scheme": "lingvohero",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/images/tim.png",
@@ -14,7 +14,7 @@
     "android": {
       "package": "com.lingvohero.app",
       "allowBackup": false,
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "bundler": "metro",
