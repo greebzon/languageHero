@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "revision": 13,
+  "revision": 15,
   "languages": [
     {
       "code": "en",
@@ -106,6 +106,100 @@
           "title": "Праздник в лесу",
           "titles": {
             "en": "A Party in the Forest",
+            "he": "מסיבה ביער"
+          },
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "build-word",
+            "match-pairs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "he-zagadochnyy-les-x8yl",
+      "language": "he",
+      "title": "Загадочный лес",
+      "description": "Слушаем, играем и учим слова",
+      "cover": {
+        "id": "zagadochnyy-les-x8yl-cover",
+        "path": "/v1/media/8ec735ed253cb35bcff391345345c802a749edceb1b349308297a2838fc2870b.png",
+        "kind": "image"
+      },
+      "texts": {
+        "en": {
+          "title": "Magic Forest",
+          "description": "Listen, play, and learn words"
+        },
+        "he": {
+          "title": "יער קסום",
+          "description": "להקשיב, לשחק וללמוד מילים"
+        }
+      },
+      "locales": [
+        "ru",
+        "en",
+        "he"
+      ],
+      "lessons": [
+        {
+          "id": "he-zagadochnyy-les-x8yl-01",
+          "version": 1,
+          "title": "Лесные друзья",
+          "titles": {
+            "en": "Forest Friends",
+            "he": "חברי היער"
+          },
+          "exerciseCount": 6,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "he-zagadochnyy-les-x8yl-02",
+          "version": 1,
+          "title": "Кто спрятался?",
+          "titles": {
+            "en": "Who Is Hiding?",
+            "he": "מי מסתתר?"
+          },
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "listen-and-select"
+          ]
+        },
+        {
+          "id": "he-zagadochnyy-les-x8yl-03",
+          "version": 1,
+          "title": "Найди пары",
+          "titles": {
+            "en": "Find the Pairs",
+            "he": "למצוא זוגות"
+          },
+          "exerciseCount": 3,
+          "requiredTypes": [
+            "match-pairs"
+          ]
+        },
+        {
+          "id": "he-zagadochnyy-les-x8yl-04",
+          "version": 1,
+          "title": "Собери слова",
+          "titles": {
+            "en": "Build Words",
+            "he": "בונים מילים"
+          },
+          "exerciseCount": 4,
+          "requiredTypes": [
+            "build-word"
+          ]
+        },
+        {
+          "id": "he-zagadochnyy-les-x8yl-05",
+          "version": 1,
+          "title": "Праздник в лесу",
+          "titles": {
+            "en": "Forest Party",
             "he": "מסיבה ביער"
           },
           "exerciseCount": 6,

@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 2,
+  "id": "he-zagadochnyy-les-x8yl-03",
+  "version": 1,
+  "language": "he",
+  "title": "Найди пары",
+  "texts": {
+    "en": {
+      "title": "Find the Pairs",
+      "exercises": {
+        "match-0": {
+          "prompt": "Find the pair for each word",
+          "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+        },
+        "match-1": {
+          "prompt": "Find the pair for each word",
+          "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+        },
+        "match-2": {
+          "prompt": "Find the pair for each word",
+          "hint": "Tap a word on the left, then its picture on the right. You can change any pair."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "Fox"
+        },
+        "owl": {
+          "translation": "Owl"
+        },
+        "bear": {
+          "translation": "Bear"
+        },
+        "rabbit": {
+          "translation": "Rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "למצוא זוגות",
+      "exercises": {
+        "match-0": {
+          "prompt": "למצוא זוג לכל מילה",
+          "hint": "לבחור מילה משמאל, ואז את התמונה שלה מימין. אפשר לשנות כל זוג."
+        },
+        "match-1": {
+          "prompt": "למצוא זוג לכל מילה",
+          "hint": "לבחור מילה משמאל, ואז את התמונה שלה מימין. אפשר לשנות כל זוג."
+        },
+        "match-2": {
+          "prompt": "למצוא זוג לכל מילה",
+          "hint": "לבחור מילה משמאל, ואז את התמונה שלה מימין. אפשר לשנות כל זוג."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "שועל",
+      "spelling": "שועל",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "דוב",
+      "spelling": "דוב",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "ארנב",
+      "spelling": "ארנב",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "ינשוף",
+      "spelling": "ינשוף",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/c0cda8013b189d21a16fbdb6faf96a56b702c793c6e9f38393ca3d10756864df.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/a114eb61bd6e0da3fe4a8bd7620dceae7e447cfe314908353ee5da2ecdeda227.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/c7d2813d5db28b58bb56d3db791cc84fe42287a5dad2224075777957f2eb553d.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/bd566535459abf8a625b33a3c7d3ce0f617dd9bb48c33b0459b3420db6eb6b51.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "match-0",
+      "prompt": "Найди пару каждому слову",
+      "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fox",
+        "bear"
+      ],
+      "imageOrder": [
+        "bear",
+        "fox"
+      ]
+    },
+    {
+      "id": "match-1",
+      "prompt": "Найди пару каждому слову",
+      "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "bear",
+        "rabbit",
+        "owl"
+      ],
+      "imageOrder": [
+        "rabbit",
+        "owl",
+        "bear"
+      ]
+    },
+    {
+      "id": "match-2",
+      "prompt": "Найди пару каждому слову",
+      "hint": "Нажми на слово слева, затем на его картинку справа. Можно поменять любую пару.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fox",
+        "bear",
+        "rabbit",
+        "owl"
+      ],
+      "imageOrder": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ]
+    }
+  ]
+}

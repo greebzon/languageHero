@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 2,
+  "id": "he-zagadochnyy-les-x8yl-01",
+  "version": 1,
+  "language": "he",
+  "title": "Лесные друзья",
+  "texts": {
+    "en": {
+      "title": "Forest Friends",
+      "exercises": {
+        "listen-0": {
+          "prompt": "Listen and find the animal",
+          "hint": "This animal has red fur and a fluffy tail."
+        },
+        "listen-1": {
+          "prompt": "Listen and find the animal",
+          "hint": "A big forest animal with round ears."
+        },
+        "listen-2": {
+          "prompt": "Listen and find the animal",
+          "hint": "This animal has long ears. It can jump!"
+        },
+        "listen-3": {
+          "prompt": "Listen and find the animal",
+          "hint": "This bird has big eyes and can see well in the dark."
+        },
+        "listen-4": {
+          "prompt": "Listen and find the animal",
+          "hint": "A big forest animal with round ears."
+        },
+        "listen-5": {
+          "prompt": "Listen and find the animal",
+          "hint": "This animal has red fur and a fluffy tail."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "Fox"
+        },
+        "owl": {
+          "translation": "Owl"
+        },
+        "bear": {
+          "translation": "Bear"
+        },
+        "rabbit": {
+          "translation": "Rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "חברי היער",
+      "exercises": {
+        "listen-0": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "לחיה הזאת יש פרווה כתומה וזנב פרוותי."
+        },
+        "listen-1": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "חיית יער גדולה עם אוזניים עגולות."
+        },
+        "listen-2": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "לחיה הזאת יש אוזניים ארוכות. היא יודעת לקפוץ!"
+        },
+        "listen-3": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "לציפור הזאת יש עיניים גדולות והיא רואה טוב בחושך."
+        },
+        "listen-4": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "חיית יער גדולה עם אוזניים עגולות."
+        },
+        "listen-5": {
+          "prompt": "להקשיב ולמצוא את החיה",
+          "hint": "לחיה הזאת יש פרווה כתומה וזנב פרוותי."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "שועל",
+      "spelling": "שועל",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "דוב",
+      "spelling": "דוב",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "ארנב",
+      "spelling": "ארנב",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "ינשוף",
+      "spelling": "ינשוף",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/c0cda8013b189d21a16fbdb6faf96a56b702c793c6e9f38393ca3d10756864df.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/a114eb61bd6e0da3fe4a8bd7620dceae7e447cfe314908353ee5da2ecdeda227.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/c7d2813d5db28b58bb56d3db791cc84fe42287a5dad2224075777957f2eb553d.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/bd566535459abf8a625b33a3c7d3ce0f617dd9bb48c33b0459b3420db6eb6b51.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "listen-0",
+      "prompt": "Послушай и найди зверька",
+      "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+      "type": "listen-and-select",
+      "wordId": "fox",
+      "choices": [
+        "fox",
+        "bear",
+        "rabbit",
+        "owl"
+      ]
+    },
+    {
+      "id": "listen-1",
+      "prompt": "Послушай и найди зверька",
+      "hint": "Большой лесной зверь с круглыми ушами.",
+      "type": "listen-and-select",
+      "wordId": "bear",
+      "choices": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ]
+    },
+    {
+      "id": "listen-2",
+      "prompt": "Послушай и найди зверька",
+      "hint": "У этого зверька длинные ушки. Он умеет прыгать!",
+      "type": "listen-and-select",
+      "wordId": "rabbit",
+      "choices": [
+        "rabbit",
+        "owl",
+        "fox",
+        "bear"
+      ]
+    },
+    {
+      "id": "listen-3",
+      "prompt": "Послушай и найди зверька",
+      "hint": "Эта птица с большими глазами хорошо видит в темноте.",
+      "type": "listen-and-select",
+      "wordId": "owl",
+      "choices": [
+        "owl",
+        "fox",
+        "bear",
+        "rabbit"
+      ]
+    },
+    {
+      "id": "listen-4",
+      "prompt": "Послушай и найди зверька",
+      "hint": "Большой лесной зверь с круглыми ушами.",
+      "type": "listen-and-select",
+      "wordId": "bear",
+      "choices": [
+        "fox",
+        "bear",
+        "rabbit",
+        "owl"
+      ]
+    },
+    {
+      "id": "listen-5",
+      "prompt": "Послушай и найди зверька",
+      "hint": "У этого зверька рыжая шубка и пушистый хвост.",
+      "type": "listen-and-select",
+      "wordId": "fox",
+      "choices": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ]
+    }
+  ]
+}

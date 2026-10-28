@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 2,
+  "id": "he-zagadochnyy-les-x8yl-04",
+  "version": 1,
+  "language": "he",
+  "title": "Собери слова",
+  "texts": {
+    "en": {
+      "title": "Build Words",
+      "exercises": {
+        "spell-0": {
+          "prompt": "Build the animal's name in Hebrew",
+          "hint": "It is a fox. Tap a chosen letter to put it back."
+        },
+        "spell-1": {
+          "prompt": "Build the animal's name in Hebrew",
+          "hint": "It is a bear. Tap a chosen letter to put it back."
+        },
+        "spell-2": {
+          "prompt": "Build the animal's name in Hebrew",
+          "hint": "It is a rabbit. Tap a chosen letter to put it back."
+        },
+        "spell-3": {
+          "prompt": "Build the animal's name in Hebrew",
+          "hint": "It is an owl. Tap a chosen letter to put it back."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "Fox"
+        },
+        "owl": {
+          "translation": "Owl"
+        },
+        "bear": {
+          "translation": "Bear"
+        },
+        "rabbit": {
+          "translation": "Rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "בונים מילים",
+      "exercises": {
+        "spell-0": {
+          "prompt": "לבנות את שם החיה בעברית",
+          "hint": "זו שועלה. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-1": {
+          "prompt": "לבנות את שם החיה בעברית",
+          "hint": "זה דוב. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-2": {
+          "prompt": "לבנות את שם החיה בעברית",
+          "hint": "זה ארנב. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-3": {
+          "prompt": "לבנות את שם החיה בעברית",
+          "hint": "זו ינשופה. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "שועל",
+      "spelling": "שועל",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "דוב",
+      "spelling": "דוב",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "ארנב",
+      "spelling": "ארנב",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "ינשוף",
+      "spelling": "ינשוף",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/c0cda8013b189d21a16fbdb6faf96a56b702c793c6e9f38393ca3d10756864df.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/a114eb61bd6e0da3fe4a8bd7620dceae7e447cfe314908353ee5da2ecdeda227.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/c7d2813d5db28b58bb56d3db791cc84fe42287a5dad2224075777957f2eb553d.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/bd566535459abf8a625b33a3c7d3ce0f617dd9bb48c33b0459b3420db6eb6b51.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "spell-0",
+      "prompt": "Собери название зверька на иврите",
+      "hint": "Это лиса. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "fox",
+      "tiles": [
+        {
+          "id": "t6",
+          "letter": "ג"
+        },
+        {
+          "id": "t4",
+          "letter": "ל"
+        },
+        {
+          "id": "t1",
+          "letter": "ש"
+        },
+        {
+          "id": "t3",
+          "letter": "ע"
+        },
+        {
+          "id": "t5",
+          "letter": "ב"
+        },
+        {
+          "id": "t2",
+          "letter": "ו"
+        }
+      ]
+    },
+    {
+      "id": "spell-1",
+      "prompt": "Собери название зверька на иврите",
+      "hint": "Это медведь. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "bear",
+      "tiles": [
+        {
+          "id": "t4",
+          "letter": "א"
+        },
+        {
+          "id": "t3",
+          "letter": "ב"
+        },
+        {
+          "id": "t2",
+          "letter": "ו"
+        },
+        {
+          "id": "t1",
+          "letter": "ד"
+        },
+        {
+          "id": "t5",
+          "letter": "ג"
+        }
+      ]
+    },
+    {
+      "id": "spell-2",
+      "prompt": "Собери название зверька на иврите",
+      "hint": "Это кролик. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "rabbit",
+      "tiles": [
+        {
+          "id": "t3",
+          "letter": "נ"
+        },
+        {
+          "id": "t4",
+          "letter": "ב"
+        },
+        {
+          "id": "t5",
+          "letter": "ד"
+        },
+        {
+          "id": "t6",
+          "letter": "ה"
+        },
+        {
+          "id": "t2",
+          "letter": "ר"
+        },
+        {
+          "id": "t1",
+          "letter": "א"
+        }
+      ]
+    },
+    {
+      "id": "spell-3",
+      "prompt": "Собери название зверька на иврите",
+      "hint": "Это сова. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "owl",
+      "tiles": [
+        {
+          "id": "t5",
+          "letter": "ף"
+        },
+        {
+          "id": "t7",
+          "letter": "ב"
+        },
+        {
+          "id": "t4",
+          "letter": "ו"
+        },
+        {
+          "id": "t2",
+          "letter": "נ"
+        },
+        {
+          "id": "t6",
+          "letter": "א"
+        },
+        {
+          "id": "t1",
+          "letter": "י"
+        },
+        {
+          "id": "t3",
+          "letter": "ש"
+        }
+      ]
+    }
+  ]
+}

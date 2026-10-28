@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 2,
+  "id": "he-zagadochnyy-les-x8yl-05",
+  "version": 1,
+  "language": "he",
+  "title": "Праздник в лесу",
+  "presentation": {
+    "intro": "Помоги Тиму устроить праздник: проверь гостей и подпиши приглашения!",
+    "completionTitle": "Праздник удался!",
+    "completionMessage": "Все приглашения подписаны, и лесные друзья собрались вместе. Ты помог Тиму устроить праздник!"
+  },
+  "texts": {
+    "en": {
+      "title": "Forest Party",
+      "presentation": {
+        "intro": "Help Tim throw a party: check the guests and sign the invitations!",
+        "completionTitle": "The Party Was a Success!",
+        "completionMessage": "All the invitations are signed, and the forest friends are together. You helped Tim throw a party!"
+      },
+      "exercises": {
+        "match-0": {
+          "prompt": "Check the guest list",
+          "hint": "There are three guests on the list. Match each name in Hebrew to its owner."
+        },
+        "match-3": {
+          "prompt": "Hand out the name invitations",
+          "hint": "The invitations have names in Hebrew. Find who each invitation belongs to."
+        },
+        "spell-1": {
+          "prompt": "Sign an invitation for the bear",
+          "hint": "Build the bear's name in Hebrew. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-2": {
+          "prompt": "Invite the rabbit to the party",
+          "hint": "Build the rabbit's name in Hebrew. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-4": {
+          "prompt": "Sign an invitation for the owl",
+          "hint": "Build the owl's name in Hebrew. Not all letters are needed. Tap a chosen letter to put it back."
+        },
+        "spell-5": {
+          "prompt": "All that is left is to invite the fox!",
+          "hint": "Build the fox's name in Hebrew. Not all letters are needed. Tap a chosen letter to put it back."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "Fox"
+        },
+        "owl": {
+          "translation": "Owl"
+        },
+        "bear": {
+          "translation": "Bear"
+        },
+        "rabbit": {
+          "translation": "Rabbit"
+        }
+      }
+    },
+    "he": {
+      "title": "מסיבה ביער",
+      "presentation": {
+        "intro": "עזרו לטים לערוך מסיבה: לבדוק את האורחים ולכתוב על ההזמנות!",
+        "completionTitle": "המסיבה הצליחה!",
+        "completionMessage": "כל ההזמנות נחתמו, וחברי היער התאספו יחד. עזרתם לטים לערוך מסיבה!"
+      },
+      "exercises": {
+        "match-0": {
+          "prompt": "לבדוק את רשימת האורחים",
+          "hint": "ברשימה יש שלושה אורחים. לחבר כל שם בעברית לחיה המתאימה."
+        },
+        "match-3": {
+          "prompt": "לחלק הזמנות עם שמות",
+          "hint": "על ההזמנות כתובים שמות בעברית. למצוא למי שייכת כל הזמנה."
+        },
+        "spell-1": {
+          "prompt": "לכתוב על ההזמנה לדוב",
+          "hint": "לבנות את השם של הדוב בעברית. לא כל האותיות מתאימות. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-2": {
+          "prompt": "להזמין את הארנב למסיבה",
+          "hint": "לבנות את השם של הארנב בעברית. לא כל האותיות מתאימות. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-4": {
+          "prompt": "לכתוב על ההזמנה לינשוף",
+          "hint": "לבנות את השם של הינשוף בעברית. לא כל האותיות מתאימות. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        },
+        "spell-5": {
+          "prompt": "נשאר להזמין את השועל!",
+          "hint": "לבנות את השם של השועל בעברית. לא כל האותיות מתאימות. ללחוץ על אות שנבחרה כדי להחזיר אותה."
+        }
+      },
+      "words": {
+        "fox": {
+          "translation": "שועל"
+        },
+        "owl": {
+          "translation": "ינשוף"
+        },
+        "bear": {
+          "translation": "דוב"
+        },
+        "rabbit": {
+          "translation": "ארנב"
+        }
+      }
+    }
+  },
+  "words": [
+    {
+      "id": "fox",
+      "text": "שועל",
+      "spelling": "שועל",
+      "translation": "Лиса",
+      "imageId": "fox-image",
+      "audioId": "fox-audio"
+    },
+    {
+      "id": "bear",
+      "text": "דוב",
+      "spelling": "דוב",
+      "translation": "Медведь",
+      "imageId": "bear-image",
+      "audioId": "bear-audio"
+    },
+    {
+      "id": "rabbit",
+      "text": "ארנב",
+      "spelling": "ארנב",
+      "translation": "Кролик",
+      "imageId": "rabbit-image",
+      "audioId": "rabbit-audio"
+    },
+    {
+      "id": "owl",
+      "text": "ינשוף",
+      "spelling": "ינשוף",
+      "translation": "Сова",
+      "imageId": "owl-image",
+      "audioId": "owl-audio"
+    }
+  ],
+  "media": [
+    {
+      "id": "fox-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "fox-audio",
+      "path": "/v1/media/c0cda8013b189d21a16fbdb6faf96a56b702c793c6e9f38393ca3d10756864df.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "bear-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "bear-audio",
+      "path": "/v1/media/a114eb61bd6e0da3fe4a8bd7620dceae7e447cfe314908353ee5da2ecdeda227.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "rabbit-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 0,
+        "row": 1
+      }
+    },
+    {
+      "id": "rabbit-audio",
+      "path": "/v1/media/c7d2813d5db28b58bb56d3db791cc84fe42287a5dad2224075777957f2eb553d.wav",
+      "kind": "audio"
+    },
+    {
+      "id": "owl-image",
+      "path": "/v1/media/bcdc5f9f5c6b364ae7ac81047fd2e5a1855bd9a4d8ff921eedf595e8c05e388e.png",
+      "kind": "image",
+      "region": {
+        "columns": 2,
+        "rows": 2,
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "owl-audio",
+      "path": "/v1/media/bd566535459abf8a625b33a3c7d3ce0f617dd9bb48c33b0459b3420db6eb6b51.wav",
+      "kind": "audio"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "match-0",
+      "prompt": "Проверь список гостей",
+      "hint": "В списке три гостя. Соедини каждое имя на иврите с его владельцем.",
+      "type": "match-pairs",
+      "wordIds": [
+        "fox",
+        "owl",
+        "rabbit"
+      ],
+      "imageOrder": [
+        "rabbit",
+        "fox",
+        "owl"
+      ]
+    },
+    {
+      "id": "spell-1",
+      "prompt": "Подпиши приглашение медведю",
+      "hint": "Собери имя медведя на иврите. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "bear",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "ד"
+        },
+        {
+          "id": "t3",
+          "letter": "ב"
+        },
+        {
+          "id": "t5",
+          "letter": "ש"
+        },
+        {
+          "id": "t2",
+          "letter": "ו"
+        },
+        {
+          "id": "t4",
+          "letter": "ג"
+        }
+      ]
+    },
+    {
+      "id": "spell-2",
+      "prompt": "Пригласи кролика на праздник",
+      "hint": "Собери имя кролика на иврите. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "rabbit",
+      "tiles": [
+        {
+          "id": "t2",
+          "letter": "ר"
+        },
+        {
+          "id": "t6",
+          "letter": "ש"
+        },
+        {
+          "id": "t5",
+          "letter": "ל"
+        },
+        {
+          "id": "t4",
+          "letter": "ב"
+        },
+        {
+          "id": "t3",
+          "letter": "נ"
+        },
+        {
+          "id": "t1",
+          "letter": "א"
+        }
+      ]
+    },
+    {
+      "id": "match-3",
+      "prompt": "Раздай именные приглашения",
+      "hint": "На приглашениях написаны имена на иврите. Найди владельца каждого приглашения.",
+      "type": "match-pairs",
+      "wordIds": [
+        "bear",
+        "rabbit",
+        "owl",
+        "fox"
+      ],
+      "imageOrder": [
+        "owl",
+        "fox",
+        "bear",
+        "rabbit"
+      ]
+    },
+    {
+      "id": "spell-4",
+      "prompt": "Подпиши приглашение сове",
+      "hint": "Собери имя совы на иврите. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "owl",
+      "tiles": [
+        {
+          "id": "t7",
+          "letter": "ע"
+        },
+        {
+          "id": "t4",
+          "letter": "ו"
+        },
+        {
+          "id": "t2",
+          "letter": "נ"
+        },
+        {
+          "id": "t3",
+          "letter": "ש"
+        },
+        {
+          "id": "t6",
+          "letter": "ד"
+        },
+        {
+          "id": "t5",
+          "letter": "ף"
+        },
+        {
+          "id": "t1",
+          "letter": "י"
+        }
+      ]
+    },
+    {
+      "id": "spell-5",
+      "prompt": "Осталось пригласить лису!",
+      "hint": "Собери имя лисы на иврите. Не все буквы пригодятся. Нажми на выбранную букву, чтобы вернуть её.",
+      "type": "build-word",
+      "wordId": "fox",
+      "tiles": [
+        {
+          "id": "t1",
+          "letter": "ש"
+        },
+        {
+          "id": "t6",
+          "letter": "ד"
+        },
+        {
+          "id": "t3",
+          "letter": "ע"
+        },
+        {
+          "id": "t4",
+          "letter": "ל"
+        },
+        {
+          "id": "t5",
+          "letter": "מ"
+        },
+        {
+          "id": "t2",
+          "letter": "ו"
+        }
+      ]
+    }
+  ]
+}
