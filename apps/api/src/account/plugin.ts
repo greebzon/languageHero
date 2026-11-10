@@ -79,6 +79,8 @@ export type AccountOptions = {
   levelStep: number;
   /* Test hook: the clock behind «сегодня», attempt timestamps and code expiry. */
   clock?: () => Date;
+  /* Test hook: the e2e suite signs in every learner from one address. */
+  codeRequestsPerHour?: number;
 };
 const COOKIE = 'lh_learner';
 const sha = (s: string) => createHash('sha256').update(s).digest('hex');
@@ -145,6 +147,17 @@ type User = typeof users.$inferSelect;
 export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
   const { db } = o;
   const now = () => (o.clock ? o.clock() : new Date());
+  const sessionMs = o.sessionDays * 86400000;
+  const sessionEnd = () => new Date(now().getTime() + sessionMs);
+  const setSessionCookie = (reply: FastifyReply, token: string) =>
+    reply.setCookie(COOKIE, token, {
+      httpOnly: true,
+      secure: o.secure,
+      sameSite: 'lax',
+      path: '/v1/account',
+      maxAge: o.sessionDays * 86400,
+    });
+  const renewedCookies = new WeakSet<FastifyRequest>();
   const treasury = { contentRoot: o.contentRoot, now };
   const digest = (value: string) => createHmac('sha256', o.secret).update(value).digest('hex');
   async function cleanup() {
@@ -204,6 +217,9 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       delete req.cookies[COOKIE];
     }
   });
+  app.addHook('onSend', async (req, reply) => {
+    if (renewedCookies.has(req)) setSessionCookie(reply, req.cookies[COOKIE]!);
+  });
   app.options('/*', async (_, reply) => reply.code(204).send());
   async function auth(req: FastifyRequest) {
     const token = req.headers.authorization?.replace(/^Bearer /, '') || req.cookies[COOKIE];
@@ -215,6 +231,13 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
     if (!session) throw new Fault(401, 'session_expired');
     const [user] = await db.select().from(users).where(eq(users.id, session.userId));
     if (!user) throw new Fault(401, 'sign_in');
+    // A session lives `sessionDays` from its last use, so a child who keeps playing stays signed
+    // in. The period restarts about once a day, not on every request.
+    const end = sessionEnd();
+    if (end.getTime() - session.expiresAt.getTime() >= sessionMs / 30) {
+      await db.update(sessions).set({ expiresAt: end }).where(eq(sessions.id, session.id));
+      if (!req.headers.authorization) renewedCookies.add(req);
+    }
     return { user, session };
   }
   async function snapshot(user: User, tx: Db | Tx = db): Promise<AccountSnapshot> {
@@ -250,17 +273,10 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
       userId: user.id,
       tokenHash: sha(token),
       deviceName,
-      expiresAt: new Date(Date.now() + o.sessionDays * 86400000),
+      expiresAt: sessionEnd(),
     });
     // Only browsers (they send Origin) get the cookie; native clients keep the bearer token.
-    if (req.headers.origin)
-      reply.setCookie(COOKIE, token, {
-        httpOnly: true,
-        secure: o.secure,
-        sameSite: 'lax',
-        path: '/v1/account',
-        maxAge: o.sessionDays * 86400,
-      });
+    if (req.headers.origin) setSessionCookie(reply, token);
     return { ...(await snapshot(user)), ...(req.headers.origin ? {} : { token }), recoveryCode };
   }
   /* Published lesson versions never change: a replay reads and validates each file once. */
@@ -340,7 +356,7 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
   }
   app.post(
     '/auth/code',
-    { config: { rateLimit: { max: 12, timeWindow: '1 hour' } } },
+    { config: { rateLimit: { max: o.codeRequestsPerHour ?? 12, timeWindow: '1 hour' } } },
     async (req) => {
       const input = z
         .object({
@@ -804,39 +820,49 @@ export async function accountPlugin(app: FastifyInstance, o: AccountOptions) {
         }
         const key = `${user.id}:${input.deviceId}`;
         const [device] = await tx.select().from(devices).where(eq(devices.key, key));
-        if (!device || input.sequence > device.sequence) {
-          let session: LearningState['session'] = null;
-          if (input.session && !input.session.finished) {
-            const incoming = input.session;
-            if (incoming.attemptId && incoming.events) {
-              if (!incoming.review && !incoming.boss)
-                assertAccessible(incoming.lesson.id, incoming.lesson.version);
-              const { state: restored } = await replay(
-                {
-                  id: incoming.attemptId,
-                  lessonId: incoming.lesson.id,
-                  version: incoming.lesson.version,
-                  difficulty: incoming.difficulty,
-                  review: incoming.review,
-                  boss: incoming.boss,
-                  events: incoming.events,
-                },
-                state,
-                visible,
-              );
-              if (restored.session?.finished) throw new Fault(422, 'session_finished');
-              const withDraft = learn(restored, { type: 'draft', answer: incoming.draft });
-              session = withDraft.session;
-            }
+        /* The lesson in progress, verified; undefined when it cannot be accepted yet. A long
+           backlog comes in portions and the lesson may open only with a later one: this portion's
+           results must not be lost for it, and the next sync offers the lesson again. */
+        async function verifiedSession(): Promise<LearningState['session'] | undefined> {
+          const incoming = input.session;
+          if (!incoming || incoming.finished || !incoming.attemptId || !incoming.events)
+            return null;
+          try {
+            if (!incoming.review && !incoming.boss)
+              assertAccessible(incoming.lesson.id, incoming.lesson.version);
+            const { state: restored } = await replay(
+              {
+                id: incoming.attemptId,
+                lessonId: incoming.lesson.id,
+                version: incoming.lesson.version,
+                difficulty: incoming.difficulty,
+                review: incoming.review,
+                boss: incoming.boss,
+                events: incoming.events,
+              },
+              state,
+              visible,
+            );
+            if (restored.session?.finished) throw new Fault(422, 'session_finished');
+            return learn(restored, { type: 'draft', answer: incoming.draft }).session;
+          } catch (error) {
+            if (error instanceof Fault || (error as NodeJS.ErrnoException).code === 'ENOENT')
+              return undefined;
+            throw error;
           }
-          state = { ...state, soundEnabled: input.soundEnabled, session };
-          await tx
-            .insert(devices)
-            .values({ key, userId: user.id, sequence: input.sequence })
-            .onConflictDoUpdate({
-              target: devices.key,
-              set: { sequence: input.sequence, updatedAt: now() },
-            });
+        }
+        if (!device || input.sequence > device.sequence) {
+          const session = await verifiedSession();
+          if (session !== undefined) {
+            state = { ...state, soundEnabled: input.soundEnabled, session };
+            await tx
+              .insert(devices)
+              .values({ key, userId: user.id, sequence: input.sequence })
+              .onConflictDoUpdate({
+                target: devices.key,
+                set: { sequence: input.sequence, updatedAt: now() },
+              });
+          }
         }
         const [updated] = await tx
           .update(users)

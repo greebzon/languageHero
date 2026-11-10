@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDemo } from '../state/DemoProvider';
 import { Badge, Heading, Label, Tim } from './ui';
 import { NetworkNotice } from './NetworkNotice';
+import { SaveNotice } from './SaveNotice';
 import { MenuButton } from './MenuButton';
 import { colors, fonts } from '../theme';
 import { useT } from '../i18n';
@@ -48,6 +49,7 @@ export function Screen({
       <View style={styles.width}>
         {header ?? <Header />}
         <NetworkNotice />
+        <SaveNotice />
       </View>
       {/* Edge-to-edge Android does not shrink the window for the keyboard, so pad for it here. */}
       <KeyboardAvoidingView style={styles.safe} behavior="padding">

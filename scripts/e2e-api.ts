@@ -56,6 +56,7 @@ async function main() {
       // Playwright pins the browser clock to this moment (course.spec); quests count «сегодня»
       // on the server, so it must agree.
       clock: () => new Date(2026, 8, 18, 12, 0, 0),
+      codeRequestsPerHour: 100,
       mailer: createMailer({
         mode: 'file',
         directory: resolve(cache, 'e2e-mail'),

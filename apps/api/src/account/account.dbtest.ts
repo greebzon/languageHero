@@ -31,6 +31,7 @@ import {
   learnerAccounts,
   learnerLedger,
   learnerMascots,
+  learnerSessions,
 } from '../db/schema.js';
 import { publishRelease } from '../content.js';
 const seed = releaseSchema.parse(seedData);
@@ -148,6 +149,70 @@ test('mandatory auth, one-time email codes, attempt limits, profile and isolated
   await call(ctx, '/auth/logout', {}, alice.token);
   assert.equal((await call(ctx, '/me', undefined, alice.token)).statusCode, 401);
   assert.equal((await call(ctx, '/me', undefined, again.token)).statusCode, 200);
+});
+test('a session lives from its last use: playing keeps the sign-in, a long silence ends it', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const user = await login(ctx, 'steady@example.test');
+  const DAY = 86400000;
+  const setDaysLeft = (days: number) =>
+    ctx.db.update(learnerSessions).set({ expiresAt: new Date(Date.now() + days * DAY) });
+  const daysLeft = async () => {
+    const [row] = await ctx.db.select().from(learnerSessions);
+    return (row!.expiresAt.getTime() - Date.now()) / DAY;
+  };
+  // Ten days after the last renewal a request starts the whole period again.
+  await setDaysLeft(20);
+  assert.equal((await call(ctx, '/me', undefined, user.token)).statusCode, 200);
+  assert.ok((await daysLeft()) > 29.9, 'renewed');
+  // Not every request writes: within a day of the last renewal nothing changes.
+  await setDaysLeft(29.5);
+  await call(ctx, '/me', undefined, user.token);
+  assert.ok((await daysLeft()) < 29.6, 'not renewed yet');
+  // A browser signs in with the cookie, so the cookie is renewed too.
+  await setDaysLeft(20);
+  const browser = await ctx.app.inject({
+    method: 'GET',
+    url: '/v1/account/me',
+    headers: { origin: 'http://localhost:8082', cookie: `lh_learner=${user.token}` },
+  });
+  assert.equal(browser.statusCode, 200, browser.body);
+  assert.match(String(browser.headers['set-cookie']), /lh_learner=.*Max-Age=2592000/);
+  // Nothing brings back a session that has ended.
+  await setDaysLeft(-1);
+  assert.equal((await call(ctx, '/me', undefined, user.token)).statusCode, 401);
+});
+test('a long backlog comes in portions: a lesson still locked in it costs no results', async (t) => {
+  const ctx = await createTestContext(t);
+  if (!ctx) return;
+  const user = await login(ctx, 'backlog@example.test');
+  // The device is inside the third lesson; the first portion holds only the first one.
+  const open = learn(newLearningState(), {
+    type: 'start',
+    lesson: seed.lessons[2],
+    attemptId: randomUUID(),
+  }).session;
+  const body = { deviceId: randomUUID(), sequence: 7, session: open, soundEnabled: true };
+  const first = await call(
+    ctx,
+    '/sync',
+    { ...body, attempts: [attempt(seed.lessons[0])] },
+    user.token,
+  );
+  assert.equal(first.statusCode, 200, first.body);
+  assert.equal(first.json().accepted.length, 1);
+  assert.equal(first.json().profile.xp, 100);
+  assert.equal(first.json().learning.session, null);
+  // With the next portion its lesson is open: the same upload now saves the child's place.
+  const second = await call(
+    ctx,
+    '/sync',
+    { ...body, attempts: [attempt(seed.lessons[1])] },
+    user.token,
+  );
+  assert.equal(second.statusCode, 200, second.body);
+  assert.equal(second.json().profile.xp, 200);
+  assert.equal(second.json().learning.session.lesson.id, seed.lessons[2].id);
 });
 test('server replays answers; retries and versions do not mint duplicate rewards; level and progress restore', async (t) => {
   const ctx = await createTestContext(t);
