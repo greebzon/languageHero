@@ -126,6 +126,8 @@ export function learn(state: LearningState, action: LearningAction): LearningSta
         correct: result === 'correct',
         events,
         mistakes: session.mistakes + (result === 'wrong' ? 1 : 0),
+        // A lost «Поймай слово» has no bubbles left to change the answer: the game starts again.
+        ...(result === 'wrong' && exercise.type === 'catch-word' ? { draft: null } : {}),
       },
     };
   }

@@ -440,6 +440,39 @@ test('memory ends when every pair is found; catch-the-word replays taps and coun
   );
 });
 
+test('a lost catch-the-word game starts again: no bubbles are left to change the answer', () => {
+  const pkg = courseLessonSchema.parse(
+    lesson([
+      {
+        id: 'catch',
+        type: 'catch-word',
+        prompt: 'Поймай',
+        hint: 'Слушай',
+        rounds: [
+          { wordId: 'fox', choices: ['owl', 'fox', 'bear'] },
+          { wordId: 'bear', choices: ['bear', 'rabbit'] },
+        ],
+      },
+      choices[0]!,
+    ]),
+  );
+  let state = learn(newLearningState(), { type: 'start', lesson: pkg });
+  state = learn(state, { type: 'draft', answer: { taps: ['owl', 'fox', 'rabbit', 'bear'] } });
+  state = learn(state, { type: 'answer' });
+  assert.equal(state.session!.mistakes, 1);
+  assert.equal(state.session!.correct, false);
+  assert.equal(state.session!.draft, null, 'the next tap begins a new game');
+  assert.ok(restoreLearningState(state), 'a restarted game restores');
+  state = learn(state, { type: 'draft', answer: { taps: ['fox', 'bear'] } });
+  state = learn(state, { type: 'answer' });
+  assert.equal(state.session!.correct, true);
+  // Other mechanics keep the wrong answer on screen: the child changes it.
+  state = learn(state, { type: 'next' });
+  state = learn(state, { type: 'draft', answer: { choiceId: 'bear' } });
+  state = learn(state, { type: 'answer' });
+  assert.deepEqual(state.session!.draft, { choiceId: 'bear' });
+});
+
 test('fill the gap: one right word in a sentence, options of lesson words', () => {
   const gap: CourseExercise = {
     id: 'gap',
